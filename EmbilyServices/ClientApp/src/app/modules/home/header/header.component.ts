@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         public authService: AuthService,
         public nav: NavbarService,
         public data: DataService) {
-        
+
     }
 
     ngOnInit(): void {
@@ -43,22 +43,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this._subscription = this.authService.loginStatusChange.subscribe((value) => this.isUserLoggedIn = value);
         // In your JavaScript
         setTimeout(() => {
-            let auth_response_change_callback = function (response) {
+            let auth_response_change_callback = (response) => {
                 console.log("auth_response_change_callback");
                 console.log(response);
+                this.loginning = true;
+                this.authService.loginWithFacebook(response.authResponse.userID, response.authResponse.accessToken)
+                    .subscribe(r => {
+                        this.loginning = false;
+                        this.router.navigate(['dashboard'])
+                    }, (error: any) => {
+                        console.error(error);
+                        this.loginning = false;
+                        this.authService.isLoginError = true;
+                        this.router.navigate(['/profile/login'])
+                    }, () => {
+                        this.loginning = false;
+                        this.isCollapsed = true;
+                    });
             }
-    
-            let auth_status_change_callback = function (response) {
-                console.log("auth_status_change_callback: " + response.status);
-            }
-    
+
             FB.Event.subscribe('auth.authResponseChange', auth_response_change_callback);
-            FB.Event.subscribe('auth.statusChange', auth_status_change_callback); 
         }, 500);
     }
 
     ngAfterViewInit() {
-        
+
     }
 
     logout() {

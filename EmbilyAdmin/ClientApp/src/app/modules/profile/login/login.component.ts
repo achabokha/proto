@@ -5,6 +5,8 @@ import { Login } from "../../../models";
 import { NavbarService } from '../../../services/navbar.service';
 import { NgForm } from '@angular/forms';
 
+
+declare var FB: any;
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -25,6 +27,33 @@ export class LoginComponent implements OnInit {
             this.showError = true;
             this.user.password = "";
         }
+
+        setTimeout(() => {
+            let auth_response_change_callback = function(response) {
+                console.log("auth_response_change_callback");
+                console.log(response);
+                FB.Event.unsubscribe('auth.authResponseChange', auth_response_change_callback);
+
+                this.showError = false;
+                this.spinner = true;
+                this.authService.loginWithFacebook(response.authResponse.userID, response.authResponse.accessToken)
+                    .subscribe(r => {
+                        if (r) this.router.navigate(['dashboard'])
+                        else {
+                            this.showError = true;
+                            this.user.password = "";
+                        }
+                    }, (error: any) => {
+                        console.error(error);
+                        //TODO: display error message --
+                        this.showError = true;
+                        this.user.password = "";
+                        this.spinner = false;
+                    });
+            }.bind(this)
+
+            FB.Event.subscribe('auth.authResponseChange', auth_response_change_callback);
+        }, 500);
     }
 
     onSubmit() {

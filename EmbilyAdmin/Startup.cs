@@ -101,6 +101,8 @@ namespace EmbilyAdmin
 
                     options.AllowPasswordFlow();
                     options.AllowRefreshTokenFlow();
+                    options.AllowCustomFlow("urn:ietf:params:oauth:grant-type:facebook_access_token");
+
 
                     // Accept anonymous clients (i.e clients that don't send a client_id).
                     options.AcceptAnonymousClients();

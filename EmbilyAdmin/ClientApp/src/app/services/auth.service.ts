@@ -48,6 +48,35 @@ export class AuthService {
         );
     }
 
+    loginWithFacebook(userId: string, accessToken: string): Observable<boolean> {
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/x-www-form-urlencoded'
+            })
+        };
+
+        const params = new HttpParams()
+            .append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
+            .append("assertion", userId)
+            .append("access_token", accessToken)
+            .append('scope', 'openid email phone profile offline_access');
+
+        let requestBody = params.toString();
+
+        // this call will give 401 (access denied HTTP status code) if login unsuccessful)
+        return this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe<boolean>(
+            map(value => {
+                //console.log('response: ', value)
+                let token = value as AuthTokenModel;
+                localStorage.setItem("refresh-token", token.refresh_token);
+                this.parseToken(token);
+                return true;
+            }),
+            catchError(error => this.handleError(error))
+        );
+    }
+
     refreshToken(): Observable<any> {
         let header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 

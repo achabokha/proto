@@ -5,14 +5,14 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": ".NET Core Launch (EmbilyServices)",
+            "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/EmbilyServices/bin/Debug/netcoreapp2.1/EmbilyServices.dll",
+            "program": "${workspaceFolder}/EmbilyAdmin/bin/Debug/netcoreapp2.1/EmbilyAdmin.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/EmbilyServices",
+            "cwd": "${workspaceFolder}/EmbilyAdmin",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {

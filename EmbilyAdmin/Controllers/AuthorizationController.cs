@@ -19,192 +19,247 @@ using OpenIddict.Core;
 using Embily.Models;
 using System;
 using OpenIddict.Abstractions;
+using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace EmbilyAdmin.Controllers
 {
-    public class AuthorizationController : Controller
-    {
-        private readonly IOptions<IdentityOptions> _identityOptions;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+	public class AuthorizationController : Controller
+	{
+		private readonly IOptions<IdentityOptions> _identityOptions;
+		private readonly SignInManager<ApplicationUser> _signInManager;
+		private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthorizationController(
-            IOptions<IdentityOptions> identityOptions,
-            SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
-        {
-            _identityOptions = identityOptions;
-            _signInManager = signInManager;
-            _userManager = userManager;
-        }
+		public AuthorizationController(
+			IOptions<IdentityOptions> identityOptions,
+			SignInManager<ApplicationUser> signInManager,
+			UserManager<ApplicationUser> userManager)
+		{
+			_identityOptions = identityOptions;
+			_signInManager = signInManager;
+			_userManager = userManager;
+		}
 
-        [HttpPost("~/connect/token"), Produces("application/json")]
-        public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
-        {
-            Debug.Assert(request.IsTokenRequest(),
-                "The OpenIddict binder for ASP.NET Core MVC is not registered. " +
-                "Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
+		[HttpPost("~/connect/token"), Produces("application/json")]
+		public async Task<IActionResult> Exchange(OpenIdConnectRequest request)
+		{
+			Debug.Assert(request.IsTokenRequest(),
+				"The OpenIddict binder for ASP.NET Core MVC is not registered. " +
+				"Make sure services.AddOpenIddict().AddMvcBinders() is correctly called.");
 
-            if (request.IsPasswordGrantType())
-            {
-                var user = await _userManager.FindByNameAsync(request.Username);
-                if (user == null)
-                {
-                    return BadRequest(new OpenIdConnectResponse
-                    {
-                        Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The username/password is invalid."
-                    });
-                }
+			if (request.IsPasswordGrantType())
+			{
+				var user = await _userManager.FindByNameAsync(request.Username);
+				if (user == null)
+				{
+					return BadRequest(new OpenIdConnectResponse
+					{
+						Error = OpenIdConnectConstants.Errors.InvalidGrant,
+						ErrorDescription = "The username/password is invalid."
+					});
+				}
 
-                // proceed only if Admin or Customer Support
-                if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()) || await _userManager.IsInRoleAsync(user, Roles.CustomerSupport.ToString()))
-                {
-                    if (!await _userManager.IsEmailConfirmedAsync(user))
-                    {
-                        return BadRequest(new OpenIdConnectResponse
-                        {
-                            Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                            ErrorDescription = "The username/password is invalid."
-                        });
-                    }
+				// proceed only if Admin or Customer Support
+				if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()) || await _userManager.IsInRoleAsync(user, Roles.CustomerSupport.ToString()))
+				{
+					if (!await _userManager.IsEmailConfirmedAsync(user))
+					{
+						return BadRequest(new OpenIdConnectResponse
+						{
+							Error = OpenIdConnectConstants.Errors.InvalidGrant,
+							ErrorDescription = "The username/password is invalid."
+						});
+					}
 
-                    // Validate the username/password parameters and ensure the account is not locked out.
-                    var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
-                    if (!result.Succeeded)
-                    {
-                        return BadRequest(new OpenIdConnectResponse
-                        {
-                            Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                            ErrorDescription = "The username/password is invalid."
-                        });
-                    }
+					// Validate the username/password parameters and ensure the account is not locked out.
+					var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
+					if (!result.Succeeded)
+					{
+						return BadRequest(new OpenIdConnectResponse
+						{
+							Error = OpenIdConnectConstants.Errors.InvalidGrant,
+							ErrorDescription = "The username/password is invalid."
+						});
+					}
 
-                    // Create a new authentication ticket.
-                    var ticket = await CreateTicketAsync(request, user);
+					// Create a new authentication ticket.
+					var ticket = await CreateTicketAsync(request, user);
 
-                    return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
-                }
-                else
-                {
-                    return BadRequest(new OpenIdConnectResponse
-                    {
-                        Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The username/password is invalid."
-                    });
-                }
-            }
-            else if (request.IsRefreshTokenGrantType())
-            {
-                // Retrieve the claims principal stored in the refresh token.
-                var info = await HttpContext.AuthenticateAsync(OpenIdConnectServerDefaults.AuthenticationScheme);
+					return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+				}
 
-                // Retrieve the user profile corresponding to the refresh token.
-                // Note: if you want to automatically invalidate the refresh token
-                // when the user password/roles change, use the following line instead:
-                // var user = _signInManager.ValidateSecurityStampAsync(info.Principal);
-                var user = await _userManager.GetUserAsync(info.Principal);
-                if (user == null)
-                {
-                    return BadRequest(new OpenIdConnectResponse
-                    {
-                        Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The refresh token is no longer valid."
-                    });
-                }
+				else
+				{
+					return BadRequest(new OpenIdConnectResponse
+					{
+						Error = OpenIdConnectConstants.Errors.InvalidGrant,
+						ErrorDescription = "The username/password is invalid."
+					});
+				}
+			}
+			else if (request.IsRefreshTokenGrantType())
+			{
+				// Retrieve the claims principal stored in the refresh token.
+				var info = await HttpContext.AuthenticateAsync(OpenIdConnectServerDefaults.AuthenticationScheme);
 
-                // Ensure the user is still allowed to sign in.
-                if (!await _signInManager.CanSignInAsync(user))
-                {
-                    return BadRequest(new OpenIdConnectResponse
-                    {
-                        Error = OpenIdConnectConstants.Errors.InvalidGrant,
-                        ErrorDescription = "The user is no longer allowed to sign in."
-                    });
-                }
+				// Retrieve the user profile corresponding to the refresh token.
+				// Note: if you want to automatically invalidate the refresh token
+				// when the user password/roles change, use the following line instead:
+				// var user = _signInManager.ValidateSecurityStampAsync(info.Principal);
+				var user = await _userManager.GetUserAsync(info.Principal);
+				if (user == null)
+				{
+					return BadRequest(new OpenIdConnectResponse
+					{
+						Error = OpenIdConnectConstants.Errors.InvalidGrant,
+						ErrorDescription = "The refresh token is no longer valid."
+					});
+				}
 
-                // Create a new authentication ticket, but reuse the properties stored
-                // in the refresh token, including the scopes originally granted.
-                var ticket = await CreateTicketAsync(request, user, info.Properties);
+				// Ensure the user is still allowed to sign in.
+				if (!await _signInManager.CanSignInAsync(user))
+				{
+					return BadRequest(new OpenIdConnectResponse
+					{
+						Error = OpenIdConnectConstants.Errors.InvalidGrant,
+						ErrorDescription = "The user is no longer allowed to sign in."
+					});
+				}
 
-                return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
-            }
+				// Create a new authentication ticket, but reuse the properties stored
+				// in the refresh token, including the scopes originally granted.
+				var ticket = await CreateTicketAsync(request, user, info.Properties);
 
-            return BadRequest(new OpenIdConnectResponse
-            {
-                Error = OpenIdConnectConstants.Errors.UnsupportedGrantType,
-                ErrorDescription = "The specified grant type is not supported."
-            });
-        }
+				return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+			}
+			else if (request.GrantType == "urn:ietf:params:oauth:grant-type:facebook_access_token")
+			{
+				// Reject the request if the "assertion" parameter is missing.
+				if (string.IsNullOrEmpty(request.Assertion))
+				{
+					return BadRequest(new OpenIdConnectResponse
+					{
+						Error = OpenIdConnectConstants.Errors.InvalidRequest,
+						ErrorDescription = "The mandatory 'assertion' parameter was missing."
+					});
+				}
 
-        private async Task<AuthenticationTicket> CreateTicketAsync(
-            OpenIdConnectRequest request, ApplicationUser user,
-            AuthenticationProperties properties = null)
-        {
-            // Create a new ClaimsPrincipal containing the claims that
-            // will be used to create an id_token, a token or a code.
-            var principal = await _signInManager.CreateUserPrincipalAsync(user);
+				var userData = new ApplicationUser();
 
-            // Create a new authentication ticket holding the user identity.
-            var ticket = new AuthenticationTicket(principal, properties,
-                OpenIdConnectServerDefaults.AuthenticationScheme);
+				using (HttpClient client = new HttpClient())
+				{
+					string fbURL = $"https://graph.facebook.com/v4.0/{request.Assertion}?fields=id,name,email,last_name,first_name&access_token={request.AccessToken}";
+					Console.WriteLine(fbURL);
+					var resp = await client.GetAsync(fbURL);
+					resp.EnsureSuccessStatusCode();
+					string responseBody = await resp.Content.ReadAsStringAsync();
+					dynamic respData = JsonConvert.DeserializeObject(responseBody);
+					var userId = Guid.NewGuid().ToString();
+					userData.Id = userId;
+					userData.UserName = respData.email;
+					userData.Email = respData.email;
+					userData.LastName = respData.last_name;
+					userData.FirstName = respData.first_name;
 
-            if (!request.IsRefreshTokenGrantType())
-            {
-                // Set the list of scopes granted to the client application.
-                // Note: the offline_access scope must be granted
-                // to allow OpenIddict to return a refresh token.
-                ticket.SetScopes(new[]
-                {
-                    OpenIdConnectConstants.Scopes.OpenId,
-                    OpenIdConnectConstants.Scopes.Email,
-                    OpenIdConnectConstants.Scopes.Profile,
-                    OpenIdConnectConstants.Scopes.OfflineAccess,
-                    OpenIddictConstants.Scopes.Roles
-                }.Intersect(request.GetScopes()));
-            }
+				}
 
-            ticket.SetResources("resource_server");
+				var user = await _userManager.FindByNameAsync(userData.UserName);
+				if (user == null)
+				{
+					var r = await _userManager.CreateAsync(userData);
+					if (!r.Succeeded)
+					{
+						return BadRequest(new OpenIdConnectResponse
+						{
+							Error = OpenIdConnectConstants.Errors.InvalidRequest,
+							ErrorDescription = r.Errors.First().Description
+						});
+					}
+				}
 
 
-            // Note: by default, claims are NOT automatically included in the access and identity tokens.
-            // To allow OpenIddict to serialize them, you must attach them a destination, that specifies
-            // whether they should be included in access tokens, in identity tokens or in both.
 
-            foreach (var claim in ticket.Principal.Claims)
-            {
-                // Never include the security stamp in the access and identity tokens, as it's a secret value.
-                if (claim.Type == _identityOptions.Value.ClaimsIdentity.SecurityStampClaimType)
-                {
-                    continue;
-                }
+				// Create a new authentication ticket.
+				var ticket = await CreateTicketAsync(request, user == null ? userData : user);
 
-                var destinations = new List<string>
-                {
-                    OpenIdConnectConstants.Destinations.AccessToken
-                };
 
-                // Only add the iterated claim to the id_token if the corresponding scope was granted to the client application.
-                // The other claims will only be added to the access_token, which is encrypted when using the default format.
-                if ((claim.Type == OpenIdConnectConstants.Claims.Name && ticket.HasScope(OpenIdConnectConstants.Scopes.Profile)) ||
-                    (claim.Type == OpenIdConnectConstants.Claims.Email && ticket.HasScope(OpenIdConnectConstants.Scopes.Email)) ||
-                    (claim.Type == OpenIdConnectConstants.Claims.Role && ticket.HasScope(OpenIddictConstants.Claims.Roles)))
-                {
-                    destinations.Add(OpenIdConnectConstants.Destinations.IdentityToken);
-                }
+				return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+			}
+			return BadRequest(new OpenIdConnectResponse
+			{
+				Error = OpenIdConnectConstants.Errors.UnsupportedGrantType,
+				ErrorDescription = "The specified grant type is not supported."
+			});
+		}
 
-                claim.SetDestinations(destinations);
-            }
+		private async Task<AuthenticationTicket> CreateTicketAsync(
+			OpenIdConnectRequest request, ApplicationUser user,
+			AuthenticationProperties properties = null)
+		{
+			// Create a new ClaimsPrincipal containing the claims that
+			// will be used to create an id_token, a token or a code.
+			var principal = await _signInManager.CreateUserPrincipalAsync(user);
 
-            await UpdateUserOnLogin(user);
+			// Create a new authentication ticket holding the user identity.
+			var ticket = new AuthenticationTicket(principal, properties,
+				OpenIdConnectServerDefaults.AuthenticationScheme);
 
-            return ticket;
-        }
+			if (!request.IsRefreshTokenGrantType())
+			{
+				// Set the list of scopes granted to the client application.
+				// Note: the offline_access scope must be granted
+				// to allow OpenIddict to return a refresh token.
+				ticket.SetScopes(new[]
+				{
+					OpenIdConnectConstants.Scopes.OpenId,
+					OpenIdConnectConstants.Scopes.Email,
+					OpenIdConnectConstants.Scopes.Profile,
+					OpenIdConnectConstants.Scopes.OfflineAccess,
+					OpenIddictConstants.Scopes.Roles
+				}.Intersect(request.GetScopes()));
+			}
 
-        async Task UpdateUserOnLogin(ApplicationUser user)
-        {
-            user.DateLastAccessed = DateTime.UtcNow;
-            await _userManager.UpdateAsync(user);
-        }
-    }
+			ticket.SetResources("resource_server");
+
+
+			// Note: by default, claims are NOT automatically included in the access and identity tokens.
+			// To allow OpenIddict to serialize them, you must attach them a destination, that specifies
+			// whether they should be included in access tokens, in identity tokens or in both.
+
+			foreach (var claim in ticket.Principal.Claims)
+			{
+				// Never include the security stamp in the access and identity tokens, as it's a secret value.
+				if (claim.Type == _identityOptions.Value.ClaimsIdentity.SecurityStampClaimType)
+				{
+					continue;
+				}
+
+				var destinations = new List<string>
+				{
+					OpenIdConnectConstants.Destinations.AccessToken
+				};
+
+				// Only add the iterated claim to the id_token if the corresponding scope was granted to the client application.
+				// The other claims will only be added to the access_token, which is encrypted when using the default format.
+				if ((claim.Type == OpenIdConnectConstants.Claims.Name && ticket.HasScope(OpenIdConnectConstants.Scopes.Profile)) ||
+					(claim.Type == OpenIdConnectConstants.Claims.Email && ticket.HasScope(OpenIdConnectConstants.Scopes.Email)) ||
+					(claim.Type == OpenIdConnectConstants.Claims.Role && ticket.HasScope(OpenIddictConstants.Claims.Roles)))
+				{
+					destinations.Add(OpenIdConnectConstants.Destinations.IdentityToken);
+				}
+
+				claim.SetDestinations(destinations);
+			}
+
+			await UpdateUserOnLogin(user);
+
+			return ticket;
+		}
+
+		async Task UpdateUserOnLogin(ApplicationUser user)
+		{
+			user.DateLastAccessed = DateTime.UtcNow;
+			await _userManager.UpdateAsync(user);
+		}
+	}
 }
