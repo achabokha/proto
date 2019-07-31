@@ -35,7 +35,7 @@ $ npm install
 ##### Embily Admin
 
 1. Set EmbilyAdmin as a start project 
-2. Ctrl-F5
+2. Ctrl-F5 or F5
 
 Note: it will start angular cli to compile angular code. 
 
