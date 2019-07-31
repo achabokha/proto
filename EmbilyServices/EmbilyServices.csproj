@@ -165,7 +165,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>C:\Users\Andrei\source\Embily\EmbilyServices\wwwroot\EmbilyServices.xml</DocumentationFile>
+    <DocumentationFile>wwwroot\EmbilyServices.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
     <OutputPath></OutputPath>
   </PropertyGroup>
