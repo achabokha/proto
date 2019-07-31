@@ -29,8 +29,9 @@
                 <input class="form-control mr-sm-2" type="text" placeholder="email" aria-label="email" id="email" name="email" [(ngModel)]="user.username" #email="ngModel">
                 <input class="form-control mr-sm-2" type="password" placeholder="password" aria-label="password" id="password" name="password" [(ngModel)]="user.password" #password="ngModel">
                 <button class="btn btn-outline-primary my-2 my-sm-0" type="submit" (click)="login()">
-                    <app-spinner-round *ngIf="loginning"></app-spinner-round>Login
+                    <app-spinner-round *ngIf="loginning"></app-spinner-round>Logins
                 </button>
+                <div class="fb-login-button" data-width="300" data-size="medium" data-button-type="login_with" data-auto-logout-link="true" data-use-continue-as="false"></div>
             </form>
             <!--<ul *ngIf="!isUserLoggedIn" class="navbar-nav " (click)="isCollapsed=true">
                 <li class="nav-item" [routerLinkActive]="['active']">

@@ -6,6 +6,7 @@
         "start": "ng serve",
         "release": "ng serve --prod --build-optimizer",
         "build": "ng build",
+        "build-watch": "ng build --watch",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e"

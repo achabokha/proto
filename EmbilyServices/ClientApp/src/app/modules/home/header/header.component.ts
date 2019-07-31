@@ -7,6 +7,8 @@ import { NavbarService } from '../../../services/navbar.service';
 import { DataService } from '../../../services/data.service';
 import { LoginModel } from '../../../models/security/login-model';
 
+declare var FB: any;
+
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
@@ -32,11 +34,31 @@ export class HeaderComponent implements OnInit, OnDestroy {
     constructor(public router: Router,
         public authService: AuthService,
         public nav: NavbarService,
-        public data: DataService) { }
+        public data: DataService) {
+        
+    }
 
     ngOnInit(): void {
         this.isUserLoggedIn = this.authService.isLoggedIn;
         this._subscription = this.authService.loginStatusChange.subscribe((value) => this.isUserLoggedIn = value);
+        // In your JavaScript
+        setTimeout(() => {
+            let auth_response_change_callback = function (response) {
+                console.log("auth_response_change_callback");
+                console.log(response);
+            }
+    
+            let auth_status_change_callback = function (response) {
+                console.log("auth_status_change_callback: " + response.status);
+            }
+    
+            FB.Event.subscribe('auth.authResponseChange', auth_response_change_callback);
+            FB.Event.subscribe('auth.statusChange', auth_status_change_callback); 
+        }, 500);
+    }
+
+    ngAfterViewInit() {
+        
     }
 
     logout() {
@@ -69,6 +91,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     toggleMenu() {
         this.isCollapsed = !this.isCollapsed;
     }
+
+
 
 
 }
