@@ -1,0 +1,39 @@
+<div class="row card-row" [class.disabled]="lockedCard">
+    <div class="col-sm-4 col-md-5">
+        <div class="card-wrapper">
+            <div class="card-number">{{cardNumber}}</div>
+        </div>
+    </div>
+    <div class="col-sm-8 col-md-7">
+        <h4>{{account.accountName}}</h4>
+        <p><b>{{getFormattedCardNumber(account.cardNumber)}}</b></p>
+        <p *ngIf="!lockedCard">Balance: <strong>{{account.currencyCodeString}} {{account.balance}}</strong>&nbsp;<app-spinner-round *ngIf="!account.balance && !lockedCard"></app-spinner-round></p>
+
+        <!--<button id="lockedCard" name="lockedCard" type="button" class="btn btn-secondary active" *ngIf="lockedCard">
+            Locked Card
+        </button>-->
+
+        <button id="lostCard" name="lostCard" type="button" class="btn btn-outline-primary" *ngIf="!lockedCard" (click)="modalService.open(modalContent)">
+            Report Lost Card
+        </button>
+    </div>
+</div>
+
+<ng-template #modalContent let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="lostModalLabel">Confirm Lost Card</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            Are you sure that you want to report this card lost?
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="setLostCard(true)">Report & Get New Card</button>
+            <button type="button" class="btn btn-outline-primary" (click)="setLostCard(false)">Report Only</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="c('Close click')">Close</button>
+        </div>
+    </div>
+</ng-template>

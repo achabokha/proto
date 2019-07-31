@@ -1,0 +1,39 @@
+<div class="row card-row">
+    <div class="col-sm-4 col-md-5">
+        <div class="card-wrapper">
+            <div class="card-number">{{cardNumber}}</div>
+        </div>
+    </div>
+    <div class="col-sm-8 col-md-7">
+        <h4>{{account.accountName}}</h4>
+        <p>{{getFormattedCardNumber(account.cardNumber)}} <span (click)='spinCardNumber()' class="fa fa-refresh e-hand" aria-hidden="true"></span></p>
+        <p>Balance: <strong>{{account.currencyCodeString}} <span *ngIf="!spinBalance">{{account.balance}}</span></strong>&nbsp;<span *ngIf="!spinBalance" (click)='getData()' class="fa fa-refresh e-hand" aria-hidden="true"></span> <app-spinner-round *ngIf="spinBalance"></app-spinner-round></p>
+        <hr />
+        <div class="text-center">
+            <div class="load-card">
+                <a [routerLink]="['load', 'BTC', account.accountId]">
+                    <img src="assets/images/currencies/btc.png" />
+                </a>
+                <a class="btn btn-success btn-sm btn-block" role="button" [routerLink]="['load', 'BTC', account.accountId]">
+                    Load
+                </a>
+            </div>
+            <div class="load-card">
+                <a [routerLink]="['load', 'ETH', account.accountId]">
+                    <img src="assets/images/currencies/eth.png" />
+                </a>
+                <a class="btn btn-success btn-sm btn-block" role="button" [routerLink]="['load', 'ETH', account.accountId]">
+                    Load
+                </a>
+            </div>
+            <div class="load-card">
+                <a [routerLink]="['load', 'LTC', account.accountId]">
+                    <img src="assets/images/currencies/ltc.png" />
+                </a>
+                <a class="btn btn-success btn-sm btn-block" role="button" [routerLink]="['load', 'LTC', account.accountId]">
+                    Load
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

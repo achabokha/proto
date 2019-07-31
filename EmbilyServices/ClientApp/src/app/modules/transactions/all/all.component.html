@@ -1,0 +1,41 @@
+<ngx-datatable *ngIf="data.allTransactions" class="table_embily_light"
+               [rows]="data.allTransactions"
+               [loadingIndicator]="loadingIndicator"
+               [columnMode]="'force'"
+               [headerHeight]="40"
+               [summaryRow]="false"
+               [summaryPosition]="'bottom'"
+               [limit]="20"
+               [reorderable]="true"
+               [footerHeight]="50"
+               [rowHeight]="50"
+               [scrollbarV]="false"
+               [scrollbarH]="true">
+
+    <ngx-datatable-column name="Date" [width]="100" prop="transactionDate">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value | date: 'dd MMM yyyy' }}
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Description" [width]="300" prop="description"></ngx-datatable-column>
+    <ngx-datatable-column name="Type" [width]="100" prop="transactionCode"></ngx-datatable-column>
+    <!--<ngx-datatable-column name="Amount" [width]="100" prop="transactionAmount">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span *ngIf="value != 0">{{ value | number:'1.2-2' }}</span>
+        </ng-template>
+    </ngx-datatable-column>-->
+    <ngx-datatable-column name="Currency" [width]="80" prop="billingCurrencyCode"></ngx-datatable-column>
+    <ngx-datatable-column name="Amount" [width]="100" prop="billingAmount">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span *ngIf="value != 0">{{ value | number:'1.2-2' }}</span>
+        </ng-template>
+    </ngx-datatable-column>
+
+
+</ngx-datatable>
+
+<app-spinner-rect *ngIf="!data.allTransactions"></app-spinner-rect>
+
+<div *ngIf="data.allTransactions" style="padding-top: 14px;">
+    <i>It might take up to several days for transactions to appear in the history</i>
+</div>

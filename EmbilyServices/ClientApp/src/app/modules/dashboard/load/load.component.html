@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="row" *ngIf="displayStateDebug">
+        <button class="btn btn-default" (click)="setState('loading')">Loading</button>
+        <button class="btn btn-default" (click)="setState('address')">Address</button>
+        <button class="btn btn-default" (click)="setState('transaction')">Transaction</button>
+        <button class="btn btn-default" (click)="setState('timeout')">Timeout</button>
+        <button class="btn btn-default" (click)="setState('error')">Error</button>
+    </div>
+    <div class="row">
+        <div class="col-md-6 offset-md-3 text-center">
+            <div [ngSwitch]="state">
+                <div *ngSwitchCase="'loading'">
+                    <!--<div [@flyInOut]="flyInOut" class="stateWrapper">-->
+                    <div class="stateWrapper">
+                        <app-spinner-rect></app-spinner-rect>
+                    </div>
+                </div>
+                <div *ngSwitchCase="'address'">
+                    <!--<div [@flyInOut]="flyInOut" class="stateWrapper">-->
+                    <div class="stateWrapper">
+                        <app-load-limits-live [accountCurrencyCode]="accountCurrencyCode" [currencyCode]="currencyCode" [isKYC]="isKYC"></app-load-limits-live>
+                        <h2>Load with {{currencyCode}}</h2>
+                        <app-crypto-address #cryptoAddress [currencyCode]="currencyCode" [address]="address" [qrCodeSrc]="qrCodeSrc" (statusChange)="onStatusChange($event)"></app-crypto-address>
+                        <br />
+                        <p class="small">
+                            This is a permanent crypto address assigned to your card. You can load your card by sending funds to this address any time from any wallet.
+                        </p>
+                    </div>
+                </div>
+                <div *ngSwitchCase="'transaction'">
+                    <div class="stateWrapper">
+                        <!--<div [@flyInOut]="flyInOut" class="stateWrapper">-->
+                        <h2>Transaction in Progress</h2>
+                        <p>Thank you for submitting <strong>{{currencyCode}} {{amount}}</strong>!</p>
+                        <p>Your funds will be available within 24 hours.</p>
+                        <p><a [routerLink]="['/dashboard']" class="btn btn-primary"><span class="glyphicon glyphicon-home"></span> Dashboard</a></p>
+                    </div>
+                </div>
+                <div *ngSwitchCase="'timeout'">
+                    <!--<div [@flyInOut]="flyInOut" class="stateWrapper">-->
+
+                    <div class="stateWrapper">
+                        <h2>Timeout</h2>
+                        <p>But no worries you can still send coins to this {{coinName}} address. In fact, you can <b>always</b> send funds to this address from your favorite crypto wallet or share the address with anyone to receive funds. The address is assign to your card and we are monitoring it in Blockchain that you will never miss any transactions.</p>
+                        <p><a [routerLink]="['/dashboard']" class="btn btn-primary"><span class="glyphicon glyphicon-home"></span> Dashboard</a></p>
+
+                    </div>
+                </div>
+                <div *ngSwitchCase="'error'">
+                    <div class="stateWrapper">
+                        <!--<div [@flyInOut]="flyInOut" class="stateWrapper">-->
+                        <h2 class="text-danger">Error</h2>
+                        <p class="text-danger">An error has occurred. Try again later.</p>
+                        <p>
+                            or
+                        </p>
+                        <p>
+                            contact our Customer Support via Help button in the lower right corner.
+                        </p>
+                        <p><a [routerLink]="['/dashboard']" class="btn btn-primary"><span class="glyphicon glyphicon-home"></span> Dashboard</a></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

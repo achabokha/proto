@@ -1,0 +1,47 @@
+<div class="limits text-center alert alert-info" role="alert">
+    <div *ngIf="accountCurrencyCode == 'USD'">
+        <b>min USD 50.00</b>
+        <span *ngIf="currencyCode == 'BTC'">(BTC {{((50)/(this.tickers.BTCUSD.price) | number:'1.5-5')}})</span>
+        <span *ngIf="currencyCode == 'LTC'">(LTC {{((50)/(this.tickers.LTCUSD.price) | number:'1.5-5')}})</span>
+        <span *ngIf="currencyCode == 'ETH'">(ETH {{((50)/(this.tickers.ETHUSD.price) | number:'1.5-5')}})</span>
+        transaction amount
+        <div *ngIf="isKYC" class="kyclimits">
+            <b>max USD 5,000.00</b>
+            <span *ngIf="currencyCode == 'BTC'">(BTC {{((5000)/(this.tickers.BTCUSD.price) | number:'1.5-5')}})</span>
+            <span *ngIf="currencyCode == 'LTC'">(LTC {{((5000)/(this.tickers.LTCUSD.price) | number:'1.5-5')}})</span>
+            <span *ngIf="currencyCode == 'ETH'">(ETH {{((5000)/(this.tickers.ETHUSD.price) | number:'1.5-5')}})</span>
+            daily load, 2 load transactions per day<br />
+        </div>
+        <div *ngIf="!isKYC" class="nonkyclimits">
+            <b>max USD 2,500.00</b>
+            <span *ngIf="currencyCode == 'BTC'">(BTC {{((2500)/(this.tickers.BTCUSD.price) | number:'1.5-5')}})</span>
+            <span *ngIf="currencyCode == 'LTC'">(LTC {{((2500)/(this.tickers.LTCUSD.price) | number:'1.5-5')}})</span>
+            <span *ngIf="currencyCode == 'ETH'">(ETH {{((2500)/(this.tickers.ETHUSD.price) | number:'1.5-5')}})</span>
+            daily load, 2 load transactions per day<br />
+        </div>
+    </div>
+    <div *ngIf="accountCurrencyCode == 'EUR'">
+        <b>min EUR 50.00</b>
+        <span *ngIf="currencyCode == 'BTC'">(BTC {{((50)/(this.tickers.BTCEUR.price) | number:'1.5-5')}})</span>
+        <span *ngIf="currencyCode == 'LTC'">(LTC {{((50)/(this.tickers.LTCEUR.price) | number:'1.5-5')}})</span>
+        <span *ngIf="currencyCode == 'ETH'">(ETH {{((50)/(this.tickers.ETHEUR.price) | number:'1.5-5')}})</span>
+        transaction amount
+        <div *ngIf="isKYC" class="kyclimits">
+            <b>max EUR 4,000.00</b>
+            <span *ngIf="currencyCode == 'BTC'">(BTC {{((4000)/(this.tickers.BTCEUR.price) | number:'1.5-5')}})</span>
+            <span *ngIf="currencyCode == 'LTC'">(LTC {{((4000)/(this.tickers.LTCEUR.price) | number:'1.5-5')}})</span>
+            <span *ngIf="currencyCode == 'ETH'">(ETH {{((4000)/(this.tickers.ETHEUR.price) | number:'1.5-5')}})</span>
+            daily load, 2 load transactions per day<br />
+        </div>
+        <div *ngIf="!isKYC" class="nonkyclimits">
+            <b>max USD 2,000.00</b>
+            <span *ngIf="currencyCode == 'BTC'">(BTC {{((2000)/(this.tickers.BTCUSD.price) | number:'1.5-5')}})</span>
+            <span *ngIf="currencyCode == 'LTC'">(LTC {{((2000)/(this.tickers.LTCEUR.price) | number:'1.5-5')}})</span>
+            <span *ngIf="currencyCode == 'ETH'">(ETH {{((2000)/(this.tickers.ETHEUR.price) | number:'1.5-5')}})</span>
+            daily load, 2 load transactions per day<br />
+        </div>
+    </div>
+    <!--<div class="small fees-link">
+        <a [routerLink]="['/help/fees']">click here for Fees and Limits details.</a>
+    </div>-->
+</div>

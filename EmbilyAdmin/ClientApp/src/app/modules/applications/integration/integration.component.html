@@ -1,0 +1,32 @@
+<br />
+<div class="form-group">
+    <label for="cardNumber" class="col-md-2 col-form-label text-right">Card Number [{{data.selectApp.currencyCodeString}}]: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.cardNumber" placeholder="9999 9999 9999 9969" class="form-control"
+           id="cardNumber" />
+
+</div>
+
+<div class="form-group">
+    <label for="cardReferenceID" class="col-md-2 col-form-label text-right">Card Reference ID: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.providerAccountNumber" placeholder="Card Reference ID" class="form-control"
+           id="cardReferenceID" />
+
+</div>
+
+<div class="form-group">
+    <label for="cardHolderID" class="col-md-2 col-form-label text-right">Card Holder ID: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.providerUserId" placeholder="Card Holder ID" class="form-control" id="cardHolderID" />
+
+</div>
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-2">
+        <br />
+        <button type="submit" class="btn btn-primary" id="assignCard" (click)="update()">Assign Card</button>
+    </div>
+</div>
+
+<br />

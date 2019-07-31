@@ -1,0 +1,15 @@
+﻿:host { }
+
+.picture {
+    float: left;
+    width: 25%;
+    margin-right: 12px;
+}
+
+.newsimage {
+    width: 140px;
+}
+
+:host /deep/ p.link-more, .more-link {
+    display: none !important;
+}

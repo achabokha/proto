@@ -1,0 +1,74 @@
+<!-- https://css-tricks.com/couple-takes-sticky-footer/ -->
+
+<footer class="footer">
+
+    <div class="wrapper" id="wrapper-footer">
+        <div class="container">
+            <div class="row footer-top">
+                <div class="footer-logo col-md-2">
+                    <a routerLink="/" class="navbar-brand custom-logo-link" rel="home" itemprop="url">
+                        <img width="113" height="33" src="assets/images/themes/{{data.theme.name}}/logo.png" class="img-fluid" alt="{{data.theme.name}}" itemprop="logo" />
+                    </a>
+                </div>
+                <div class="footer-menu-top col-md-10 text-right">
+
+                    <ul class="footer-menu-top-center">
+                        <li id="menu-item-299" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-299">
+                            <a href="https://embily.com/contact-us/">Contact us</a>
+                        </li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page">
+                            <a id="terms-of-use-tab" class="nav-link" role="tab" routerLink="/legal/section/terms-of-use">Terms Of Use</a>
+                        </li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page">
+                            <a id="kyc-aml-policy-tab" class="nav-link" role="tab" routerLink="/legal/section/kyc-aml-policy">KYC &amp; AML Policy</a>
+                        </li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page">
+                            <a id="privacy-policy-tab" class="nav-link" role="tab" routerLink="/legal/section/privacy-policy">Privacy Policy</a>
+                        </li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page">
+                            <a id="cookie-policy-tab" class="nav-link" role="tab" routerLink="/legal/section/cookie-policy">Cookies Policy</a>
+                        </li>
+                        <li class="menu-item menu-item-type-post_type menu-item-object-page">
+                            <a id="registrar-record-tab" class="nav-link" role="tab" routerLink="/legal/section/registrar-record">Registrar Record</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row footer-bottom">
+                <div class="footer-social col-md-3">
+                    <a href="https://www.facebook.com/embily" target="new"><img src="assets/images/icons/Facebook-icon.png" /></a>
+                    <a href="https://www.instagram.com/embilysays/" target="new"><img src="assets/images/icons/Instagram-icon.png" /></a>
+                    <a href="https://twitter.com/embilysays" target="new"><img src="assets/images/icons/Twitter-icon.png" /></a>
+                    <a href="https://www.linkedin.com/company/embily/" target="new"><img src="assets/images/icons/LinkedIn-Icon.png" /></a>
+                </div>
+                <div class="footer-copyright col-md-9 text-right">
+                    <div style="height: 24px;">
+                        <span *ngIf="data.theme.showCardProgramDisclaimer">
+                            The E-Allied Prepaid Card Program is facilitated by
+                            <a href="https://www.ccsprepay.com" rel="nofollow" target="_blank">CreditCard Solutions UK Ltd</a>
+                            <br /> CreditCard Solutions UK Ltd(CCS Prepay) is registered in England & Wales | Registration Number: 05394395
+                        </span>
+                    </div>
+                    <br />
+                    <p>
+                        {{data.theme.cardName}} is powered by Embily <br />
+                        Embily FZ LLC
+                        <br> Units 2201 & 2202, Level 22, Boulevard Plaza, Tower 2,
+                        <br />Downtown Dubai, P.O. Box: 74053, Dubai, U.A.E.
+                        <br>office@embily.com
+                        <br>+971 (0) 4524 7879
+                    </p>
+                    <p>Powered by Embily &copy; {{today | date:'yyyy'}} Embily. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+        <!-- container end -->
+    </div>
+    <!-- wrapper end -->
+
+</footer>
+<!-- Start of embily Zendesk Widget script -->
+<script>
+/*<![CDATA[*/window.zEmbed || function (e, t) { var n, o, d, i, s, a = [], r = document.createElement("iframe"); window.zEmbed = function () { a.push(arguments) }, window.zE = window.zE || window.zEmbed, r.src = "javascript:false", r.title = "", r.role = "presentation", (r.frameElement || r).style.cssText = "display: none", d = document.getElementsByTagName("script"), d = d[d.length - 1], d.parentNode.insertBefore(r, d), i = r.contentWindow, s = i.document; try { o = s } catch (e) { n = document.domain, r.src = 'javascript:var d=document.open();d.domain="' + n + '";void(0);', o = s } o.open()._l = function () { var e = this.createElement("script"); n && (this.domain = n), e.id = "js-iframe-async", e.src = "https://assets.zendesk.com/embeddable_framework/main.js", this.t = +new Date, this.zendeskHost = "embily.zendesk.com", this.zEQueue = a, this.body.appendChild(e) }, o.write('<body onload="document._l();">'), o.close() }();
+                    /*]]>*/</script>
+<!-- End of embily Zendesk Widget script -->

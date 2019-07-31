@@ -1,0 +1,13 @@
+label {
+  
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    display: inline;
+    width: 30%;
+}
+
+.form-group {
+    margin-bottom: 0rem;
+}

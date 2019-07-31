@@ -1,0 +1,54 @@
+<h1>
+    Programs
+    <button type="button" (click)="getData()" class="btn btn-link"><span class="fa fa-refresh" aria-hidden="true"></span></button>
+</h1>
+
+<ngx-datatable [ngClass]="style"
+               [rows]="data.programs"
+               [loadingIndicator]="loadingIndicator"
+               [columnMode]="'force'"
+               [headerHeight]="40"
+               [summaryRow]="false"
+               [summaryPosition]="'bottom'"
+               [limit]="20"
+               [reorderable]="true"
+               [footerHeight]="50"
+               [rowHeight]="50"
+               [scrollbarV]="false"
+               [scrollbarH]="true"
+               [selected]="selected"
+               [selectionType]="'single'"
+               (select)='onSelect($event)'>
+
+    <ngx-datatable-column name="Programs Id" [width]="140" prop="programId">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Programs Id</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "programId")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Title" [width]="100" prop="title">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Title</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "title")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Domain" [width]="100" prop="domain">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Domain</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "domain")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Created (UTC)" [width]="100" prop="dateCreated">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value | date: 'dd MMM yyyy' }}
+        </ng-template>
+    </ngx-datatable-column>
+</ngx-datatable>
+
+<div *ngIf="!data.programs">
+    <app-spinner-rect></app-spinner-rect>
+</div>
+

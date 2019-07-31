@@ -1,0 +1,59 @@
+<div class="container" id="content">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h1>Create Login</h1>
+            <form #registerForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+                <div [hidden]="registerForm.submitted">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input id="firstName" name="firstName" class="form-control" type="text" required [(ngModel)]="user.firstName" #firstName="ngModel">
+                        <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="alert alert-danger">
+                            <div *ngIf="firstName.errors.required">First Name is required.</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input id="lastName" name="lastName" class="form-control" type="text" required [(ngModel)]="user.lastName" #lastName="ngModel">
+                        <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="alert alert-danger">
+                            <div *ngIf="lastName.errors.required">Last Name is required.</div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" class="form-control" required minlength="4" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" [(ngModel)]="user.email" #email="ngModel">
+                        <div *ngIf="email.invalid && (email.dirty || email.touched)" class="alert alert-danger">
+                            <div *ngIf="email.errors.required">Email is required.</div>
+                            <div *ngIf="email.errors.minlength">Email must be at least 4 characters long.</div>
+                            <div *ngIf="email.errors.pattern">Email format should be <small><b>joe@abc.com</b></small></div>
+                        </div>
+                    </div>
+                    <div ngModelGroup="passwords" id="password-formgroup">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input id="password" name="password" class="form-control" type="password" required minlength="8" pattern="^(?=.{8,})(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=?*()/<>.!:;_-]).*$" [(ngModel)]="user.password" #password="ngModel">
+                            <div *ngIf="password.pristine" class="alert alert-warning">Password should be 8 characters long or greater and include 1 special character, 1 number, 1 uppercase and 1 lowercase character</div>
+                            <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
+                                <div *ngIf="password.errors.required">Password is required.</div>
+                                <div *ngIf="password.errors.minlength">Password must be at least 8 characters long.</div>
+                                <div *ngIf="password.errors.pattern">Password should include <small><b>1 special character, 1 number, 1 uppercase and 1 lowercase character</b></small></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input id="confirmPassword" name="confirmPassword" class="form-control" type="password" required minlength="8" [(ngModel)]="user.confirmPassword" #confirmPassword="ngModel">
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || !recaptcha ">Submit</button>
+                </div>
+                <div class="submitted-message" *ngIf="registerForm.submitted">
+                    <p><strong>Thank you for registering with Embily!</strong></p>
+                    <p>Please, check your email for further details.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

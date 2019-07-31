@@ -1,0 +1,32 @@
+﻿{
+  "cardProgramId": "0",
+  "channelType": "1",
+  "dlvAddress": {
+    "addressLineOne": "222333 DELIVERY PLACE",
+    "city": "Winchester",
+    "zipCode": "GU14 7JF",
+    "country": "GB"
+  },
+  "localeTime": "2013-06-04T00:00:00.000+05:00",
+  "nameOnCard": "Johnny",
+  "refId": "1",
+  "userDetail": {
+    "lastName": "Smith",
+    "firstName": "John",
+    "middleInitial": "xx",
+    "dateOfBirth": "1975-02-28",
+    "addressLine1": "222333 PEACHTREE PLACE",
+    "city": "Winchester",
+    "zipCode": "GU14 7JF",
+    "country": "GB",
+    "mobileNumber": "2071234567",
+    "landlineNumber": "57647564234",
+    "email": "demouser@mailinator.com",
+    "currencyCode": "EUR",
+    "externalReferenceId": "WC34930",
+    "registeredFromIp": "10.10.10.10",
+    "acceptTermsAndConditions": true,
+    "acceptEsign": true
+  }
+}
+

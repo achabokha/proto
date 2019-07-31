@@ -1,0 +1,68 @@
+/* You can add global styles to this file, and also import other style files */
+@import "assets/styles/_variables-embily-light.scss";
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~font-awesome/css/font-awesome.css";
+/*@import '~@swimlane/ngx-datatable/release/index.css';*/
+@import "assets/styles/table_embily_light.scss";
+/*@import "assets/styles/ngxtable.css";*/
+/*@import '~@swimlane/ngx-datatable/release/themes/bootstrap.css';
+@import '~@swimlane/ngx-datatable/release/themes/material.css';*/
+@import '~@swimlane/ngx-datatable/release/assets/icons.css';
+
+/* It is on CDN and it is most likely that it is already cached on the user side... -- */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');
+
+$footer-height: 350px;
+
+.body-content {
+    font-family: 'Montserrat' !important;
+    font-size: 0.875rem !important;
+}
+
+.e-hand {
+    cursor: pointer;
+}
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: $footer-height;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    line-height: $footer-height;
+    height: $footer-height;
+    /*background-color: #f5f5f5;*/
+}
+
+/******************************/
+/*                            */
+/* Cookie Notification Styles */
+/*                            */
+/******************************/
+.cc-banner .cc-btn:last-child {
+    min-width: 110px !important;
+}
+
+.cc-compliance > .cc-btn {
+    margin-right: 115px;
+    border-radius: 999rem;
+    padding: 0.6em 0.8em !important;
+    font-size: 0.9em;
+    border: 2px solid #6184ff !important;
+}
+
+.cc-window.cc-banner {
+    padding: 0.6em 1.8em !important;
+}

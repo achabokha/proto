@@ -1,0 +1,22 @@
+﻿{
+  "accountBalanceDetails": [
+    {
+      "txnAccountId": 10208793,
+      "availableBalance": 5000,
+      "accountBalance": 5000,
+      "isoCurrencyCode": "EUR"
+    }
+  ],
+  "errorDetails": [
+    {
+      "errorCode": "0",
+      "errorDescription": "Success"
+    }
+  ],
+  "localeTime": 1505898848291,
+  "proxy": "246654403707456",
+  "refId": "111",
+  "status": "Success",
+  "transactionId": 325107,
+  "usrId": 1259099
+}

@@ -1,0 +1,126 @@
+<div class="container" id="content">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+            <app-progress-indicator step="4" [resubmit]="resubmit"></app-progress-indicator>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+            <p>Please, provide an address where you would like your card to be shipped</p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <form #form="ngForm">
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="form-group">
+                    <input id="sameAsAddress" name="sameAsAddress" class="pull-left" type="checkbox" [(ngModel)]="sameAsAddress" #name="ngModel" (change)="onChangeAddress($event)">
+                    &nbsp;<label for="sameAsAddress">Same as Address</label>
+                </div>
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input id="name" name="name" class="form-control" type="text" required [(ngModel)]="shippingAddress.name" #postalCode="ngModel" (change)="getShippingOptions($event.target.value)">
+                    <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+                        <div *ngIf="name.errors.required">Full Name is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input id="phone" name="phone" class="form-control" type="text" [(ngModel)]="shippingAddress.phone" #phone="ngModel">
+                    <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="alert alert-danger">
+                        <div *ngIf="phone.errors.required">Phone is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addressLine1">Address Line 1</label>
+                    <input id="addressLine1" name="addressLine1" class="form-control" type="text" required [(ngModel)]="shippingAddress.addressLine1" #addressLine1="ngModel">
+                    <div *ngIf="addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)" class="alert alert-danger">
+                        <div *ngIf="addressLine1.errors.required">Address Line 1 is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addressLine2">Address Line 2</label>
+                    <input id="addressLine2" name="addressLine2" class="form-control" type="text" [(ngModel)]="shippingAddress.addressLine2" #addressLine2="ngModel">
+                    <div *ngIf="addressLine2.invalid && (addressLine2.dirty || addressLine2.touched)" class="alert alert-danger">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input id="city" name="city" class="form-control" type="text" required [(ngModel)]="shippingAddress.city" #city="ngModel">
+                    <div *ngIf="city.invalid && (city.dirty || city.touched)" class="alert alert-danger">
+                        <div *ngIf="city.errors.required">City is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="province">Province</label>
+                    <input id="province" name="province" class="form-control" type="text" [(ngModel)]="shippingAddress.province" #province="ngModel">
+                    <div *ngIf="province.invalid && (province.dirty || province.touched)" class="alert alert-danger">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="postalCode">Postal Code</label>
+                    <input id="postalCode" name="postalCode" class="form-control" type="text" required [(ngModel)]="shippingAddress.postalCode" #postalCode="ngModel" (change)="getShippingOptions($event.target.value)">
+                    <div *ngIf="postalCode.invalid && (postalCode.dirty || postalCode.touched)" class="alert alert-danger">
+                        <div *ngIf="postalCode.errors.required">Postal Code is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select class="form-control" name="country" [(ngModel)]="shippingAddress.country" #country="ngModel" required (change)="getShippingOptions($event.target.value)">
+                        <option *ngFor="let country of countries" [value]="country.iso3">{{country.name}}</option>
+                    </select>
+                    <div *ngIf="country.invalid && (country.dirty || country.touched)" class="alert alert-danger">
+                        <div *ngIf="country.errors.required">Country is required.</div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <br />
+                <img [src]="shipping" class="img-responsive" style="width: 80%" />
+                <h4>Shipping Options</h4>
+
+                <div *ngIf="!shippingDetail.shippingOptions && !spinner">
+                    please, enter shipping address to see shipping options
+                </div>
+
+                <app-spinner-rect *ngIf="spinner"></app-spinner-rect>
+
+                <div *ngIf="shippingDetail">
+                    {{shippingDetail.description}}<br />
+                    <table>
+                        <tr *ngFor="let option of shippingDetail.shippingOptions; let i = index">
+                            <td style="vertical-align: top">
+                                <input type="radio" name="shippingOption" #shippingOption="ngModel" required
+                                       [checked]="i === selectedShippingOption"
+                                       [value]="i"
+                                       [(ngModel)]="selectedShippingOption"
+                                       [disabled]="shippingOptionDisabled">&nbsp;&nbsp;
+                            </td>
+                            <td>
+                                <!--{{option.description}}<br />-->
+                                <b>{{option.currencyCode}} {{option.price}}</b> - {{option.title}}
+                            </td>
+                        </tr>
+                    </table>
+                    <div *ngIf="shippingOption && shippingOption.invalid" class="alert alert-danger">
+                        Select shipping option.
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <hr />
+        <button type="button" (click)="back()" class="btn btn-outline-primary"><< Back</button>&nbsp;
+        <button type="button" (click)="continue()" [disabled]="form.invalid || selectedShippingOption == -1" class="btn btn-primary">Continue >></button>
+    </div>
+</div>
+

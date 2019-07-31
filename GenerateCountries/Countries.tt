@@ -1,0 +1,21 @@
+﻿<#@ template hostspecific="true" language="C#" #>
+<#@ assembly name="$(SolutionDir)\GenerateCountries\bin\Debug\CoreTechs.Common.dll" #>  
+<#@ import namespace="System" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="CoreTechs.Common.Text" #>
+<#@ output extension=".ts" #>
+<# 
+string fileName = this.Host.ResolvePath("countries.csv");
+var csv = File.ReadAllText(fileName); 
+TextReader reader = new StringReader(csv);
+var list = reader.ReadCsvWithHeader();
+#>
+export class Countries {
+	public static list: any[] = [
+	<# foreach (var c in list) { #>
+		{ name: "<#= c["name"] #>", iso3: "<#= c["alpha-3"] #>", iso2: "<#= c["alpha-2"] #>" },
+	<# } #>
+	]
+}

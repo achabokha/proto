@@ -1,0 +1,31 @@
+﻿{
+  "localeTime": 1505897529126,
+  "errorDetails": [
+    {
+      "errorCode": "0",
+      "errorDescription": "Success"
+    }
+  ],
+  "usrId": 1259094,
+  "cardDetail": {
+    "usrId": 1259094,
+    "nameOnCard": "Sherlock Homes",
+    "proxy": "246654413134030",
+    "expiryDate": "09-20",
+    "cardStatus": "ACTIVE",
+    "cardType": "PLASTIC",
+    "currency": "EUR",
+    "cardProgramName": "MyChoiceUK Plastic Card EUR",
+    "creationDate": "2017-09-20",
+    "activatedDate": "2017-09-20",
+    "txnId": 10208786,
+    "deliveryType": "STANDARD_DELIVERY",
+    "replacedCard": false,
+    "embossedCardholderName": "Sherlock Homes",
+    "pan": "XXXXXXXXXXXX7961",
+    "cvv": "XXX"
+  },
+  "fisProxy": "2653189847084636",
+  "kyc": "LEVEL_1",
+  "designCode": "XBIT"
+}

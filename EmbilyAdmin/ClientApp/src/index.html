@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Embily | Admin</title>
+    <base href="/">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/starting.css" />
+
+</head>
+<body>
+    <app-root>
+        <div class="loader"></div>
+    </app-root>
+
+    <!-- Cookies consent starts -->
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js" async></script>
+    <script>
+        window.addEventListener("load", function () {
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#eaf7f7",
+                        "text": "#5c7291"
+                    },
+                    "button": {
+                        "background": "#ffffff",
+                        "text": "#6184ff"
+                    }
+                },
+                "content": {
+                    "href": "https://admin.embily.com/legal/cookie-policy",
+                    "dismiss": '<span style="font-size:1.1em;" class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span> Got it'
+                }
+            });
+        });
+    </script>
+    <!-- Cookies consent ends -->
+
+</body>
+</html>
+

@@ -1,0 +1,11 @@
+<app-spinner-rect *ngIf="!data.posts"></app-spinner-rect>
+<div *ngFor="let post of data.posts" class="col-xs-12">
+    <div *ngFor="let fimg of data.featured">
+        <div *ngIf="fimg.id == post.id"><img src="https://embily.com{{fimg.source_url}}" class="picture" /></div>
+    </div>
+    <h4><a [href]="post.link" [innerHtml]="post.title.rendered"></a></h4>
+    <p>{{post.date | date}}</p>
+    <div [innerHtml]="post.excerpt.rendered"></div>
+    <hr />
+</div>
+

@@ -1,0 +1,107 @@
+﻿Request: BitfinexApi.OrderStatusRequest
+Request: {
+  "order_id": 12248636228,
+  "request": null,
+  "nonce": "1526642393830000"
+}
+Response Body Raw:
+{"id":12248636228,"cid":22646792419,"cid_date":"2018-05-17","gid":null,"symbol":"btcusd","exchange":"bitfinex","price":"8353.3","avg_execution_price":"8353.3","side":"sell","type":"exchange market","timestamp":"1526537847.0","is_live":false,"is_cancelled":false,"is_hidden":false,"oco_order":null,"was_forced":false,"original_amount":"0.02059852","remaining_amount":"0.0","executed_amount":"0.02059852","src":"api"}
+Response: BitfinexApi.OrderStatusResponse
+Respose: {
+  "id": 12248636228,
+  "cid": 22646792419,
+  "cid_date": "2018-05-17",
+  "gid": null,
+  "symbol": "btcusd",
+  "exchange": "bitfinex",
+  "price": 8353.3,
+  "avg_execution_price": 8353.3,
+  "side": "sell",
+  "type": "exchange market",
+  "timestamp": "1526537847.0",
+  "is_live": false,
+  "is_cancelled": false,
+  "is_hidden": false,
+  "oco_order": null,
+  "was_forced": false,
+  "original_amount": 0.02059852,
+  "remaining_amount": 0.0,
+  "executed_amount": 0.02059852,
+  "src": "api"
+}
+Request: BitfinexApi.PastTradesRequest
+Request: {
+  "symbol": "BTCUSD",
+  "timestamp": "1526383195",
+  "until": "1526728795",
+  "limit_trades": 100,
+  "reverse": 0,
+  "request": null,
+  "nonce": "1526642395267000"
+}
+Response Body Raw:
+[{"price":"8005.9","amount":"0.00614239","timestamp":"1526621406.0","type":"Sell","fee_currency":"USD","fee_amount":"-0.09835072","tid":246764372,"order_id":12290764619},{"price":"8353.3","amount":"0.01786038","timestamp":"1526537847.0","type":"Sell","fee_currency":"USD","fee_amount":"-0.29838622","tid":246323709,"order_id":12248636228},{"price":"8353.3","amount":"0.00273814","timestamp":"1526537847.0","type":"Sell","fee_currency":"USD","fee_amount":"-0.04574501","tid":246323708,"order_id":12248636228},{"price":"8343.7","amount":"0.00673914","timestamp":"1526535817.0","type":"Sell","fee_currency":"USD","fee_amount":"-0.11245872","tid":246317675,"order_id":12247688023},{"price":"8195.8","amount":"0.00174","timestamp":"1526445914.0","type":"Sell","fee_currency":"USD","fee_amount":"-0.02852138","tid":245842826,"order_id":12200501632},{"price":"8195.9","amount":"0.00427","timestamp":"1526445914.0","type":"Sell","fee_currency":"USD","fee_amount":"-0.06999299","tid":245842825,"order_id":12200501632}]
+Response: BitfinexApi.PastTradesResponse[]
+Respose: [
+  {
+    "price": "8005.9",
+    "amount": "0.00614239",
+    "timestamp": "1526621406.0",
+    "type": "Sell",
+    "fee_currency": "USD",
+    "fee_amount": "-0.09835072",
+    "tid": 246764372,
+    "order_id": 12290764619
+  },
+  {
+    "price": "8353.3",
+    "amount": "0.01786038",
+    "timestamp": "1526537847.0",
+    "type": "Sell",
+    "fee_currency": "USD",
+    "fee_amount": "-0.29838622",
+    "tid": 246323709,
+    "order_id": 12248636228
+  },
+  {
+    "price": "8353.3",
+    "amount": "0.00273814",
+    "timestamp": "1526537847.0",
+    "type": "Sell",
+    "fee_currency": "USD",
+    "fee_amount": "-0.04574501",
+    "tid": 246323708,
+    "order_id": 12248636228
+  },
+  {
+    "price": "8343.7",
+    "amount": "0.00673914",
+    "timestamp": "1526535817.0",
+    "type": "Sell",
+    "fee_currency": "USD",
+    "fee_amount": "-0.11245872",
+    "tid": 246317675,
+    "order_id": 12247688023
+  },
+  {
+    "price": "8195.8",
+    "amount": "0.00174",
+    "timestamp": "1526445914.0",
+    "type": "Sell",
+    "fee_currency": "USD",
+    "fee_amount": "-0.02852138",
+    "tid": 245842826,
+    "order_id": 12200501632
+  },
+  {
+    "price": "8195.9",
+    "amount": "0.00427",
+    "timestamp": "1526445914.0",
+    "type": "Sell",
+    "fee_currency": "USD",
+    "fee_amount": "-0.06999299",
+    "tid": 245842825,
+    "order_id": 12200501632
+  }
+]
+Press any key to continue . . .

@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-md-4">
+        <br />
+        <table class="table">
+            <tr><td class="text-left">Card Purchase</td><td>{{data.selectApp.currencyCode}} {{data.selectApp.cardCost}}</td></tr>
+            <tr><td class="text-left">Shipping</td><td>{{data.selectApp.currencyCode}} {{data.selectApp.shippingCost}}</td></tr>
+            <tr><td class="text-right"><b>Total</b></td><td><b>{{data.selectApp.currencyCode}} {{data.selectApp.cardCost + data.selectApp.shippingCost}}</b></td></tr>
+        </table>
+    </div>
+</div>
+
+
+<h4>
+    Card Orders
+    <button type="button" (click)="getData()" class="btn btn-link">
+        <span class="fa fa-refresh" aria-hidden="true"></span>
+    </button>
+</h4>
+
+<ngx-datatable class="table_embily_light"
+               [rows]="data.cardOrders"
+               [loadingIndicator]="loadingIndicator"
+               [columnMode]="'force'"
+               [headerHeight]="40"
+               [summaryRow]="false"
+               [summaryPosition]="'bottom'"
+               [limit]="20"
+               [reorderable]="true"
+               [footerHeight]="0"
+               [rowHeight]="50"
+               [scrollbarV]="false"
+               [scrollbarH]="true">
+
+    <ngx-datatable-column name="Created (UTC)" [width]="100" prop="dateCreated">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value | date: 'dd MMM yyyy' }}
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Order Id" [width]="100" prop="cardOrderId"></ngx-datatable-column>
+    <ngx-datatable-column name="From" [width]="100" prop="purchaseCurrencyCode"></ngx-datatable-column>
+    <ngx-datatable-column name="Amount" [width]="100" prop="purchaseAmount"></ngx-datatable-column>
+    <ngx-datatable-column name="To" [width]="100" prop="cryptoCurrencyCode"></ngx-datatable-column>
+    <ngx-datatable-column name="Amount" [width]="100" prop="cryptoAmount"></ngx-datatable-column>
+    <ngx-datatable-column name="Crypto Address" [width]="100" prop="cryptoAddress">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a *ngIf="value != ''" target='_blank' href='https://live.blockcypher.com/{{row.cryptoCurrencyCode.toLowerCase()}}/tx/{{value}}/'
+               title="{{value}}">
+                {{ value.substr(0, 6) }}...{{ value.substr(-6) }}
+            </a>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Status" [width]="100" prop="status"></ngx-datatable-column>
+
+</ngx-datatable>

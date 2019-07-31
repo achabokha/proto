@@ -1,0 +1,90 @@
+<h1>
+    Accounts
+    <button type="button" (click)="getAccounts()" class="btn btn-link"><span class="fa fa-refresh" aria-hidden="true"></span></button>
+</h1>
+
+<ngx-datatable class="table_embily_light"
+               [rows]="data.accounts"
+               [loadingIndicator]="loadingIndicator"
+               [columnMode]="'force'"
+               [headerHeight]="40"
+               [summaryRow]="false"
+               [summaryPosition]="'bottom'"
+               [limit]="20"
+               [reorderable]="true"
+               [footerHeight]="50"
+               [rowHeight]="50"
+               [scrollbarV]="false"
+               [scrollbarH]="true"
+               [selected]="selected"
+               [selectionType]="'single'"
+               (select)='onSelect($event)'>
+
+    <ngx-datatable-column name="Acct Num" [width]="140" prop="accountNumber">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Acct Num</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "accountNumber")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="First Name" [width]="100" prop="firstName">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">First Name</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "firstName")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Last Name" [width]="100" prop="lastName">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Last Name</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "lastName")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Account Type" [width]="130" prop="accountTypeString">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Account Type</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "accountTypeString")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Provider Name" [width]="100" prop="providerNameString">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Provider Name</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "providerNameString")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Card Number" [width]="110" prop="cardNumber">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Card Number</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "cardNumber")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Provider Acct" [width]="110" prop="providerAccountNumber">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Provider Acct</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "providerAccountNumber")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Provider Id" [width]="140" prop="providerUserId">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Provider User Id</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "providerUserId")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Currency" [width]="140" prop="currencyCodeString">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Currency</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "currencyCodeString")' />
+        </ng-template>
+    </ngx-datatable-column>
+</ngx-datatable>
+
+<div *ngIf="!data.accounts">
+    <app-spinner-rect></app-spinner-rect>
+</div>

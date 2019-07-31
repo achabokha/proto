@@ -1,0 +1,219 @@
+<app-tickertape></app-tickertape>
+<br />
+<div *ngIf="dashboard">
+    <h1>{{dashboard.greeting}}</h1>
+    <h4>{{dashboard.tag}}</h4>
+    <br />
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card dash-card">
+                <div class="card-header">
+                    Daily Volume
+                </div>
+                <div class="card-body">
+                    <span>{{dashboard.dollarVolume24h | currency:'USD':'symbol-narrow':'4.2-2' }}</span> |
+                    <span>{{dashboard.euroVolume24h | currency:'EUR':'symbol-narrow':'4.2-2' }}</span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="col-md-3">
+            <div class="card dash-card">
+                <div class="card-header">
+                    30 Day Volume
+                </div>
+                <div class="card-body">
+                    <span>{{dashboard.dollarVolume30d | currency:'USD':'symbol-narrow':'4.2-2'}}</span> |
+                    <samp>{{dashboard.euroVolume30d | currency:'EUR':'symbol-narrow':'4.2-2'}}</samp>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dash-card">
+                <div class="card-header">
+                    All Time Volume
+                </div>
+                <div class="card-body">
+                    <samp>{{dashboard.dollarVolumeAll | currency:'USD':'symbol-narrow':'4.2-2'}}</samp> |
+                    <samp>{{dashboard.euroVolumeAll | currency:'EUR':'symbol-narrow':'4.2-2'}}</samp>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card dash-card">
+                <div class="card-header">
+                    <a class="link-header" [routerLink]="['/applications']" [queryParams]="{ new: 'true' }">New Applications</a>
+                    <!--<div *ngIf="dashboard.numNewApplications > 0" class="count">{{dashboard.numNewApplications}}</div>-->
+                </div>
+                <div class="card-body">{{dashboard.numNewApplications}}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dash-card">
+                <div class="card-header">
+                    <a class="link-header" [routerLink]="['/users']">Users</a>
+                </div>
+                <div class="card-body">{{dashboard.numUsers}}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <a class="link-header" [routerLink]="['/accounts']">Accounts</a>
+                </div>
+                <div class="card-body">{{dashboard.numAccounts}}</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card dash-card">
+                <div class="card-header">
+                    <a class="link-header" [routerLink]="['/transactions']">Transactions</a>
+                </div>
+                <div class="card-body">{{dashboard.numTransactions}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card dash-card">
+                <div class="card-header">
+                    Transactions
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup name="radioBasic" [(ngModel)]="modelTransactions">
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="1" (click)="applyFilterTransactions(24)"> Day
+                                </label>
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="2" (click)="applyFilterTransactions(24*7)"> Week
+                                </label>
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="3" (click)="applyFilterTransactions(24*30)"> Month
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col text-right">
+                            <div ngbDropdown placement="top-right" class="d-inline-block dropdown">
+                                <button class="btn btn-outline-primary" ngbDropdownToggle>{{currency}}</button>
+                                <div ngbDropdownMenu>
+                                    <!--<button class="dropdown-item" (click)="applyFilterTransactions(null, 'All')">All</button>-->
+                                    <button class="dropdown-item" (click)="applyFilterTransactions(null, 'USD')">USD</button>
+                                    <button class="dropdown-item" (click)="applyFilterTransactions(null, 'EUR')">EUR</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<canvas *ngIf="transactions" id="bar-line1" height="400" baseChart class="chart" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"> </canvas>-->
+                    <canvas baseChart
+                            class="chart"
+                            [datasets]="chartTransactionsData"
+                            [labels]="transactionsChartLabels"
+                            [chartType]="lineChartType"
+                            [colors]="lineChartColors"
+                            [legend]="lineChartLegend"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"
+                            [options]="options">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card dash-card">
+                <div class="card-header">
+                    Applications
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup name="radioBasic" [(ngModel)]="modelApplications">
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="1" (click)="applyFilterApplications(24)"> Day
+                                </label>
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="2" (click)="applyFilterApplications(24*7)"> Week
+                                </label>
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="3" (click)="applyFilterApplications(24*30)"> Month
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas baseChart
+                            class="chart"
+                            [data]="chartApplicationsData"
+                            [labels]="applicationsChartLabels"
+                            [chartType]="lineChartType"
+                            [colors]="lineChartColors"
+                            [legend]="false"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"
+                            [options]="optionsApp">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card dash-card">
+                <div class="card-header">
+                    Distribution by Amount
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="btn-group btn-group-toggle mb-3" ngbRadioGroup name="radioBasic" [(ngModel)]="modelTransactionsPie">
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="1" (click)="applyFilterDonutAmount('24')"> Day
+                                </label>
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="2" (click)="applyFilterDonutAmount(24*7)"> Week
+                                </label>
+                                <label ngbButtonLabel class="btn-primary">
+                                    <input ngbButton type="radio" [value]="3" (click)="applyFilterDonutAmount(24*30)"> Month
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <canvas baseChart
+                            height="150px"
+                            [data]="pieChartData"
+                            [labels]="pieChartLabels"
+                            [chartType]="pieChartType"
+                            [options]="pieoptions"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>
+                </div>
+
+                <!--<div class="card-header">
+                    Distribution by Amount
+                </div>
+                <div class="card-body">
+                    <span class="link" (click)="applyFilterDonutAmount($event, '24h')">24H</span> |
+                    <span class="link" (click)="applyFilterDonutAmount($event, '7d')">7D</span> |
+                    <span class="link selected" (click)="applyFilterDonutAmount($event, '30d')">30D</span>
+
+                </div>-->
+            </div>
+        </div>
+        <!--<div class="col-md-6">
+            <div class="card dash-card">
+                <div class="card-header">
+                    Distribution By Count
+                </div>
+                <div class="card-body">
+                    <span class="link" (click)="applyFilterDonutCount($event, '24h')">24H</span> |
+                    <span class="link" (click)="applyFilterDonutCount($event, '7d')">7D</span> |
+                    <span class="link selected" (click)="applyFilterDonutCount($event,'30d')">30D</span>
+
+                </div>
+            </div>
+        </div>-->
+    </div>
+</div>

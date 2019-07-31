@@ -1,0 +1,40 @@
+<div>
+    <!--<div [@flyInOut]="flyInOut" class="stateWrapper">-->
+
+    <div>
+        <img [src]="coinImage" class="coin-img" />
+    </div>
+
+    <div class="timer">
+        {{(minutesDisplay) && (minutesDisplay <= 59) ? minutesDisplay : '00'}}:{{(secondsDisplay) && (secondsDisplay <= 59) ? secondsDisplay : '00'}} <br />
+    </div>
+
+    <div>
+        <img [src]="qrCodeSrc" class="qr-img" />
+    </div>
+
+    <div class="address-wrapper">
+        <div class="header">
+            <b>{{currencyCode}} Address</b>
+        </div>
+        <div class="address">
+            <input type="text" [(ngModel)]="address" #copyTarget class="address-value" readonly>
+        </div>
+        <button class="btn btn-outline-primary btn-sm" [class.active]="isCopied1" (click)="copyToClipboard()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Copy Address&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        <button class="btn btn-outline-secondary btn-sm" (click)="cancel()">Cancel</button>
+
+        <div *ngIf="isDebug">
+            <hr /> Debug: 
+            <button class="btn btn-default btn-sm" (click)="debugTransaction()">Transaction</button>
+            <button class="btn btn-default btn-sm" (click)="debugTimeout()">Timeout</button>
+            <button class="btn btn-default btn-sm" (click)="debugError()">Error</button>
+            <hr />
+        </div>
+    </div>
+
+</div>
+            
+
+
+
+

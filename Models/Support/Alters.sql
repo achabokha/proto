@@ -1,0 +1,22 @@
+﻿ALTER SEQUENCE UserNumbers restart with 1000001030;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

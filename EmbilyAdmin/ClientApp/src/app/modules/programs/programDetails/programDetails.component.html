@@ -1,0 +1,34 @@
+<h2>Program Details</h2>
+<div *ngIf="programDetails">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Program Id: </label>
+                <input type="text" [(ngModel)]="programDetails.programId" placeholder="Program Id" class="form-control" id="programId" />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Title: </label>
+                <input type="text" [(ngModel)]="programDetails.title" placeholder="Title" class="form-control" id="title" />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Domain: </label>
+                <input type="text" [(ngModel)]="programDetails.domain" placeholder="Domain" class="form-control" id="domain" />
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Date Created: </label>
+                <input type="text" [(ngModel)]="programDetails.dateCreated" placeholder="dateCreated" class="form-control" id="dateCreated" readonly />
+                <!--<label class="col-md-5 col-form-label text-left">{{programDetails.dateCreated}}</label>-->
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Settings: </label>
+                <input type="text" [(ngModel)]="programDetails.settings" placeholder="{}" class="form-control" id="settings" />
+            </div>           
+            <div class="row">
+                <div class="col-md-offset-2 col-md-6">
+                    <br />
+                    <button type="submit" class="btn btn-primary mr-2" (click)="update()">Update</button>
+                </div>
+            </div>
+        </div>      
+    </div>   
+</div>

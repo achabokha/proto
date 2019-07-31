@@ -1,0 +1,44 @@
+﻿:host {
+}
+
+.coin-img {
+    width: 80px;
+    margin-bottom: 20px;
+}
+
+.timer {
+    font-size: x-large;
+    color: #57acec;
+    font-weight: bold;
+}
+
+.qr-img {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 150px;
+}
+
+.address-wrapper {
+}
+
+    .address-wrapper .header {
+        margin: 10px 0 10px 0;
+    }
+
+    .address-wrapper .address {
+        margin: 10px 0 10px 0;
+        font-weight: normal;
+    }
+
+        .address-wrapper .address .address-value {
+            text-align: center;
+            background: none;
+            border: none;
+            width: 100%;
+        }
+
+.done-wrapper {
+    margin-top: 50px;
+}
+
+

@@ -1,0 +1,52 @@
+﻿{
+  "refId": "1234",
+  "localeTime": 1505902638965,
+  "errorDetails": [
+    {
+      "errorCode": "0",
+      "errorDescription": "Success"
+    }
+  ],
+  "proxy": "246654412772715",
+  "txntype": [
+    "Load"
+  ],
+  "startDate": "2017-09-01T05:30:00.000+0530",
+  "endDate": "2017-09-30T05:30:00.000+0530",
+  "txnCount": 10,
+  "offset": 0,
+  "currency": "EUR",
+  "transactionDetails": [
+    {
+      "transactionId": "325117",
+      "tranDate": "2017-09-20T14:58:29.000+0530",
+      "postDate": "2017-09-20T14:58:29.000+0530",
+      "description": "Value Load",
+      "transactionAmount": 5000,
+      "transactionCurrency": "EUR",
+      "billAmount": 5000,
+      "billCurrency": "EUR",
+      "totalFeeAmount": 0,
+      "authAmt": 5000,
+      "currency": "EUR",
+      "settleAmt": 5000,
+      "settleCurrency": "EUR",
+      "inserted": "2017-09-20T14:58:29.000+0530",
+      "merchantName": "testuser666",
+      "txnType": "Load",
+      "crdrIndicator": "CREDIT",
+      "comment": "Card load",
+      "reasoncode": "0",
+      "instrumentType": "CashCard",
+      "status": "Success",
+      "source": "ProgramPartner",
+      "txnReference": "325117",
+      "parentTxnReference": "325115",
+      "sourceTxnId": "1505899705993",
+      "parentTxnId": "325115"
+    }
+  ],
+  "cardStatus": "3",
+  "cardStatusDesc": "ACTIVE",
+  "totalCount": 1
+}

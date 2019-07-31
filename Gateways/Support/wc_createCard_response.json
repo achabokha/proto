@@ -1,0 +1,29 @@
+﻿{
+  "refId": "1",
+  "localeTime": 1505880201977,
+  "errorDetails": [
+    {
+      "errorCode": "0",
+      "errorDescription": "Success"
+    }
+  ],
+  "usrId": 1259078,
+  "cardDetail": {
+    "usrId": 1259078,
+    "nameOnCard": "Johnny2",
+    "proxy": "246654409478532",
+    "expiryDate": "09-20",
+    "cardStatus": "READY_TO_ACTIVE",
+    "cardType": "PLASTIC",
+    "currency": "EUR",
+    "cardProgramName": "MyChoiceUK Plastic Card EUR",
+    "creationDate": "2017-09-20",
+    "txnId": 10208768,
+    "deliveryType": "STANDARD_DELIVERY",
+    "replacedCard": false,
+    "embossedCardholderName": "Johnny2",
+    "pan": "XXXXXXXXXXXX0338"
+  },
+  "eligibleForQuestions": false,
+  "userId": 1259078
+}

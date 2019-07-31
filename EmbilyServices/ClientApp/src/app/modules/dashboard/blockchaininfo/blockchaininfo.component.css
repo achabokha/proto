@@ -1,0 +1,12 @@
+:host { }
+
+.runner {
+    font-size: 0.6rem;
+}
+
+@media (min-width: 768px) {
+    .runner {
+        font-size: 0.875rem;
+    }
+}
+

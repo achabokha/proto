@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
+    <div class="container">
+        <a class="navbar-brand" routerLink="{{ isUserLoggedIn? '/dashboard' : '/'}}">
+            <img src="assets/images/themes/{{data.theme.name}}/logo.png" class="d-inline-block align-top logo" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleMenu()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" [ngbCollapse]="isCollapsed">
+            <ul class="navbar-nav mr-auto" (click)="isCollapsed=true">
+                <li *ngIf="isUserLoggedIn" class="nav-item " [routerLinkActive]="['active']">
+                    <a class="nav-link" [routerLink]="['dashboard']"><span class="fa fa-home"></span>  <span class="sr-only">(current)</span></a>
+                </li>
+                <li *ngIf="isUserLoggedIn" class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" [routerLink]="['transactions']"> History</a>
+                </li>
+                <li *ngIf="isUserLoggedIn" class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" [routerLink]="['application']"> Products</a>
+                </li>
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" [routerLink]="['/help/faqs']"> FAQs</a>
+                </li>
+                <!--<li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" [routerLink]="['/help/fees']"> Fees &amp; Limits</a>
+                </li>-->
+            </ul>
+            <form *ngIf="!isUserLoggedIn && nav.visible" class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="email" aria-label="email" id="email" name="email" [(ngModel)]="user.username" #email="ngModel">
+                <input class="form-control mr-sm-2" type="password" placeholder="password" aria-label="password" id="password" name="password" [(ngModel)]="user.password" #password="ngModel">
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit" (click)="login()">
+                    <app-spinner-round *ngIf="loginning"></app-spinner-round>Login
+                </button>
+            </form>
+            <!--<ul *ngIf="!isUserLoggedIn" class="navbar-nav " (click)="isCollapsed=true">
+                <li class="nav-item" [routerLinkActive]="['active']">
+                    <a class="nav-link" [routerLink]="['profile', 'signup']">Sing Up</a>
+                </li>
+            </ul>-->
+            <ul *ngIf="isUserLoggedIn" class="navbar-nav">
+                <li>
+                    <div ngbDropdown class="d-inline-block" placement="bottom-right">
+                        <a class="nav-link e-hand" id="dropdownProfile" ngbDropdownToggle> Profile</a>
+                        <div ngbDropdownMenu aria-labelledby="dropdownProfile" (click)="isCollapsed=true">
+                            <a class="dropdown-item" [routerLink]="['profile', 'general']">General</a>
+                            <a class="dropdown-item" [routerLink]="['profile', 'change-password']">Change Password</a>
+                            <a class="dropdown-item" [routerLink]="['profile', 'setcardpin']">Set PIN</a>
+                            <a class="dropdown-item" [routerLink]="['profile', 'lostcard']">Report Lost Card</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['']" (click)="logout()"> Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

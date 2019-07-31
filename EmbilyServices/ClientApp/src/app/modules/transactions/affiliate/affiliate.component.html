@@ -1,0 +1,33 @@
+
+<ngx-datatable class="table_embily_light"
+               [rows]="data.affiliateTransactions"
+               [loadingIndicator]="loadingIndicator"
+               [columnMode]="'force'"
+               [headerHeight]="40"
+               [summaryRow]="false"
+               [summaryPosition]="'bottom'"
+               [limit]="20"              
+               [reorderable]="true"            
+               [footerHeight]="50"
+               [rowHeight]="50"
+               [scrollbarV]="false"
+               [scrollbarH]="true">
+
+    <ngx-datatable-column name="Date (UTC)" [width]="100" prop="dateCreated">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value | date: 'dd MMM yyyy' }}
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Reference" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column name="Code" [width]="80" prop="txnCode"></ngx-datatable-column>
+    <ngx-datatable-column name="Currency" [width]="100" prop="destinationCurrencyCode"></ngx-datatable-column>
+    <ngx-datatable-column name="Amount" [width]="100" prop="destinationAmount">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span *ngIf="value != 0">{{ value | number:'1.2-2' }}</span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Status" [width]="100"></ngx-datatable-column>
+
+</ngx-datatable>
+
+<app-spinner-rect *ngIf="!data.affiliateTransactions"></app-spinner-rect>

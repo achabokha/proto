@@ -1,0 +1,53 @@
+:host {
+}
+
+#wrapper-footer {
+    background-color: #3A3C4D;
+    color: #A2A9C5;
+    font-family: 'Montserrat';
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    margin-top: 35px;
+}
+
+#wrapper-footer .site-footer a, #wrapper-footer .site-footer a:hover {
+    color: #A2A9C5;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-top {
+    padding-top: 1.5em;
+    padding-bottom: 2.0em;
+    border-bottom: 1px solid #A2A9C5;
+}
+
+.footer-menu-top li, .footer-menu-bottom li {
+    list-style: none;
+    display: inline-block;
+    padding: 0 10px;
+}
+
+.footer-menu-top li a, .footer-menu-top li a:hover, .footer-menu-bottom li a, .footer-menu-bottom li a:hover {
+    color: #A2A9C5;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-menu-bottom {
+    text-align: center;
+}
+
+.footer-social a, .footer-social a:hover {
+    overflow: hidden;
+    display: inline-block;
+    margin-left: 6px;
+    color: #A2A9C5;
+    text-decoration: none;
+}
+
+.footer-copyright {
+    padding-top: 12px;
+    font-size: 0.9em;
+    font-weight: 600;
+}

@@ -1,0 +1,88 @@
+<div *ngIf="complete" class="container">
+    <div class="row">
+        <div class="col-md-3 hidden-xs hidden-sm">&nbsp;</div>
+        <div class="col-md-6 text-center">
+            <h1>Your Request Complete</h1>
+            <br />
+            <br />
+            <p>
+                We will notify you shortly with the status of your request.
+            </p>
+            <p>
+                Thank you for submitting your request!
+            </p>
+            <br />
+            <p>
+                <a [routerLink]="['/dashboard']" class="btn btn-primary"><span class="glyphicon glyphicon-home"></span> Dashboard</a>
+            </p>
+        </div>
+        <div class="col-md-3 hidden-xs hidden-sm">&nbsp;</div>
+    </div>
+</div>
+<div *ngIf="!complete" class="container">
+    <div class="row">
+        <div class="col-md-2 hidden-xs hidden-sm">&nbsp;</div>
+        <div class="col-md-8">
+            <app-progress-indicator step="5" [resubmit]="resubmit"></app-progress-indicator>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+            <p>Finally, submitting your request</p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <br />
+            <p class="text-center">
+                Please, make sure you have corrected appropriate fields in your application.
+            </p>
+            <div *ngIf="rejectedInfo" class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h4>
+                        Rejection reason:
+                    </h4>
+                    <div>{{rejectedInfo.Reason}}</div>
+                    <br />
+                    <div [innerHTML]="rejectedInfo.Description"></div>
+                    <div><i>{{rejectedInfo.MoreInfo}}</i></div>
+                </div>
+            </div>
+            <br />
+            <p class="text-center">Most common reasons for rejection:</p>
+            <br />
+            <div class="row text-left">
+                <div class="col-md-6">
+                    <ul>
+                        <li>Proof of ID is not Government issued and/or internationally recognized.</li>
+                        <li>Proof of ID is invalid (expired)</li>
+                        <li>Proof of ID does not include your signature, where applicable</li>
+                        <li>Proof of address is older than 3 months</li>
+                        <li>P.O. Box are not accepted</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <ul>
+                        <li>Your name is not in English.</li>
+                        <li>Your address is not in English</li>
+                        <li>The document is not fully shown, or partially shown</li>
+                        <li>The borders of the document is not seen</li>
+                        <li>The picture is not in color</li>
+                        <li>The picture is tampered or modified</li>
+                    </ul>
+                </div>
+            </div>
+            <br />
+            <br />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <hr />
+            <button type="button" (click)="back()" class="btn btn-outline-primary"><< Back</button>&nbsp;
+            <button type="button" (click)="submit()" class="btn btn-primary"><app-spinner-round *ngIf="spinning"></app-spinner-round> Submit</button>
+        </div>
+    </div>
+</div>

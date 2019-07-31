@@ -1,0 +1,106 @@
+<br />
+
+<button type="submit" class="btn btn-outline-primary" (click)="open(modalContent)">Open document</button>
+
+<br />
+<br />
+
+<div class="form-group">
+    <label for="firstName" class="col-md-2 col-form-label text-right">First Name: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.firstName" placeholder="First Name" class="form-control" id="firstName" readonly />
+
+</div>
+
+
+<div class="form-group">
+    <label for="lastName" class="col-md-2 col-form-label text-right">Last Name: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.lastName" placeholder="Last Name" class="form-control" id="lastName" readonly />
+
+</div>
+
+<div class="row">
+    <hr />
+</div>
+
+<div class="form-group">
+    <label for="AddressLine1" class="col-md-2 col-form-label text-right">Address Line 1: </label>
+
+    <input type="text" [(ngModel)]="data.address.addressLine1" placeholder="Address Line 1" class="form-control" id="AddressLine1" />
+
+</div>
+
+
+<div class="form-group">
+    <label for="AddressLine2" class="col-md-2 col-form-label text-right">Address Line 2: </label>
+
+    <input type="text" [(ngModel)]="data.address.addressLine2" placeholder="Address2" class="form-control" id="AddressLine2" />
+
+</div>
+
+
+<div class="form-group">
+    <label for="City" class="col-md-2 col-form-label text-right">City: </label>
+
+    <input type="text" [(ngModel)]="data.address.city" placeholder="City" class="form-control" id="City" />
+
+</div>
+
+
+<div class="form-group">
+    <label for="Province" class="col-md-2 col-form-label text-right">Province: </label>
+
+    <input type="text" [(ngModel)]="data.address.province" placeholder="Province" class="form-control" id="Province" />
+
+</div>
+
+
+<div class="form-group">
+    <label for="PostalCode" class="col-md-2 col-form-label text-right">Postal Code: </label>
+
+    <input type="text" [(ngModel)]="data.address.postalCode" placeholder="Postal Code" class="form-control" id="PostalCode" />
+
+</div>
+
+
+<div class="form-group">
+    <label for="Country" class="col-md-2 col-form-label text-right">Country: </label>
+
+    <input type="text" [(ngModel)]="data.address.country" placeholder="Country" class="form-control" id="Country" />
+
+</div>
+
+<div class="row">
+    <div class="col-md-offset-2 col-md-6">
+        <br />
+        <button type="submit" class="btn btn-primary" (click)="update()">Update</button>
+    </div>
+</div>
+
+<ng-template #modalContent let-c="close" let-d="dismiss" size="lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="lostModalLabel">Document viewer</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div *ngFor="let doc of data.selectApp.documents">
+                <div style="height: 640px" *ngIf="doc && doc.documentType == 'ProofOfAddress'">
+
+                    <ng2-pdfjs-viewer *ngIf="doc.fileType == 'application/pdf'"
+                                      pdfSrc="/api/Applications/GetFilePdf/{{doc.documentId}}"
+                                      [download]="false">
+                    </ng2-pdfjs-viewer>
+
+                    <ngx-image-viewer *ngIf="images && doc.fileType == 'image/jpeg' || doc.fileType == 'image/png'" [src]="images"></ngx-image-viewer>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" ngbAutofocus class="btn btn-outline-primary" (click)="c('Close click')">Close</button>
+        </div>
+    </div>
+</ng-template>

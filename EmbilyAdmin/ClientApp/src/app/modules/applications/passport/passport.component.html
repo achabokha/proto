@@ -1,0 +1,109 @@
+
+<br />
+
+<button type="submit" class="btn btn-outline-primary" (click)="open(modalContent)">Open Document(s)</button> <br />
+
+<br />
+<br />
+
+<div class="form-group">
+    <label for="title" class="col-md-2 col-form-label text-right">Title: </label>
+    <input type="text" [(ngModel)]="data.selectApp.title" placeholder="Title" class="form-control" id="title" />
+</div>
+
+<div class="form-group">
+    <label for="firstName" class="col-md-2 col-form-label text-right">First Name: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.firstName" placeholder="First Name" class="form-control" id="firstName" />
+</div>
+
+
+<div class="form-group">
+    <label for="lastName" class="col-md-2 col-form-label text-right">Last Name: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.lastName" placeholder="Last Name" class="form-control" id="lastName" />
+</div>
+
+
+
+<div class="form-group">
+    <label for="Phone" class="col-md-2 col-form-label text-right">Phone: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.phone" placeholder="Phone" class="form-control" id="Phone" />
+
+</div>
+
+
+<div class="form-group">
+    <label for="email" class="col-md-2 col-form-label text-right">Email: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.email" placeholder="Email" class="form-control" id="email" />
+
+</div>
+
+
+<div class="form-group">
+    <label for="dob" class="col-md-2 col-form-label text-right">Date of Birth: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.dateOfBirth" placeholder="Date of Birth" class="form-control" id="dob" />
+
+</div>
+
+
+<!--<div class="form-group">
+    <label for="maritalStatus" class="col-md-2 col-form-label text-right">Marital Status: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.maritalStatus" placeholder="Marital Status" class="form-control" id="maritalStatus" />
+
+</div>
+
+
+<div class="form-group">
+    <label for="gender" class="col-md-2 col-form-label text-right">Gender: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.gender" placeholder="Gender" class="form-control" id="gender" />
+
+</div>-->
+
+
+<div class="form-group">
+    <label for="nationality" class="col-md-2 col-form-label text-right">Nationality: </label>
+
+    <input type="text" [(ngModel)]="data.selectApp.nationality" placeholder="Nationality" class="form-control" id="nationality" />
+
+</div>
+
+<div class="row">
+    <div class="col-md-offset-2 col-md-6">
+        <br />
+        <button type="submit" class="btn btn-primary" (click)="update()">Update</button>
+    </div>
+</div>
+
+<ng-template #modalContent let-c="close" let-d="dismiss" size="lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="lostModalLabel">Document viewer</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div *ngFor="let doc of data.selectApp.documents">
+                
+                <div style="height: 640px" *ngIf="doc && (doc.documentType == 'ProofOfID' || doc.documentType == 'Selfie')">
+
+                    <ng2-pdfjs-viewer *ngIf="doc.fileType == 'application/pdf'"
+                                      pdfSrc="/api/Applications/GetFilePdf/{{doc.documentId}}"
+                                      [download]="false">
+                    </ng2-pdfjs-viewer>
+
+                    <ngx-image-viewer *ngIf="images && doc.fileType == 'image/jpeg' || doc.fileType == 'image/png'" [src]="images[doc.documentType]"></ngx-image-viewer>
+                </div>
+            </div>
+        </div>
+            <div class="modal-footer">
+                <button type="button" ngbAutofocus class="btn btn-outline-primary" (click)="c('Close click')">Close</button>
+            </div>
+        </div>
+</ng-template>

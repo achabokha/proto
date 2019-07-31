@@ -1,0 +1,49 @@
+<ngx-datatable class="table_embily_light"
+               [rows]="data.affiliateUsers"
+               [loadingIndicator]="loadingIndicator"
+               [columnMode]="'force'"
+               [headerHeight]="40"
+               [summaryRow]="false"
+               [summaryPosition]="'bottom'"
+               [limit]="20"
+               [reorderable]="true"
+               [footerHeight]="50"
+               [rowHeight]="50"
+               [scrollbarV]="false"
+               [scrollbarH]="true"
+               [selected]="selected"
+               [selectionType]="'single'"
+               (select)='onSelect($event)'>
+
+    <ngx-datatable-column name="First Name" [width]="80" prop="firstName">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">First Name</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "firstName")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Last Name" [width]="80" prop="lastName">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Last Name</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "lastName")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Email" [width]="80" prop="email">
+        <ng-template let-sort="sortFn" let-column="column" ngx-datatable-header-template>
+            <span (click)="sort()" class="datatable-header-cell-wrapper draggable">Email</span>
+            <br />
+            <input style="height: 20px;" class="form-control" placeholder='' (keyup)='updateFilter($event, "email")' />
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Created (UTC)" [width]="100" prop="dateCreated">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value | date: 'dd MMM yyyy' }}
+        </ng-template>
+    </ngx-datatable-column>
+
+</ngx-datatable>
+
+<div *ngIf="!data.affiliateUsers">
+    <app-spinner-rect></app-spinner-rect>
+</div>

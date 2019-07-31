@@ -1,0 +1,32 @@
+:host {
+}
+
+.card-header {
+    color: #e3e3e3 !important;
+}
+
+.dash-card {
+    margin-bottom: 10px;
+}
+
+.link-header{
+    color: #e3e3e3;
+}
+
+.link {
+    cursor: pointer;
+    color: blue;
+}
+
+.link.selected {
+    text-decoration: underline;
+}
+
+
+.chart-container {
+    padding: 2px;
+}
+/*.link:hover {
+    text-decoration: none;
+    text-shadow: 1px 1px 1px #555;
+}*/

@@ -1,0 +1,22 @@
+﻿#swagger-ui {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.topbar {
+    background-color: #6280fc !important;
+}
+
+
+.topbar-wrapper > a:after {
+    margin-left: 10px;
+    content: "Embily API Explorer";
+}
+
+.topbar-wrapper > a > span {
+    display: none;
+ }
+
+.download-url-wrapper > label {
+    color: white;
+}

@@ -1,0 +1,23 @@
+<div>
+    <div class="pull-left">
+        <h1>
+            History
+            <button type="button" (click)="getData()" class="btn btn-lg btn-link">
+                <span class="fa fa-refresh" aria-hidden="true"></span>
+            </button>
+        </h1>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<ngb-tabset #t="ngbTabset" (tabChange)="onTabChange($event)">
+    <ngb-tab id="loads" title="Loads">
+    </ngb-tab>
+    <ngb-tab *ngIf="isAffiliate" id="affiliate" title="Affiliates">
+    </ngb-tab>
+    <ngb-tab id="all" title="All">
+    </ngb-tab>
+</ngb-tabset>
+
+<router-outlet></router-outlet>

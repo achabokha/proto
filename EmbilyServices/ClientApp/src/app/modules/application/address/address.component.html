@@ -1,0 +1,81 @@
+<div class="container" id="content">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+            <app-progress-indicator step="3" [resubmit]="resubmit"></app-progress-indicator>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 text-center">
+            <p>Anti money laundering regulations require us to collect a proof of your address</p>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form #form="ngForm">
+                <div class="form-group">
+                    <label for="addressLine1">Address Line 1</label>
+                    <input id="addressLine1" name="addressLine1" class="form-control" type="text" required [(ngModel)]="address.addressLine1" #addressLine1="ngModel">
+                    <div *ngIf="addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)" class="alert alert-danger">
+                        <div *ngIf="addressLine1.errors.required">Address Line 1 is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addressLine2">Address Line 2</label>
+                    <input id="addressLine2" name="addressLine2" class="form-control" type="text" [(ngModel)]="address.addressLine2" #addressLine2="ngModel">
+                    <div *ngIf="addressLine2.invalid && (addressLine2.dirty || addressLine2.touched)" class="alert alert-danger">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input id="city" name="city" class="form-control" type="text" required [(ngModel)]="address.city" #city="ngModel">
+                    <div *ngIf="city.invalid && (city.dirty || city.touched)" class="alert alert-danger">
+                        <div *ngIf="city.errors.required">City is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="province">Province</label>
+                    <input id="province" name="province" class="form-control" type="text" [(ngModel)]="address.province" #province="ngModel">
+                    <div *ngIf="province.invalid && (province.dirty || province.touched)" class="alert alert-danger">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="postalCode">Postal Code</label>
+                    <input id="postalCode" name="postalCode" class="form-control" type="text" required [(ngModel)]="address.postalCode" #postalCode="ngModel">
+                    <div *ngIf="postalCode.invalid && (postalCode.dirty || postalCode.touched)" class="alert alert-danger">
+                        <div *ngIf="postalCode.errors.required">Postal Code is required.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select class="form-control" name="country" [(ngModel)]="address.country" #country="ngModel" required>
+                        <option *ngFor="let country of countries" [ngValue]="country.iso3">{{country.name}}</option>
+                    </select>
+                    <div *ngIf="country.invalid && (country.dirty || country.touched)" class="alert alert-danger">
+                        <div *ngIf="country.errors.required">Country is required.</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <br />
+            <p>The submission must be provided in <b>ENGLISH</b> and should show both your <b>NAME</b> and your <b>ADDRESS</b> in English.</p>
+            <p>A bank statement or a utility bill such as electricity, water, telephone, Internet or similar can be provided. A traffic ticket is also acceptable.</p>
+            <p>Ensure that the <b>ENTIRE</b> document can be seen including edges and corners.</p>
+            <img [src]="addressExample" class="img-fluid" />
+            <br />
+            <p><i>If your image does not meet these requirements, your application will be rejected.</i></p>
+            <app-uploadfile #uploadFile1></app-uploadfile>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <hr />
+            <button type="button" (click)="back()" class="btn btn-outline-primary"><< Back</button>&nbsp;
+            <button type="button" (click)="continue()" [disabled]="form.invalid || uploadFile1.continueDisabled" class="btn btn-primary" data-toggle="tooltip" title="Please, make sure you have uploaded the document and filled out all mandatory fields">Continue >></button>
+        </div>
+    </div>
+</div>

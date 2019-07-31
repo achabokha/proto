@@ -1,0 +1,89 @@
+<!--<div class="row">
+    <div class="col-md-6 col-md-offset-2">
+        <div *ngIf="!(appDetails.firstName == appUser.firstName && appDetails.lastName == appUser.lastName)" class="alert alert-warning fade in">
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <b>
+                User Name and Applicant Name do not match!
+            </b>
+        </div>
+    </div>
+</div>-->
+<!--<div class="form-group">
+    <label for="typeahead-http">Search for a wiki page:</label>
+    <input aria-multiline="false" autocapitalize="off" autocorrect="off" class="form-control ng-valid ng-touched ng-dirty" id="typeahead-http" placeholder="Wikipedia search" role="combobox" type="text" autocomplete="off" aria-autocomplete="list" aria-expanded="false">
+</div>-->
+<div *ngIf="data.selectApp && data.user">
+    <div class="form-group">
+        <label for="applicationNumber" class="col-md-2 col-form-label text-right">Application Number: </label>
+        <input type="text" readonly [(ngModel)]="data.selectApp.applicationNumber" placeholder="Application Number" class="form-control" id="applicationNumber" />
+    </div>
+
+    <div class="form-group">
+        <label for="reference" class="col-md-2 col-form-label text-right">Reference: </label>
+        <input type="text" readonly [(ngModel)]="data.selectApp.reference" placeholder="Reference" class="form-control" id="reference" />
+    </div>
+
+
+    <div class="form-group">
+        <label for="accountType" class="col-md-2 col-form-label text-right">Account Type: </label>
+        <input type="text" readonly [(ngModel)]="data.selectApp.accountType" placeholder="Account Type" class="form-control" id="accountType" />
+    </div>
+
+    <div class="form-group">
+        <label for="providerName" class="col-md-2 col-form-label text-right">Provider: </label>
+        <input type="text" readonly [(ngModel)]="data.selectApp.providerName" placeholder="Provider" class="form-control" id="providerName" />
+    </div>
+
+
+    <div class="form-group">
+        <label for="appStatus" class="col-md-2 col-form-label text-right"> Status: </label>
+        <input type="text" [(ngModel)]="data.selectApp.status" placeholder="" class="form-control" id="appStatus" />
+    </div>
+
+
+    <div class="form-group">
+        <label for="currency" class="col-md-2 col-form-label text-right"> Currency Code: </label>
+        <input type="text" [(ngModel)]="data.selectApp.currencyCodeString" placeholder="" class="form-control" id="currency" />
+    </div>
+
+
+    <div class="form-group">
+        <label for="comments" class="col-md-2 col-form-label text-right"> Comments: </label>
+        <app-app-comments [comments]="data.selectApp.comments"></app-app-comments>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-6">
+            <br />
+            <button type="submit" class="btn btn-primary" (click)="update()">Update</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <br />
+            <h4>
+                User
+            </h4>
+            <hr />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="firstName" class="col-md-2 col-form-label text-right">User First Name: </label>
+        <input type="text" [(ngModel)]="data.user.firstName" placeholder="First Name" class="form-control" id="firstName" readonly />
+    </div>
+
+
+    <div class="form-group">
+        <label for="lastName" class="col-md-2 col-form-label text-right">User Last Name: </label>
+        <input type="text" [(ngModel)]="data.user.lastName" placeholder="Last Name" class="form-control" id="lastName" readonly />
+    </div>
+
+
+    <div class="form-group">
+        <label for="email" class="col-md-2 col-form-label text-right">User Email: </label>
+        <input type="text" readonly [(ngModel)]="data.user.email" placeholder="Email" class="form-control" id="email" />
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<ngx-datatable *ngIf="data" class="table_embily_light"
+               #table
+               [rows]="data.loadTransactions"
+               [loadingIndicator]="loadingIndicator"
+               [columnMode]="'force'"
+               [headerHeight]="60"
+               [summaryRow]="false"
+               [summaryPosition]="'bottom'"
+               [limit]="20"
+               [reorderable]="true"
+               [footerHeight]="50"
+               [rowHeight]="50"
+               [scrollbarV]="false"
+               [scrollbarH]="true">
+
+    <ngx-datatable-column name="Date (UTC)" [width]="100" prop="dateCreated">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+            {{value | date: 'dd MMM yyyy' }}
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Reference" [width]="100"></ngx-datatable-column>
+    <ngx-datatable-column name="Trasaction Hash" prop="cryptoTxnId">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a *ngIf="value != ''" target='_blank' href='https://live.blockcypher.com/{{row.originalCurrencyCode.toLowerCase()}}/tx/{{value}}/'
+               title="{{value}}">
+                {{ value.substr(0, 6) }}...{{ value.substr(-6) }}
+            </a>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Code" prop="txnCode" [width]="60"></ngx-datatable-column>
+    <ngx-datatable-column name="From" [width]="50" prop="originalCurrencyCode">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span *ngIf="value != 'NONE'">{{ value }}</span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="" [width]="85" prop="originalAmount">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span *ngIf="value != 0">{{ value | number:'1.8-8' }}</span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="To" [width]="50" prop="destinationCurrencyCode"></ngx-datatable-column>
+    <ngx-datatable-column name="" [width]="80" prop="destinationAmount">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span *ngIf="value != 0">{{ value | number:'1.2-2' }}</span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Status" [width]="100"></ngx-datatable-column>
+
+</ngx-datatable>
+
+<app-spinner-rect *ngIf="!data.loadTransactions"></app-spinner-rect>

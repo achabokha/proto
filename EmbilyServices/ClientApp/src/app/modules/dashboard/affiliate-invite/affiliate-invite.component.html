@@ -1,0 +1,64 @@
+<form role="search" class="invite-form">
+    <ngb-alert *ngIf="status == 'success'" type="success" (close)="status = 'none'">
+        An invitation email has been sent! <br />
+    </ngb-alert>
+    <ngb-alert *ngIf="status == 'error'" type="danger" (close)="status = 'none'">
+        {{message}} <br />
+    </ngb-alert>
+    <div class="input-group">
+        <input id="email" name="email" required [(ngModel)]="emailInvite" #email="ngModel" type="text" class="form-control" placeholder="enter email here" aria-label="...">
+        <div class="input-group-btn">
+            <button (click)='invite()' class="btn btn-outline-primary">
+                <app-spinner-round *ngIf="spinner"></app-spinner-round> Invite
+            </button>
+        </div>
+    </div>
+</form>
+<br />
+<a class="link" (click)="open(modalContent)">view invitees</a>
+
+<ng-template #modalContent let-c="close" let-d="dismiss" size="lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="lostModalLabel">Invitees</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="header">
+                <div id="square" class="purple">
+                    {{countInvite}}
+                </div>
+                invited
+                <div id="square" class="blue">
+                    {{countRegistered}}
+                </div>
+                registered
+                <div id="square" class="green">
+                    {{countApproved}}
+                </div>
+                account approved
+                <div id="square" class="turquoise">
+                    {{countTransacting}}
+                </div>
+                transacting
+            </div>
+            <br />
+            <div *ngIf="invitees" class="list-contain" id="style-bar">
+                <div class="list">
+                    <div class="invite" *ngFor="let invite of invitees">
+                        {{invite.email}}
+                        <div id="square-status" [ngClass]="invite.satusColor"></div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!invitees">
+                You did not invite anyone.
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" ngbAutofocus class="btn btn-outline-primary" (click)="c('Close click')">Close</button>
+        </div>
+    </div>
+</ng-template>

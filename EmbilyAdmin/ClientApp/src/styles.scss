@@ -1,0 +1,43 @@
+/* You can add global styles to this file, and also import other style files */
+@import "assets/styles/_variables-embily-light.scss";
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~font-awesome/css/font-awesome.css";
+@import '~@swimlane/ngx-datatable/release/index.css';
+/*@import '~@swimlane/ngx-datatable/release/themes/bootstrap.css';*/
+@import "assets/styles/table_embily_light.scss";
+/*@import "assets/styles/material.scss";
+@import "assets/styles/dark.scss";*/
+/*@import '~@swimlane/ngx-datatable/release/themes/material.css';*/
+@import '~@swimlane/ngx-datatable/release/assets/icons.css';
+
+@import "assets/styles/responsive";
+
+@media print {
+    .breadcrumb {
+        display: none !important;
+    }
+}
+
+/* It is on CDN and it is most likely that it is already cached on the user side... -- */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');
+
+/******************************/
+/*                            */
+/* Cookie Notification Styles */
+/*                            */
+/******************************/
+.cc-banner .cc-btn:last-child {
+    min-width: 110px !important;
+}
+
+.cc-compliance > .cc-btn {
+    margin-right: 115px;
+    border-radius: 999rem;
+    padding: 0.6em 0.8em !important;
+    font-size: 0.9em;
+    border: 2px solid #6184ff !important;
+}
+
+.cc-window.cc-banner {
+    padding: 0.6em 1.8em !important;
+}

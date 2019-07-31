@@ -1,0 +1,189 @@
+<h2>Account Details</h2>
+<div *ngIf="accountDetails">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Account Status: </label>
+                <select name="accountStatusString" [(ngModel)]="accountDetails.accountStatusString" #gender="ngModel" (change)="selectStatus($event)">
+                    <option>Active</option>
+                    <option>Awaiting</option>
+                    <option>Closed</option>
+                    <option>Suspended</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Account Number: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.accountNumber}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Account Name: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.accountName}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Account Type: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.accountTypeString}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Currency: </label>
+                <input type="text" [(ngModel)]="accountDetails.currencyCodeString" placeholder="Currency" class="form-control" id="currency" />
+                <!--<label class="col-md-5 col-form-label text-left">{{accountDetails.currencyCodeString}}</label>-->
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Provider: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.providerNameString}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Card Number: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.cardNumber}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Provider User Id: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.providerUserId}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Provider Acct Number: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.providerAccountNumber}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">First Name: </label>
+                <input type="text" [(ngModel)]="accountDetails.firstName" placeholder="First Name" class="form-control" id="firstName" />
+                <!--<label class="col-md-5 col-form-label text-left">{{accountDetails.firstName}}</label>-->
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Last Name: </label>
+                <input type="text" [(ngModel)]="accountDetails.lastName" placeholder="Last Name" class="form-control" id="lastName" />
+                <!--<label class="col-md-5 col-form-label text-left">{{accountDetails.lastName}}</label>-->
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Email: </label>
+                <input type="text" [(ngModel)]="accountDetails.email" placeholder="Email" class="form-control" id="email" />
+                <!--<label class="col-md-5 col-form-label text-left">{{accountDetails.email}}</label>-->
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Phone: </label>
+                <input type="text" [(ngModel)]="accountDetails.phone" placeholder="Phone" class="form-control" id="phone" />
+                <!--<label class="col-md-5 col-form-label text-left">{{accountDetails.phone}}</label>-->
+            </div>
+            <div class="row">
+                <div class="col-md-offset-2 col-md-6">
+                    <br />
+                    <button type="submit" class="btn btn-primary mr-2" (click)="update()">Update</button>
+                    <button type="submit" class="btn btn-primary" (click)="modalService.open(modalContent)">Load</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">User Number: </label>
+                <label class="col-md-5 col-form-label text-left"><a [routerLink]="['/users/details',accountDetails.user.id]">{{accountDetails.user.userNumber}}</a></label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">User Name: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.user.userName}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">First Name: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.user.firstName}}</label>
+            </div>
+            <div class="form-group">
+                <label class="col-md-4 col-form-label text-right">Last Name: </label>
+                <label class="col-md-5 col-form-label text-left">{{accountDetails.user.lastName}}</label>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="col-xl-6" *ngIf="accountDetails.accountTypeString != 'Affiliate'">
+        <h2>Crypto Address</h2>
+        <ngx-datatable class="table_embily_light"
+                       [rows]="accountDetails.cryptoAddreses"
+                       [loadingIndicator]="loadingIndicator"
+                       [columnMode]="'force'"
+                       [headerHeight]="40"
+                       [summaryRow]="false"
+                       [summaryPosition]="'bottom'"
+                       [limit]="20"
+                       [reorderable]="true"
+                       [footerHeight]="50"
+                       [rowHeight]="50"
+                       [scrollbarV]="false">
+
+            <ngx-datatable-column name="Cryto Address" [width]="275" prop="address"></ngx-datatable-column>
+            <ngx-datatable-column name="Currency" [width]="70" prop="currencyCodeString"></ngx-datatable-column>
+        </ngx-datatable>
+        <br />
+        <button *ngIf="!isBTC" type="submit" class="btn btn-primary mr-2" id="shipped-app" (click)="getNewCryptoAddress('BTC')">
+            <app-spinner-round *ngIf="working"></app-spinner-round> Get BTC Address
+        </button>
+        <button *ngIf="!isLTC" type="submit" class="btn btn-primary mr-2" id="shipped-app" (click)="getNewCryptoAddress('LTC')">
+            <app-spinner-round *ngIf="working"></app-spinner-round> Get LTC Address
+        </button>
+        <button *ngIf="!isETH" type="submit" class="btn btn-primary" id="shipped-app" (click)="getNewCryptoAddress('ETH')">
+            <app-spinner-round *ngIf="working"></app-spinner-round> Get ETH Address
+        </button>
+    </div>
+    <br />
+    <div *ngIf="accountDetails.transactions">
+        <h2>Transactions</h2>
+        <ngx-datatable class="table_embily_light"
+                       [rows]="accountDetails.transactions"
+                       [loadingIndicator]="loadingIndicator"
+                       [columnMode]="'force'"
+                       [headerHeight]="40"
+                       [summaryRow]="false"
+                       [summaryPosition]="'bottom'"
+                       [limit]="20"
+                       [reorderable]="true"
+                       [footerHeight]="50"
+                       [rowHeight]="50"
+                       [scrollbarV]="false"
+                       [scrollbarH]="true">
+
+            <ngx-datatable-column name="Created (UTC)" [width]="100" prop="dateCreated">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                    {{value | date: 'dd MMM yyyy' }}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Txn Num" [width]="140" prop="transactionNumber"></ngx-datatable-column>
+            <ngx-datatable-column name="Crypto Txn Id(hash)" [width]="100" prop="cryptoTxnLink"></ngx-datatable-column>
+            <ngx-datatable-column name="Code" [width]="100" prop="txnCode"></ngx-datatable-column>
+            <ngx-datatable-column name="From" [width]="100" prop="originalCurrencyCode"></ngx-datatable-column>
+            <ngx-datatable-column name="Amount" [width]="100" prop="originalAmount"></ngx-datatable-column>
+            <ngx-datatable-column name="To" [width]="110" prop="destinationCurrencyCode"></ngx-datatable-column>
+            <ngx-datatable-column name="Amount" [width]="140" prop="destinationAmount"></ngx-datatable-column>
+            <ngx-datatable-column name="Status" [width]="140" prop="statusString"></ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+</div>
+
+<ng-template #modalContent let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" id="lostModalLabel">Load Card via CCS Prepay API</h4>
+            <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div *ngIf="accountDetails" class="modal-body">
+            <!--<app-processing #processing></app-processing>-->
+            <p>
+                {{accountDetails.user.firstName}} {{accountDetails.user.lastName}} - {{accountDetails.providerAccountNumber}}
+            </p>
+            <div class="form-group">
+                <label for="loadAmount" class="form-control-label">Amount: </label>
+                <div *ngIf="!confirm">
+                    <input id="loadAmount" name="loadAmount" class="form-control" type="text" required [(ngModel)]="amountToLoad" #loadAmount="ngModel">
+                </div>
+                <div *ngIf="confirm">
+                    <label class="form-control-label" style="font-weight:normal;">{{amountToLoad | number:'1.2-2' }}</label>
+                </div>
+                <label class="form-control-label">{{accountDetails.currencyCodeString}}</label>
+            </div>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" (click)="closeModal()">Close</button>
+            <button *ngIf="load" type="button" class="btn btn-primary" [disabled]="!amountToLoad" (click)="loadCard()">Load</button>
+            <button *ngIf="confirmButton" type="button" class="btn btn-primary" (click)="confirmAmount()">Confirm</button>
+            <!--<button type="button" class="btn btn-outline-secondary" (click)="c('Close click')">Close</button>-->
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,69 @@
+:host { }
+
+.card-wrapper {
+    background-image: var(--card-image);
+    background-size: contain; 
+    background-repeat: no-repeat;
+}
+.card-number {
+    color: var(--card-card-number-color) !important;
+    padding-top: 70px;
+    padding-left: 20px;
+    padding-bottom: 37px;
+    font-size: 14px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+.cardImg {}
+
+.card-row {
+    margin-bottom: 20px;
+}
+
+.load-card {
+    width: 60px;
+    text-align: center;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+    .load-card img {
+        width: 70%;
+        margin: 4px;
+    }
+
+/* Small devices (tablets, 768px and up)         */
+@media (min-width: 768px) {
+    .card-number {
+        color: whitesmoke;
+        padding-top: 70px;
+        padding-left: 20px;
+        padding-bottom: 37px;
+        font-size: 14px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+    }
+}
+
+/* Medium devices (desktops, 992px and up)       */
+@media (min-width: 992px) {
+    .card-number {
+        color: whitesmoke;
+        padding-top: 54px;
+        padding-left: 15px;
+        padding-bottom: 37px;
+        font-size: 12px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+    }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .card-number {
+        color: whitesmoke;
+        padding-top: 70px;
+        padding-left: 20px;
+        padding-bottom: 37px;
+        font-size: 14px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+    }
+}
