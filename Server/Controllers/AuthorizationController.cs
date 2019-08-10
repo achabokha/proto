@@ -59,36 +59,9 @@ namespace Server.Controllers
 					});
 				}
 
-				// proceed only if Admin
-				if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()))
-				{
-					if (!await _userManager.IsEmailConfirmedAsync(user))
-					{
-						return BadRequest(new OpenIdConnectResponse
-						{
-							Error = OpenIdConnectConstants.Errors.InvalidGrant,
-							ErrorDescription = "The username/password is invalid."
-						});
-					}
-
-					// Validate the username/password parameters and ensure the account is not locked out.
-					var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, lockoutOnFailure: true);
-					if (!result.Succeeded)
-					{
-						return BadRequest(new OpenIdConnectResponse
-						{
-							Error = OpenIdConnectConstants.Errors.InvalidGrant,
-							ErrorDescription = "The username/password is invalid."
-						});
-					}
-
-					// Create a new authentication ticket.
-					var ticket = await CreateTicketAsync(request, user);
-
-					return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
-				}
-
-				else
+				// Validate the username/password parameters and ensure the account is not locked out.
+				var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+				if (!result.Succeeded)
 				{
 					return BadRequest(new OpenIdConnectResponse
 					{
@@ -96,6 +69,12 @@ namespace Server.Controllers
 						ErrorDescription = "The username/password is invalid."
 					});
 				}
+
+				// Create a new authentication ticket.
+				var ticket = await CreateTicketAsync(request, user);
+
+				return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+
 			}
 			else if (request.IsRefreshTokenGrantType())
 			{

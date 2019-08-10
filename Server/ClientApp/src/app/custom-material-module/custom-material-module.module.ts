@@ -1,13 +1,27 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
-  MatToolbarModule,
-  MatSidenavModule,
+  MatButtonModule,
+  MatCardModule,
+  MatDialogModule,
   MatIconModule,
-  MatListModule, MatGridListModule, MatCardModule, MatMenuModule, MatRadioModule, MatDialogModule, MatFormFieldModule, MatInputModule
+  MatInputModule,
+  MatChipsModule,
+  MatDividerModule,
+  MatSnackBarModule,
+  MatTabsModule,
+  MatTooltipModule,
+  MatProgressSpinnerModule,
+  MatProgressBarModule,
+  MatCheckboxModule,
+  MatRadioModule,
+  MatListModule,
+  MatGridListModule,
+  MatMenuModule,
+  MatFormFieldModule,
+  MatToolbarModule,
+  MatSidenavModule
 } from '@angular/material';
 
 @NgModule({
@@ -22,7 +36,16 @@ import {
     MatRadioModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+
+    MatChipsModule,
+    MatDividerModule,
+    MatSnackBarModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    MatCheckboxModule
   ],
   exports: [MatToolbarModule,
     MatButtonModule,
@@ -35,6 +58,14 @@ import {
     MatRadioModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatInputModule],
+    MatInputModule,
+    MatChipsModule,
+    MatDividerModule,
+    MatSnackBarModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    MatCheckboxModule],
 })
 export class CustomMaterialModuleModule { }

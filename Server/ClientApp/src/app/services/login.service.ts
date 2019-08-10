@@ -1,33 +1,36 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, Observer, throwError } from 'rxjs';
 import { EventEmitter } from '@angular/core';
+import { AuthService } from './auth.service';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class LoginService {
 
-    userId: number = null;
-    username = '';
-    name = '';
-    email = '';
-    isLoggedIn: Observable<boolean> = of(false);
-    onLoggedInOut: Observer<any> = {
-        next: x => {
-            this.userId = x ? 1 : null;
-            this.isLoggedIn = of(x);
-        },
-        error: err => console.error('Observer got an error: ' + err),
-        complete: () => console.log('Observer got a complete notification'),
-    };
+  userId: number = null;
+  username = '';
+  name = '';
+  email = '';
+  isLoggedIn: Observable<boolean> = of(false);
+  onLoggedInOut: Observer<any> = {
+    next: x => {
+      this.userId = x ? 1 : null;
+      this.isLoggedIn = of(x);
+    },
+    error: err => console.error('Observer got an error: ' + err),
+    complete: () => console.log('Observer got a complete notification'),
+  };
 
-    constructor() { }
+  constructor(private authService: AuthService) { }
 
-    login(username: string, password: string): Observable<any> {
-        if (username && password) {
-            const responseObs = of({ username, email: `${username}@taiga.com` });
-            return responseObs;
-        }
-        throwError('Something went terribly wrong!');
+  login(userName: string, userPasw: string): Observable<any> {
+    if (userName && userPasw) {
+      return this.authService.login(userName, userPasw);
     }
+
+
+
+    throwError('Something wen terrible wrong');
+  }
 }

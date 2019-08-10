@@ -53,8 +53,8 @@ namespace Server.Controllers
                 Id = userId,
                 UserName = model.Email,
                 Email = model.Email,
-                LastName = model.LastName,
-                FirstName = model.FirstName,
+                FirstName = "FirstName",
+                LastName = "Last Name"
             };
 
             var r = await _userManager.CreateAsync(user, model.Password);

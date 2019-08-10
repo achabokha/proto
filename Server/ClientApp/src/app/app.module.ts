@@ -29,9 +29,14 @@ import { ChartModule } from './chart/chart.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { CustomMaterialModuleModule } from './custom-material-module/custom-material-module.module';
 import { LoginService } from './services/login.service';
-import { LoginModule } from './login/login.module';
+import { LoginModule, UserProvidedConfigToken } from './login/login.module';
 import { FormsModule } from '@angular/forms';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
+import { AuthService } from './services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
+
+import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
+import { AuthProcessService } from './services/auth-process.service';
 
 @NgModule({
    declarations: [
@@ -40,6 +45,7 @@ import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
    imports: [
       BrowserModule,
       FormsModule,
+      HttpClientModule,
       IonicModule.forRoot(),
       AppRoutingModule,
       BrowserAnimationsModule,
@@ -48,7 +54,8 @@ import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
       ThemePickerModule,
       DashboardModule,
       ChartModule,
-      LoginModule
+      LoginModule,
+      MatPasswordStrengthModule.forRoot()
    ],
    providers: [
       StatusBar,
@@ -57,7 +64,11 @@ import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
       ThemeStorage,
       LocationDataService,
       LoginService,
-      FingerprintAIO
+      FingerprintAIO,
+      AuthService,
+      HttpClientModule,
+      AuthProcessService,
+      {provide: UserProvidedConfigToken, useValue: {}}
    ],
    bootstrap: [
       AppComponent
