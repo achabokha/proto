@@ -1,0 +1,30 @@
+<form fxLayout="column" #loginForm="ngForm" autocomplete="off">
+	<!-- <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="gappx" class="container"> -->
+	<div fxLayout="row" fxLayoutAlign="space-around center">
+		<h1>Login</h1>
+	</div>
+	<div fxLayout="row" fxLayoutAlign="space-around center">
+		<mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
+	</div>
+
+	<div fxLayout="row" fxLayoutAlign="space-around center">
+		<mat-form-field>
+			<input id="username" name="username" matInput placeholder="email" [(ngModel)]="username" />
+		</mat-form-field>
+	</div>
+	<div fxLayout="row" fxLayoutAlign="space-around center">
+		<mat-form-field>
+			<input id="password" name="password" matInput placeholder="Password" type="password"
+				[(ngModel)]="password" />
+		</mat-form-field>
+	</div>
+
+	<div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+		<button type="submit" mat-raised-button (click)="login()">Login</button>
+		<button type="submit" mat-raised-button (click)="showFingerprintModal()">Touch/Face ID</button>
+	</div>
+
+	<div fxLayout="row" class="rowSpacing" fxLayoutGap="20px" fxLayoutAlign="center center">
+			<button type="submit" mat-raised-button (click)="signUp()">Sign-Up</button>
+		</div>
+</form>

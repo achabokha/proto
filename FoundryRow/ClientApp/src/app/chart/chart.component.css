@@ -1,0 +1,17 @@
+#graphic {
+  display: block;
+  height: calc(100vh - 110px);
+}
+
+.radio_box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.radio_box mat-radio-button {
+  margin-left: 5px;
+  margin-right: 5px;
+}

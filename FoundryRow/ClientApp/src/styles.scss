@@ -1,0 +1,54 @@
+/* You can add global styles to this file, and also import other style files */
+$color-facebook: #189c22;
+$color-google: #415ef4;
+$color-shelter: #5f1c89;
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.bar_facebook {
+  fill: $color-facebook;
+}
+.bar_google {
+  fill: $color-google;
+}
+.bar_shelter {
+  fill: $color-shelter;
+}
+
+.bar_median {
+  fill: $color-shelter;
+}
+
+.legend_facebook {
+  fill: $color-facebook;
+  stroke: $color-facebook;
+}
+.legend_google {
+  fill: $color-google;
+  stroke: $color-google;
+}
+.legend_shelter {
+  fill: $color-shelter;
+  stroke: $color-shelter;
+}
+.legend_text {
+  fill: #ffffff;
+}
+
+.sidenav-container {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.mat-sidenav-fixed {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+ion-router-outlet {
+  position: sticky;
+}

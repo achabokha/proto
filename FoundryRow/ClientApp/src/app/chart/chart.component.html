@@ -1,0 +1,15 @@
+<div class="radio_box">
+  <mat-radio-group [(value)]="daysStartingFrom" aria-label="Select an option" (change)="dateRangeChange()">
+    <mat-radio-button [value]="3">3 days</mat-radio-button>
+    <mat-radio-button [value]="7">5 days</mat-radio-button>
+    <mat-radio-button [value]="15">15 days</mat-radio-button>
+  </mat-radio-group>
+</div>
+<div id="graphic"></div>
+<ng-template #chartPopUp let-data>
+  <h2 mat-dialog-title>{{data.description}}</h2>
+  <mat-dialog-content>
+    <label>Location: </label>{{data.location}}<br/>
+    <label>Registrations: </label>{{data.count}}
+  </mat-dialog-content>
+</ng-template>
