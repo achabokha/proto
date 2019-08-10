@@ -7,60 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="EmailTemplates\card-application-alert.html" />
-    <None Remove="EmailTemplates\card-application-approved-kyc.html" />
-    <None Remove="EmailTemplates\card-application-approved-nonkyc.html" />
-    <None Remove="EmailTemplates\card-application-awaiting-payment.html" />
-    <None Remove="EmailTemplates\card-application-paid.html" />
-    <None Remove="EmailTemplates\card-application-processing.html" />
-    <None Remove="EmailTemplates\card-application-rejected.html" />
-    <None Remove="EmailTemplates\card-application-submitted-kyc.html" />
-    <None Remove="EmailTemplates\card-application-submitted-nonkyc.html" />
-    <None Remove="EmailTemplates\card-shipping.html" />
     <None Remove="EmailTemplates\email-verification.html" />
-    <None Remove="EmailTemplates\lost-card-new-application-alert.html" />
     <None Remove="EmailTemplates\password-reset.html" />
-    <None Remove="EmailTemplates\template.html" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="EmailTemplates\lost-card-new-application-alert.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-approved-kyc.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-approved-nonkyc.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-rejected.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-alert.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-processing.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-awaiting-payment.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-paid.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-submitted-kyc.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-application-submitted-nonkyc.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\card-shipping.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="EmailTemplates\password-reset.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EmailTemplates\template.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="EmailTemplates\email-verification.html">
@@ -76,31 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="EmailTemplates\affiliate-invite.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="EmailTemplates\card-pickup.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="EmailTemplates\topup-first-transaction.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="EmailTemplates\affiliate-balance-redemption.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="EmailTemplates\generic.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="EmailTemplates\topup-over-the-limit.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="EmailTemplates\topup-insufficient-funds.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="EmailTemplates\topup-load.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="EmailTemplates\topup-transfer.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -24,7 +24,6 @@
   </ItemGroup> -->
 
   <ItemGroup>
-    <ProjectReference Include="..\BitfinexAPI\BitfinexApi\BitfinexApi.csproj" />
     <ProjectReference Include="..\Messages\Messages.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
