@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    public interface IEmbilyDbInitializer
+    public interface IDbInitializer
     {
         Task SeedAsync();
     }
@@ -19,7 +19,7 @@ namespace Models
         public const string adminId = "21478290-36D3-4C65-8FD0-C9CDD94633BA";
     }
 
-    public class EmbilyDbInitializer : IEmbilyDbInitializer
+    public class EmbilyDbInitializer : IDbInitializer
     {
         private readonly DbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
