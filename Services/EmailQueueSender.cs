@@ -1,4 +1,4 @@
-﻿using Embily.Messages;
+﻿using Messages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Embily.Services
+namespace Services
 {
     public class EmailQueueSender : IEmailQueueSender
     {

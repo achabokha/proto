@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Embily.Gateways</AssemblyName>
-    <RootNamespace>Embily.Gateways</RootNamespace>
+    <AssemblyName>Gateways</AssemblyName>
+    <RootNamespace>Gateways</RootNamespace>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -24,7 +24,6 @@
   </ItemGroup> -->
 
   <ItemGroup>
-    <ProjectReference Include="..\Messages\Messages.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
   </ItemGroup>
 

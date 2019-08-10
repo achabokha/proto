@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Embily.Workflows</AssemblyName>
-    <RootNamespace>Embily.Workflows</RootNamespace>
+    <AssemblyName>Workflows</AssemblyName>
+    <RootNamespace>Workflows</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

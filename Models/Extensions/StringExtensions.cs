@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Embily.Models
+namespace Models
 {
     public static class StringExtensions
     {

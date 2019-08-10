@@ -1,5 +1,5 @@
 ﻿
-namespace Embily.Services
+namespace Services
 {
     public interface IRefGen
     {

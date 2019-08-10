@@ -1,6 +1,6 @@
-﻿using Embily.Gateways;
-using Embily.Messages;
-using Embily.Models;
+﻿using Gateways;
+using Messages;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -9,13 +9,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Embily.Workflows
+namespace Workflows
 {
     public class EmailNotificationWorkflow : BaseWorkflow
     {
         IEmailSender _mailer;
 
-        public EmailNotificationWorkflow(IEmailSender mailer, NameValueCollection appSettings, EmbilyDbContext ctx, TextWriter log) 
+        public EmailNotificationWorkflow(IEmailSender mailer, NameValueCollection appSettings, DbContext ctx, TextWriter log) 
             : base(appSettings, ctx, log)
         {
             _mailer = mailer;

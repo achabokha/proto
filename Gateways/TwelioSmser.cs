@@ -6,7 +6,7 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using Twilio.Types;
 
-namespace Embily.Gateways
+namespace Gateways
 {
     public class TwilioSmser : ISmsSender
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Embily.Messages
+namespace Messages
 {
     public class NotifyEmail : BaseMessage
     {

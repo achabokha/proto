@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Embily.Services
+namespace Services
 {
     public class RefGenerator : IRefGen
     {

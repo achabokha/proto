@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Embily.Messages
+namespace Messages
 {
     public class BaseMessage
     {

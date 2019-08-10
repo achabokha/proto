@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Embily.Models
+namespace Models
 {
     public abstract class BaseEntity
     {

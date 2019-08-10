@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>Embily.Messages</AssemblyName>
-    <RootNamespace>Embily.Messages</RootNamespace>
+    <AssemblyName>Messages</AssemblyName>
+    <RootNamespace>Messages</RootNamespace>
   </PropertyGroup>
 
 </Project>
