@@ -1,13 +1,13 @@
-import { EventEmitter, Inject, Injectable, forwardRef } from '@angular/core';
+import { EventEmitter, Inject, Injectable, forwardRef, InjectionToken } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { ICredentials, ISignInProcess, ISignUpProcess } from '../interfaces/main.interface';
 import { NgxAuthFirebaseUIConfig } from '../interfaces/config.interface';
 import { Accounts } from '../enums';
+import { AuthService } from './auth.service';
 
 // import User = firebase.User;
 
-
-import { NgxAuthFirebaseUIConfigToken } from '../login/login.module';
+export const NgxAuthFirebaseUIConfigToken = new InjectionToken<NgxAuthFirebaseUIConfig>('NgxAuthFirebaseUIConfigToken');
 
 export const facebookAuthProvider = {};
 export const googleAuthProvider = {};
@@ -42,10 +42,11 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 	messageOnAuthError: string;
 
 	private _fireStoreService: any;
-	public afa: any;
+
 
 	constructor(
 		private _snackBar: MatSnackBar,
+		public afa: AuthService,
 		@Inject(forwardRef(() => NgxAuthFirebaseUIConfigToken)) public config: NgxAuthFirebaseUIConfig
 	) { }
 

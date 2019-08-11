@@ -8,7 +8,7 @@ import { AuthComponent } from './auth-ui/auth-ui.component';
 const routes: Routes = [
   {
     path: '',
-    component: AuthComponent
+    component: LoginComponent
   },
   {
     path: 'sign-up',

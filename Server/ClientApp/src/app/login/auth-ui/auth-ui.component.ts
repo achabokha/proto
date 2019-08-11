@@ -20,9 +20,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { MatPasswordStrengthComponent } from '@angular-material-extensions/password-strength';
-import { AuthProcessService, AuthProvider } from 'src/app/services/auth-process.service';
+import { AuthProcessService, AuthProvider, NgxAuthFirebaseUIConfigToken } from 'src/app/services/auth-process.service';
 import { NgxAuthFirebaseUIConfig } from 'src/app/interfaces/config.interface';
-import { NgxAuthFirebaseUIConfigToken } from '../login.module';
 import { LegalityDialogComponent } from '../legality-dialog/legality-dialog.component';
 import { LegalityDialogParams, LegalityDialogResult } from 'src/app/interfaces/legality.dialog.intreface';
 

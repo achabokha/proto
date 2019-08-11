@@ -32,9 +32,9 @@ export interface NgxAuthFirebaseUIConfig {
 export const defaultAuthFirebaseUIConfig: NgxAuthFirebaseUIConfig = {
   // authMethod: 'redirect',
   // authProviders: [new GoogleAuthProvider(), new FacebookAuthProvider(), new TwitterAuthProvider(), new GithubAuthProvider()],
-  authGuardFallbackURL: '/',
+  authGuardFallbackURL: '/login',
   authGuardLoggedInURL: '/',
-  enableFirestoreSync: true,
+  enableFirestoreSync: false,
   toastMessageOnAuthSuccess: true,
   toastMessageOnAuthError: true,
   // Password length min/max in forms independently of each componenet min/max.

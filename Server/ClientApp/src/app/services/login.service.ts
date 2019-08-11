@@ -24,10 +24,10 @@ export class LoginService {
 
   constructor(private authService: AuthService) { }
 
-  login(userName: string, userPasw: string): Observable<any> {
-    if (userName && userPasw) {
-      return this.authService.login(userName, userPasw);
-    }
+  login(userName: string, userPasw: string): any {
+    // if (userName && userPasw) {
+    //   return this.authService.login(userName, userPasw);
+    // }
 
 
 

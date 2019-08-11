@@ -3,8 +3,8 @@ import {CanActivate, Router} from '@angular/router'
 import {map} from 'rxjs/operators'
 import {Observable} from 'rxjs'
 import { NgxAuthFirebaseUIConfig } from '../interfaces/config.interface';
-import { AuthProcessService } from '../services/auth-process.service';
-import { NgxAuthFirebaseUIConfigToken } from '../login/login.module';
+import { AuthProcessService, NgxAuthFirebaseUIConfigToken } from '../services/auth-process.service';
+import { AuthService } from '../services/auth.service';
 
 
 @Injectable({
@@ -15,12 +15,12 @@ export class LoggedInGuard implements CanActivate {
     @Inject(NgxAuthFirebaseUIConfigToken)
     private config: NgxAuthFirebaseUIConfig,
     private router: Router,
-    private auth: AuthProcessService,
+    private afa: AuthService,
   ) {
   }
 
   canActivate(): Observable<boolean> {
-    return this.auth.afa.user.pipe(
+    return this.afa.auth.user.pipe(
       map(res => {
         if (res) {
           if (this.config.authGuardLoggedInURL && this.config.authGuardLoggedInURL !== '/') {

@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 
 import { Router } from "@angular/router";
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, Subject, throwError, of } from 'rxjs';
 import { map, catchError, retry} from 'rxjs/operators';
 
 import { AuthTokenModel } from '../models/security/auth-token-model';
@@ -10,15 +10,37 @@ import { LoginModel } from '../models/security/login-model';
 
 //TODO: implement token refresh at some point --
 
+
+interface IAuthServiceFirebase {
+	user: Observable<any>;
+	currentUser: {
+		name: string,
+		email: string,
+		delete(): Promise<any>;
+		updateProfile(props: any): Promise<any>;
+	};
+	signInAnonymously(): Promise<any>;
+	signInWithEmailAndPassword(email: string, password: string): Promise<any>;
+	signInWithPopup(authProvider: any): Promise<any>;
+	sendPasswordResetEmail(email: string): Promise<any>;
+	createUserWithEmailAndPassword(email: string, password: string): Promise<any>;
+}
+
 @Injectable()
 export class AuthService {
 	isLoginError: boolean;
 
+	public auth: IAuthServiceFirebase = {} as  IAuthServiceFirebase;
+
 	loginStatusChange: Subject<boolean> = new Subject<boolean>();
 
-	constructor(private http: HttpClient, private router: Router) { }
+	constructor(private http: HttpClient, private router: Router) {
+		this.auth.createUserWithEmailAndPassword = this.createUserWithEmailAndPassword.bind(this);
+		this.auth.signInWithEmailAndPassword = this.login.bind(this);
+		this.auth.user = of(null);
+	 }
 
-	login(username: string, password: string): Observable<boolean> {
+	login(username: string, password: string): Promise<any> {
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -32,19 +54,19 @@ export class AuthService {
 			.append("password", password)
 			.append('scope', 'openid email phone profile offline_access');
 
-		let requestBody = params.toString();
+		const requestBody = params.toString();
 
 		// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-		return this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe(
-			map((value:any) => {
-				//console.log('response: ', value)
-				let token = (value as AuthTokenModel);
-				localStorage.setItem("refresh-token", token.refresh_token);
-				this.parseToken(token);
-				return true;
-			}),
-			catchError(error => this.handleError(error))
-		);
+		return this.http.post<any>('/connect/token', requestBody, httpOptions).pipe(map(d => {
+			d.user = d.user || {};
+			d.user.displayName = username;
+			this.auth.user  = of(d.user);
+			return d;
+		})).toPromise();
+	}
+
+	createUserWithEmailAndPassword(email: string, password: string): Promise<any> {
+		return this.http.post('/api/signup/register', { email, password}).toPromise();
 	}
 
 	loginWithFacebook(userId: string, accessToken: string): Observable<boolean> {
@@ -123,7 +145,7 @@ export class AuthService {
 		// return an observable with a user-facing error message
 		return throwError(
 			'Something bad happened; please try again later.');
-	};
+	}
 
 	storeToken(token: AuthTokenModel) {
 		localStorage.setItem('auth-token', JSON.stringify(token));

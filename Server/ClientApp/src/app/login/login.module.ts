@@ -11,10 +11,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthComponent } from './auth-ui/auth-ui.component';
 import { NgxAuthFirebaseUIConfig, ngxAuthFirebaseUIConfigFactory } from '../interfaces/config.interface';
 
-export const NgxAuthFirebaseUIConfigToken = new InjectionToken<NgxAuthFirebaseUIConfig>('NgxAuthFirebaseUIConfigToken');
 export const UserProvidedConfigToken = new InjectionToken<NgxAuthFirebaseUIConfig>('UserProvidedConfigToken');
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { EmailConfirmationComponent } from './email-confirmation/email-confirmation.component';
+import { NgxAuthFirebaseUIConfigToken } from '../services/auth-process.service';
 
 @NgModule({
   declarations: [ LoginComponent, SignUpComponent, AuthComponent, EmailConfirmationComponent ],
