@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ThemeStorage } from '../theme-picker/theme-storage/theme-storage';
 import { NgZone } from '@angular/core';
-import { LoginService } from '../services/login.service';
+import { AuthService } from '../services/auth.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatSidenav, MatSidenavContent, MatToolbar } from '@angular/material';
 import { Router } from '@angular/router';
@@ -54,13 +54,12 @@ export class NavComponent {
               private breakpointObserver: BreakpointObserver,
               public overlayContainer: OverlayContainer,
               private themeStorage: ThemeStorage,
-              private loginService: LoginService,
+              private authService: AuthService,
               private router: Router) {
 
     // must do theme here, as nav a parent component for the whole app --
     this.componentCssClass = this.initThemeName = this.themeStorage.getStoredThemeName();
     this.onThemeChanged(this.initThemeName);
-
   }
 
   goTo(link: string) {
