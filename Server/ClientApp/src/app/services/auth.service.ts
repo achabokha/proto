@@ -3,11 +3,15 @@ import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular
 
 import { Router } from "@angular/router";
 import { Observable, Subject, throwError, of } from 'rxjs';
-import { map, catchError, retry} from 'rxjs/operators';
+import { map, catchError, retry } from 'rxjs/operators';
 
 import { AuthTokenModel } from '../models/security/auth-token-model';
 import { LoginModel } from '../models/security/login-model';
 
+import { ProviderAst } from '@angular/compiler';
+import { AuthProvider } from './auth-process.service';
+
+declare var FB: any;
 //TODO: implement token refresh at some point --
 
 
@@ -30,15 +34,16 @@ interface IAuthServiceFirebase {
 export class AuthService {
 	isLoginError: boolean;
 
-	public auth: IAuthServiceFirebase = {} as  IAuthServiceFirebase;
+	public auth: IAuthServiceFirebase = {} as IAuthServiceFirebase;
 
 	loginStatusChange: Subject<boolean> = new Subject<boolean>();
 
 	constructor(private http: HttpClient, private router: Router) {
 		this.auth.createUserWithEmailAndPassword = this.createUserWithEmailAndPassword.bind(this);
 		this.auth.signInWithEmailAndPassword = this.login.bind(this);
+		this.auth.signInWithPopup = this.loginWithFaceBook.bind(this);
 		this.auth.user = of(null);
-	 }
+	}
 
 	login(username: string, password: string): Promise<any> {
 
@@ -60,16 +65,51 @@ export class AuthService {
 		return this.http.post<any>('/connect/token', requestBody, httpOptions).pipe(map(d => {
 			d.user = d.user || {};
 			d.user.displayName = username;
-			this.auth.user  = of(d.user);
+			this.auth.user = of(d.user);
 			return d;
 		})).toPromise();
 	}
 
 	createUserWithEmailAndPassword(email: string, password: string): Promise<any> {
-		return this.http.post('/api/signup/register', { email, password}).toPromise();
+		return this.http.post('/api/signup/register', { email, password }).toPromise();
 	}
 
-	loginWithFacebook(userId: string, accessToken: string): Observable<boolean> {
+	loginWithFaceBook(authProvider: any): Promise<any> {
+		if (authProvider === AuthProvider.Facebook) {
+			return new Promise(async (resolve) => {
+			FB.login((response) => {
+				const httpOptions = {
+					headers: new HttpHeaders({
+						'Content-Type': 'application/x-www-form-urlencoded'
+					})
+				};
+
+				const params = new HttpParams()
+					.append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
+					.append("assertion", response.authResponse.userID)
+					.append("access_token", response.authResponse.accessToken)
+					.append('scope', 'openid email phone profile offline_access');
+
+				let requestBody = params.toString();
+
+				// this call will give 401 (access denied HTTP status code) if login unsuccessful)
+				this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe<boolean>(
+					map((d: any) => {
+						d.user = d.user || {};
+						d.user.displayName = response.authResponse.userID;
+						this.auth.user = of(d.user);
+						return d;
+					})
+				).toPromise()
+				.then(d => resolve(d));
+			});
+		});
+		}
+	}
+
+
+
+	loginWithFacebookToken(userId: string, accessToken: string): Promise<any> {
 
 		const httpOptions = {
 			headers: new HttpHeaders({
@@ -87,15 +127,18 @@ export class AuthService {
 
 		// this call will give 401 (access denied HTTP status code) if login unsuccessful)
 		return this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe(
-			map((value:any) => {
+			map((d: any) => {
 				//console.log('response: ', value)
-				let token = value as AuthTokenModel;
+				let token = d as AuthTokenModel;
 				localStorage.setItem("refresh-token", token.refresh_token);
 				this.parseToken(token);
-				return true;
-			}),
-			catchError(error => this.handleError(error))
-		);
+
+				d.user = d.user || {};
+				d.user.displayName = userId;
+				this.auth.user = of(d.user);
+				return d;
+			})
+		).toPromise();
 	}
 
 	refreshToken(): Observable<any> {
@@ -112,7 +155,7 @@ export class AuthService {
 		let requestBody = params.toString();
 
 		return this.http.post<boolean>('/connect/token', requestBody, { headers: header }).pipe(
-			map((value:any) => {
+			map((value: any) => {
 				//console.log('response: ', value)
 				let token = value as AuthTokenModel;
 				this.parseToken(token);

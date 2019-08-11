@@ -9,13 +9,6 @@ import { AuthService } from './auth.service';
 
 export const NgxAuthFirebaseUIConfigToken = new InjectionToken<NgxAuthFirebaseUIConfig>('NgxAuthFirebaseUIConfigToken');
 
-export const facebookAuthProvider = {};
-export const googleAuthProvider = {};
-export const twitterAuthProvider = {};
-export const githubAuthProvider = {};
-export const microsoftAuthProvider = {};
-export const yahooAuthProvider = {};
-
 export enum AuthProvider {
 	ALL = 'all',
 	ANONYMOUS = 'anonymous',
@@ -86,28 +79,8 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 					signInResult = await this.afa.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
 					break;
 
-				case AuthProvider.Google:
-					signInResult = await this.afa.auth.signInWithPopup(googleAuthProvider);
-					break;
-
 				case AuthProvider.Facebook:
-					signInResult = await this.afa.auth.signInWithPopup(facebookAuthProvider);
-					break;
-
-				case AuthProvider.Twitter:
-					signInResult = await this.afa.auth.signInWithPopup(twitterAuthProvider);
-					break;
-
-				case AuthProvider.Github:
-					signInResult = await this.afa.auth.signInWithPopup(githubAuthProvider);
-					break;
-
-				case AuthProvider.Microsoft:
-					signInResult = await this.afa.auth.signInWithPopup(microsoftAuthProvider);
-					break;
-
-				case AuthProvider.Yahoo:
-					signInResult = await this.afa.auth.signInWithPopup(yahooAuthProvider);
+					signInResult = await this.afa.auth.signInWithPopup(provider);
 					break;
 
 				case AuthProvider.PhoneNumber:
