@@ -10,19 +10,26 @@ import { LoginModel } from '../models/security/login-model';
 
 import { ProviderAst } from '@angular/compiler';
 import { AuthProvider } from '../enums';
+import { resolve } from 'q';
 
 declare var FB: any;
-//TODO: implement token refresh at some point --
+// TODO: implement token refresh at some point --
 
 
-interface IAuthServiceFirebase {
+interface IAuthState {
 	user: Observable<any>;
 	currentUser: {
 		name: string,
 		email: string,
+		phoneNumber: string,
+		displayName: string,
 		delete(): Promise<any>;
+		updatePhoneNumber(phone: string): Promise<any>;
+		updateEmail(email: string): Promise<any>;
 		updateProfile(props: any): Promise<any>;
 	};
+	checkAuthStatus: () => void;
+	signOut(): Promise<any>;
 	signInAnonymously(): Promise<any>;
 	signInWithEmailAndPassword(email: string, password: string): Promise<any>;
 	signInWithPopup(authProvider: any): Promise<any>;
@@ -34,27 +41,55 @@ interface IAuthServiceFirebase {
 export class AuthService {
 	isLoginError: boolean;
 
-	getToken: () => AuthTokenModel;
+	public authState: IAuthState = {
+		user: new Observable(),
+		currentUser: {
+			name: '',
+			email: '',
+			phoneNumber: '',
+			displayName: '',
+			delete: (): Promise<any> => new Promise((res) => res()),
+			updatePhoneNumber: (phone: string): Promise<any> => new Promise((res) => res()),
+			updateEmail: (email: string): Promise<any> => new Promise((res) => res()),
+			updateProfile: (props: any): Promise<any> => new Promise((res) => res())
+		},
+		signOut: (): Promise<any> => {
 
+			return new Promise<any>(resolve => {
+				this.logout();
+				resolve();
+			});
+		},
+		checkAuthStatus: () => { this.checkAuthorization(); },
+		signInAnonymously: (): Promise<any> => new Promise((res) => res()),
+		signInWithEmailAndPassword: (email: string, password: string): Promise<any> => this.login.bind(this),
+		signInWithPopup: (authProvider: any): Promise<any> => this.loginWithFaceBook.call(this, authProvider),
+		sendPasswordResetEmail: (email: string): Promise<any> => new Promise((res) => res()),
+		createUserWithEmailAndPassword: (email: string, password: string): Promise<any> => this.createUserWithEmailAndPassword.bind(this)
+	};
 
-	public auth: IAuthServiceFirebase = {} as IAuthServiceFirebase;
 
 	constructor(private http: HttpClient, private router: Router) {
-		this.getToken = (): AuthTokenModel => {
-			const tokenJson = localStorage.getItem('auth-token');
-			if (tokenJson) {
-				const token = JSON.parse(tokenJson) as AuthTokenModel;
-				return token;
-			}
-			return null;
-		};
-		this.auth.createUserWithEmailAndPassword = this.createUserWithEmailAndPassword.bind(this);
-		this.auth.signInWithEmailAndPassword = this.login.bind(this);
-		this.auth.signInWithPopup = this.loginWithFaceBook.bind(this);
-		const token = this.getToken();
-
-		this.auth.user = of(token ? token.user : null);
+		this.authState.checkAuthStatus();
 	}
+
+	checkAuthorization() {
+		const token = this.getToken();
+		this.authState.user.subscribe(d => {
+			console.log(`We have a user ${d}`);
+			this.authState.currentUser = d;
+		});
+		this.authState.user = of(token ? token.user : null);
+	}
+
+	getToken(): AuthTokenModel {
+		const tokenJson = localStorage.getItem('auth-token');
+		if (tokenJson) {
+			const token = JSON.parse(tokenJson) as AuthTokenModel;
+			return token;
+		}
+		return null;
+	};
 
 	login(username: string, password: string): Promise<any> {
 
@@ -65,9 +100,9 @@ export class AuthService {
 		};
 
 		const params = new HttpParams()
-			.append("grant_type", "password")
-			.append("username", username)
-			.append("password", password)
+			.append('grant_type', 'password')
+			.append('username', username)
+			.append('password', password)
 			.append('scope', 'openid email phone profile offline_access');
 
 		const requestBody = params.toString();
@@ -76,7 +111,7 @@ export class AuthService {
 		return this.http.post<any>('/connect/token', requestBody, httpOptions).pipe(map(d => {
 			d.user = d.user || {};
 			d.user.displayName = username;
-			this.auth.user = of(d.user);
+			this.authState.user.lift(d.user);
 			return d;
 		})).toPromise();
 	}
@@ -96,19 +131,19 @@ export class AuthService {
 					};
 
 					const params = new HttpParams()
-						.append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
-						.append("assertion", response.authResponse.userID)
-						.append("access_token", response.authResponse.accessToken)
+						.append('grant_type', 'urn:ietf:params:oauth:grant-type:facebook_access_token')
+						.append('assertion', response.authResponse.userID)
+						.append('access_token', response.authResponse.accessToken)
 						.append('scope', 'openid email phone profile offline_access');
 
-					let requestBody = params.toString();
+					const requestBody = params.toString();
 
 					// this call will give 401 (access denied HTTP status code) if login unsuccessful)
 					this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe<boolean>(
 						map((d: any) => {
 							d.user = d.user || {};
 							d.user.displayName = d.userName;
-							this.auth.user = of(d.user);
+							this.authState.user = of(d.user);
 							return d;
 						})
 					).toPromise()
@@ -129,46 +164,46 @@ export class AuthService {
 		};
 
 		const params = new HttpParams()
-			.append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
-			.append("assertion", userId)
-			.append("access_token", accessToken)
+			.append('grant_type', 'urn:ietf:params:oauth:grant-type:facebook_access_token')
+			.append('assertion', userId)
+			.append('access_token', accessToken)
 			.append('scope', 'openid email phone profile offline_access');
 
-		let requestBody = params.toString();
+		const requestBody = params.toString();
 
 		// this call will give 401 (access denied HTTP status code) if login unsuccessful)
 		return this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe(
 			map((d: any) => {
-				//console.log('response: ', value)
-				let token = d as AuthTokenModel;
-				localStorage.setItem("refresh-token", token.refresh_token);
+				// console.log('response: ', value)
+				const token = d as AuthTokenModel;
+				localStorage.setItem('refresh-token', token.refresh_token);
 				this.parseToken(token);
 
 				d.user = d.user || {};
 				d.user.displayName = userId;
-				this.auth.user = of(d.user);
+				this.authState.user = of(d.user);
 				return d;
 			})
 		).toPromise();
 	}
 
 	refreshToken(): Observable<any> {
-		let header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+		const header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
-		let refreshToken = localStorage.getItem("refresh-token");
-		//this.getToken().refresh_token
+		const refreshToken = localStorage.getItem('refresh-token');
+		// this.getToken().refresh_token
 
-		let params = new HttpParams()
+		const params = new HttpParams()
 			.append('refresh_token', refreshToken)
 			.append('grant_type', 'refresh_token');
-		//.append('scope', 'openid email phone profile offline_access');
+		// .append('scope', 'openid email phone profile offline_access');
 
-		let requestBody = params.toString();
+		const requestBody = params.toString();
 
 		return this.http.post<boolean>('/connect/token', requestBody, { headers: header }).pipe(
 			map((value: any) => {
-				//console.log('response: ', value)
-				let token = value as AuthTokenModel;
+				// console.log('response: ', value)
+				const token = value as AuthTokenModel;
 				this.parseToken(token);
 				return true;
 			}),
@@ -186,7 +221,7 @@ export class AuthService {
 		token.expiration_date = new Date(now.getTime() + token.expires_in * 1000).getTime().toString();
 
 		this.storeToken(token);
-		this.auth.user = this.http.get('/api/User/GetSettings', this.authJsonHeaders()).pipe(
+		this.authState.user = this.http.get('/api/User/GetSettings', this.authJsonHeaders()).pipe(
 			catchError((error: any) => this.errorCheck(error))
 		);
 	}
@@ -214,12 +249,12 @@ export class AuthService {
 
 
 	getAccessToken(): string {
-		let tokenJson = localStorage.getItem("auth-token");
+		const tokenJson = localStorage.getItem('auth-token');
 		if (tokenJson) {
-			let token = <AuthTokenModel>JSON.parse(tokenJson);
+			const token = JSON.parse(tokenJson) as AuthTokenModel;
 			return token.access_token;
 		}
-		return "not found";
+		return 'not found';
 	}
 
 	removeToken() {
@@ -228,15 +263,15 @@ export class AuthService {
 
 	logout(): void {
 		this.removeToken();
-		this.auth.user = of(null);
+		this.authState.user = of(null);
 	}
 
 	get isLoggedIn(): boolean {
 		if (typeof window !== 'undefined') { // hack for server side rendering, server side dose not have --
-			let tokenJson = localStorage.getItem('auth-token');
-			if (!tokenJson) return false;
+			const tokenJson = localStorage.getItem('auth-token');
+			if (!tokenJson) { return false; }
 
-			let token = <AuthTokenModel>JSON.parse(tokenJson);
+			const token = JSON.parse(tokenJson) as AuthTokenModel;
 			// console.log("Token: ", token);
 
 			return (new Date().getTime() < +token.expiration_date);
@@ -246,13 +281,13 @@ export class AuthService {
 
 	// for requesting secure data using json
 	authJsonHeaders() {
-		let token = this.getAccessToken();
+		const token = this.getAccessToken();
 
-		let options = {
+		const options = {
 			headers: new HttpHeaders({
 				'Content-Type': 'application/json',
-				'Accept': 'application/json',
-				'Authorization': 'Bearer ' + token
+				Accept: 'application/json',
+				Authorization: 'Bearer ' + token
 			})
 		};
 
@@ -261,13 +296,13 @@ export class AuthService {
 
 	// for requesting secure data from a form post
 	authFormHeaders() {
-		let token = this.getAccessToken();
+		const token = this.getAccessToken();
 
-		let options = {
+		const options = {
 			headers: new HttpHeaders({
 				'Content-Type': 'application/x-www-form-urlencoded',
-				'Accept': 'application/json',
-				'Authorization': 'Bearer ' + token
+				Accept: 'application/json',
+				Authorization: 'Bearer ' + token
 			})
 		};
 
@@ -275,12 +310,12 @@ export class AuthService {
 	}
 
 	errorCheck(error: any) {
-		console.error("error");
-		console.error("status: " + error.status);
+		console.error('error');
+		console.error('status: ' + error.status);
 		console.error(error);
-		if (error.status == 401) {
+		if (error.status === 401) {
 			this.router.navigateByUrl('/login');
 		}
-		return Observable.throw(error.json().message || 'Server error')
+		return Observable.throw(error.json().message || 'Server error');
 	}
 }

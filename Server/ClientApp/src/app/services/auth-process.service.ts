@@ -40,7 +40,7 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 	 * @returns
 	 */
 	public resetPassword(email: string) {
-		return this.afa.auth.sendPasswordResetEmail(email)
+		return this.afa.authState.sendPasswordResetEmail(email)
 			.then(() => console.log('email sent'))
 			.catch((error) => this.onErrorEmitter.next(error));
 	}
@@ -62,15 +62,15 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 
 			switch (provider) {
 				case AuthProvider.ANONYMOUS:
-					signInResult = await this.afa.auth.signInAnonymously();
+					signInResult = await this.afa.authState.signInAnonymously();
 					break;
 
 				case AuthProvider.EmailAndPassword:
-					signInResult = await this.afa.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
+					signInResult = await this.afa.authState.signInWithEmailAndPassword(credentials.email, credentials.password);
 					break;
 
 				case AuthProvider.Facebook:
-					signInResult = await this.afa.auth.signInWithPopup(provider);
+					signInResult = await this.afa.authState.signInWithPopup(provider);
 					break;
 
 				case AuthProvider.PhoneNumber:
@@ -103,7 +103,7 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 	public async signUp(displayName: string, credentials: ICredentials) {
 		try {
 			this.isLoading = true;
-			const userCredential: any = await this.afa.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
+			const userCredential: any = await this.afa.authState.createUserWithEmailAndPassword(credentials.email, credentials.password);
 			const user = userCredential.user;
 			await this.updateProfile(displayName, user.photoURL);
 
@@ -139,11 +139,11 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 	 * @returns
 	 */
 	public updateProfile(name: string, photoURL: string): Promise<any> {
-		return this.afa.auth.currentUser.updateProfile({ displayName: name, photoURL: photoURL });
+		return this.afa.authState.currentUser.updateProfile({ displayName: name, photoURL: photoURL });
 	}
 
 	public deleteAccount(): Promise<any> {
-		return this.afa.auth.currentUser.delete();
+		return this.afa.authState.currentUser.delete();
 	}
 
 	public parseUserInfo(user: any): any {
@@ -159,7 +159,7 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 
 	public getUserPhotoUrl(): string {
 
-		const user: any | null = this.afa.auth.currentUser;
+		const user: any | null = this.afa.authState.currentUser;
 
 		if (!user) {
 			return;

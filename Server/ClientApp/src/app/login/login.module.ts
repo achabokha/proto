@@ -16,9 +16,16 @@ import { MatPasswordStrengthModule } from '@angular-material-extensions/password
 import { EmailConfirmationComponent } from './email-confirmation/email-confirmation.component';
 import { NgxAuthFirebaseUIConfigToken } from '../services/auth-process.service';
 import { AuthProvidersComponent } from './auth-provider/auth.providers.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
-  declarations: [ LoginComponent, SignUpComponent, AuthComponent, EmailConfirmationComponent, AuthProvidersComponent ],
+  declarations: [LoginComponent,
+    SignUpComponent,
+    AuthComponent,
+    EmailConfirmationComponent,
+    AuthProvidersComponent,
+    UserComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,
