@@ -15,7 +15,7 @@ export const UserProvidedConfigToken = new InjectionToken<NgxAuthFirebaseUIConfi
 import { MatPasswordStrengthModule } from '@angular-material-extensions/password-strength';
 import { EmailConfirmationComponent } from './email-confirmation/email-confirmation.component';
 import { NgxAuthFirebaseUIConfigToken } from '../services/auth-process.service';
-import { AuthProvidersComponent } from './auth-privide/auth.providers.component';
+import { AuthProvidersComponent } from './auth-provider/auth.providers.component';
 
 @NgModule({
   declarations: [ LoginComponent, SignUpComponent, AuthComponent, EmailConfirmationComponent, AuthProvidersComponent ],

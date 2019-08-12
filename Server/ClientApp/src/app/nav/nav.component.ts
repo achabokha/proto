@@ -70,6 +70,11 @@ export class NavComponent {
     }
   }
 
+  logOut() {
+    this.authService.logout();
+    this.router.navigateByUrl('/dashboard');
+  }
+
   onThemeChanged(theme: string) {
     this.overlayContainer.getContainerElement().classList.remove(this.componentCssClass);
     this.overlayContainer.getContainerElement().classList.add(theme);

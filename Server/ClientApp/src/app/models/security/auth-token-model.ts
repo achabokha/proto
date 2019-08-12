@@ -5,4 +5,5 @@ export interface AuthTokenModel {
     expires_in: number;
     token_type: string;
     expiration_date: string;
+    user: any;
 }

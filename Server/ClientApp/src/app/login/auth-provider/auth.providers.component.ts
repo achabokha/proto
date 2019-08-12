@@ -1,7 +1,8 @@
 import {Component, Input, Output} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MatIconRegistry} from '@angular/material';
-import {AuthProcessService, AuthProvider} from '../../services/auth-process.service';
+import {AuthProcessService } from '../../services/auth-process.service';
+import { AuthProvider } from 'src/app/enums';
 
 export enum Theme {
   DEFAULT = 'default',

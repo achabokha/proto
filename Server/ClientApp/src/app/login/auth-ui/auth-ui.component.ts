@@ -20,10 +20,11 @@ import { isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 import { MatPasswordStrengthComponent } from '@angular-material-extensions/password-strength';
-import { AuthProcessService, AuthProvider, NgxAuthFirebaseUIConfigToken } from 'src/app/services/auth-process.service';
+import { AuthProcessService, NgxAuthFirebaseUIConfigToken } from 'src/app/services/auth-process.service';
 import { NgxAuthFirebaseUIConfig } from 'src/app/interfaces/config.interface';
 import { LegalityDialogComponent } from '../legality-dialog/legality-dialog.component';
 import { LegalityDialogParams, LegalityDialogResult } from 'src/app/interfaces/legality.dialog.intreface';
+import { AuthProvider } from 'src/app/enums';
 
 
 export const EMAIL_REGEX = new RegExp(['^(([^<>()[\\]\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\.,;:\\s@\"]+)*)',

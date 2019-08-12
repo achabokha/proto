@@ -2,25 +2,15 @@ import { EventEmitter, Inject, Injectable, forwardRef, InjectionToken } from '@a
 import { MatSnackBar } from '@angular/material';
 import { ICredentials, ISignInProcess, ISignUpProcess } from '../interfaces/main.interface';
 import { NgxAuthFirebaseUIConfig } from '../interfaces/config.interface';
-import { Accounts } from '../enums';
+import { Accounts, AuthProvider } from '../enums';
 import { AuthService } from './auth.service';
 
 // import User = firebase.User;
 
 export const NgxAuthFirebaseUIConfigToken = new InjectionToken<NgxAuthFirebaseUIConfig>('NgxAuthFirebaseUIConfigToken');
 
-export enum AuthProvider {
-	ALL = 'all',
-	ANONYMOUS = 'anonymous',
-	EmailAndPassword = 'firebase',
-	Google = 'google',
-	Facebook = 'facebook',
-	Twitter = 'twitter',
-	Github = 'github',
-	Microsoft = 'microsoft',
-	Yahoo = 'yahoo',
-	PhoneNumber = 'phoneNumber'
-}
+
+
 
 @Injectable()
 export class AuthProcessService implements ISignInProcess, ISignUpProcess {
@@ -193,15 +183,12 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 	}
 
 	async handleSuccess(userCredential: any) {
-		this.onSuccessEmitter.next(userCredential.user);
-		if (this.config.enableFirestoreSync) {
-			try {
-				await this._fireStoreService.updateUserData(this.parseUserInfo(userCredential.user));
-			} catch (e) {
-				console.error(`Error occurred while updating user data with firestore: ${e}`);
-			}
-		}
 
+
+		this.afa.parseRefreshToken(userCredential);
+		this.afa.parseToken(userCredential);
+
+		this.onSuccessEmitter.next(userCredential.user);
 		if (this.config.toastMessageOnAuthSuccess) {
 			this._snackBar.open(this.messageOnAuthSuccess ? this.messageOnAuthSuccess :
 				`Hello ${userCredential.user.displayName ? userCredential.user.displayName : ''}!`,

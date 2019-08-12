@@ -7,6 +7,7 @@
 			<a mat-list-item  [routerLink]="['/dashboard']">Dashboard</a>
 			<a mat-list-item [routerLink]="['/chart']">Chart</a>
 			<a mat-list-item [routerLink]="['/login/sign-up']">Sign-Up</a>
+			<a mat-list-item (click)="logOut()">Log Out</a>
 		</mat-nav-list>
 	</mat-sidenav>
 	<mat-sidenav-content >
@@ -15,7 +16,7 @@
 				*ngIf="isHandset$ | async">
 				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
 			</button>
-			<span>client</span>
+			<span>{{ (authService.auth.user | async).displayName }}</span>
 
 			<div class="flex-spacer"></div>
 			<theme-picker (onThemeChanged)="onThemeChanged($event)" initThemeName="initThemeName"></theme-picker>

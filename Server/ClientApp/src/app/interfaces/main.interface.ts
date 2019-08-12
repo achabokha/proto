@@ -1,4 +1,5 @@
-import {AuthProvider} from '../services/auth-process.service';
+import { AuthProvider } from '../enums';
+
 
 export interface ICredentials {
   email: string,

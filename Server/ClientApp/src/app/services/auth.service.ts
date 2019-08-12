@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { Observable, Subject, throwError, of } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
 
@@ -9,7 +9,7 @@ import { AuthTokenModel } from '../models/security/auth-token-model';
 import { LoginModel } from '../models/security/login-model';
 
 import { ProviderAst } from '@angular/compiler';
-import { AuthProvider } from './auth-process.service';
+import { AuthProvider } from '../enums';
 
 declare var FB: any;
 //TODO: implement token refresh at some point --
@@ -34,15 +34,26 @@ interface IAuthServiceFirebase {
 export class AuthService {
 	isLoginError: boolean;
 
+	getToken: () => AuthTokenModel;
+
+
 	public auth: IAuthServiceFirebase = {} as IAuthServiceFirebase;
 
-	loginStatusChange: Subject<boolean> = new Subject<boolean>();
-
 	constructor(private http: HttpClient, private router: Router) {
+		this.getToken = (): AuthTokenModel => {
+			const tokenJson = localStorage.getItem('auth-token');
+			if (tokenJson) {
+				const token = JSON.parse(tokenJson) as AuthTokenModel;
+				return token;
+			}
+			return null;
+		};
 		this.auth.createUserWithEmailAndPassword = this.createUserWithEmailAndPassword.bind(this);
 		this.auth.signInWithEmailAndPassword = this.login.bind(this);
 		this.auth.signInWithPopup = this.loginWithFaceBook.bind(this);
-		this.auth.user = of(null);
+		const token = this.getToken();
+
+		this.auth.user = of(token ? token.user : null);
 	}
 
 	login(username: string, password: string): Promise<any> {
@@ -77,33 +88,33 @@ export class AuthService {
 	loginWithFaceBook(authProvider: any): Promise<any> {
 		if (authProvider === AuthProvider.Facebook) {
 			return new Promise(async (resolve) => {
-			FB.login((response) => {
-				const httpOptions = {
-					headers: new HttpHeaders({
-						'Content-Type': 'application/x-www-form-urlencoded'
-					})
-				};
+				FB.login((response) => {
+					const httpOptions = {
+						headers: new HttpHeaders({
+							'Content-Type': 'application/x-www-form-urlencoded'
+						})
+					};
 
-				const params = new HttpParams()
-					.append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
-					.append("assertion", response.authResponse.userID)
-					.append("access_token", response.authResponse.accessToken)
-					.append('scope', 'openid email phone profile offline_access');
+					const params = new HttpParams()
+						.append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
+						.append("assertion", response.authResponse.userID)
+						.append("access_token", response.authResponse.accessToken)
+						.append('scope', 'openid email phone profile offline_access');
 
-				let requestBody = params.toString();
+					let requestBody = params.toString();
 
-				// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-				this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe<boolean>(
-					map((d: any) => {
-						d.user = d.user || {};
-						d.user.displayName = response.authResponse.userID;
-						this.auth.user = of(d.user);
-						return d;
-					})
-				).toPromise()
-				.then(d => resolve(d));
+					// this call will give 401 (access denied HTTP status code) if login unsuccessful)
+					this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe<boolean>(
+						map((d: any) => {
+							d.user = d.user || {};
+							d.user.displayName = d.userName;
+							this.auth.user = of(d.user);
+							return d;
+						})
+					).toPromise()
+						.then(d => resolve(d));
+				});
 			});
-		});
 		}
 	}
 
@@ -166,12 +177,18 @@ export class AuthService {
 			}));
 	}
 
+	parseRefreshToken(token: AuthTokenModel) {
+		localStorage.setItem('refresh-token', token.refresh_token);
+	}
+
 	parseToken(token: AuthTokenModel) {
 		const now = new Date();
 		token.expiration_date = new Date(now.getTime() + token.expires_in * 1000).getTime().toString();
 
 		this.storeToken(token);
-		this.loginStatusChange.next(true);
+		this.auth.user = this.http.get('/api/User/GetSettings', this.authJsonHeaders()).pipe(
+			catchError((error: any) => this.errorCheck(error))
+		);
 	}
 
 	private handleError(error: HttpErrorResponse) {
@@ -194,14 +211,7 @@ export class AuthService {
 		localStorage.setItem('auth-token', JSON.stringify(token));
 	}
 
-	getToken(): AuthTokenModel {
-		let tokenJson = localStorage.getItem("auth-token");
-		if (tokenJson) {
-			let token = <AuthTokenModel>JSON.parse(tokenJson);
-			return token;
-		}
-		return null;
-	}
+
 
 	getAccessToken(): string {
 		let tokenJson = localStorage.getItem("auth-token");
@@ -218,7 +228,7 @@ export class AuthService {
 
 	logout(): void {
 		this.removeToken();
-		this.loginStatusChange.next(false);
+		this.auth.user = of(null);
 	}
 
 	get isLoggedIn(): boolean {
