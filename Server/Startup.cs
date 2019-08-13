@@ -40,11 +40,6 @@ namespace Server
 				configuration.RootPath = "ClientApp/dist";
 			});
 
-			services.Configure<IdentityOptions>(options =>
-            {
-                options.SignIn.RequireConfirmedEmail = false;
-            });
-
 			//services.AddMemoryCache();
 
 			services.AddAutoMapper();
@@ -73,7 +68,7 @@ namespace Server
 
 			services.AddIdentity<ApplicationUser, IdentityRole>(config =>
 			{
-				config.SignIn.RequireConfirmedEmail = true;
+				config.SignIn.RequireConfirmedEmail = false;
 			})
 			.AddEntityFrameworkStores<Models.DbContext>()
 			.AddDefaultTokenProviders();
