@@ -160,7 +160,9 @@ namespace Server.Controllers
 
 				// Create a new authentication ticket.
 				var ticket = await CreateTicketAsync(request, user == null ? userData : user);
-				ticket.AddProperty("userName#public_string", userData.Email);
+				ticket.AddProperty("userEmail#public_string", userData.Email);
+				ticket.AddProperty("userID#public_string", userData.Id);
+				ticket.AddProperty("userName#public_string", userData.UserName);
 
 				return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
 			}

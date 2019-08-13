@@ -36,10 +36,10 @@ namespace Server.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> GetSettings()
+        public async Task<JsonResult> GetSettings()
         {
             var user = await _userManager.FindByIdAsync(this.GetUserId());
-            return Ok(new { user.FirstName, user.LastName, user.Email });
+            return Json(new { user.FirstName, user.LastName, user.Email });
         }
 
         [HttpPost("[action]")]

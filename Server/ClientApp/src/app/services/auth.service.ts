@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 
 import { Router } from '@angular/router';
-import { Observable, Subject, throwError, of } from 'rxjs';
+import { Observable, Subject, throwError, of, BehaviorSubject } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
 
 import { AuthTokenModel } from '../models/security/auth-token-model';
@@ -11,43 +11,26 @@ import { LoginModel } from '../models/security/login-model';
 import { ProviderAst } from '@angular/compiler';
 import { AuthProvider } from '../enums';
 import { resolve } from 'q';
+import { EventEmitter } from 'events';
 
 declare var FB: any;
 // TODO: implement token refresh at some point --
 
 
-interface IAuthState {
-	user: Observable<any>;
-	currentUser: {
-		name: string,
-		email: string,
-		phoneNumber: string,
-		displayName: string,
-		delete(): Promise<any>;
-		updatePhoneNumber(phone: string): Promise<any>;
-		updateEmail(email: string): Promise<any>;
-		updateProfile(props: any): Promise<any>;
-	};
-	checkAuthStatus: () => void;
-	signOut(): Promise<any>;
-	signInAnonymously(): Promise<any>;
-	signInWithEmailAndPassword(email: string, password: string): Promise<any>;
-	signInWithPopup(authProvider: any): Promise<any>;
-	sendPasswordResetEmail(email: string): Promise<any>;
-	createUserWithEmailAndPassword(email: string, password: string): Promise<any>;
-}
+
 
 @Injectable()
 export class AuthService {
 	isLoginError: boolean;
 
-	public authState: IAuthState = {
-		user: new Observable(),
+	authState: any = {
+		user: new BehaviorSubject<any>(null),
 		currentUser: {
 			name: '',
 			email: '',
 			phoneNumber: '',
 			displayName: '',
+			userID: '',
 			delete: (): Promise<any> => new Promise((res) => res()),
 			updatePhoneNumber: (phone: string): Promise<any> => new Promise((res) => res()),
 			updateEmail: (email: string): Promise<any> => new Promise((res) => res()),
@@ -62,12 +45,14 @@ export class AuthService {
 		},
 		checkAuthStatus: () => { this.checkAuthorization(); },
 		signInAnonymously: (): Promise<any> => new Promise((res) => res()),
-		signInWithEmailAndPassword: (email: string, password: string): Promise<any> => this.login.bind(this),
+		signInWithEmailAndPassword: (email: string, password: string): Promise<any> => this.login.call(this, email, password),
 		signInWithPopup: (authProvider: any): Promise<any> => this.loginWithFaceBook.call(this, authProvider),
 		sendPasswordResetEmail: (email: string): Promise<any> => new Promise((res) => res()),
-		createUserWithEmailAndPassword: (email: string, password: string): Promise<any> => this.createUserWithEmailAndPassword.bind(this)
+		createUserWithEmailAndPassword: (email: string, password: string): Promise<any> => this.createUserWithEmailAndPassword.call(this, email, password)
 	};
 
+	currentUser$ = this.authState.user;
+	currentUser: any;
 
 	constructor(private http: HttpClient, private router: Router) {
 		this.authState.checkAuthStatus();
@@ -75,11 +60,9 @@ export class AuthService {
 
 	checkAuthorization() {
 		const token = this.getToken();
-		this.authState.user.subscribe(d => {
-			console.log(`We have a user ${d}`);
-			this.authState.currentUser = d;
-		});
-		this.authState.user = of(token ? token.user : null);
+		if (token) {
+			this.parseToken(token);
+		}
 	}
 
 	getToken(): AuthTokenModel {
@@ -109,9 +92,6 @@ export class AuthService {
 
 		// this call will give 401 (access denied HTTP status code) if login unsuccessful)
 		return this.http.post<any>('/connect/token', requestBody, httpOptions).pipe(map(d => {
-			d.user = d.user || {};
-			d.user.displayName = username;
-			this.authState.user.lift(d.user);
 			return d;
 		})).toPromise();
 	}
@@ -139,14 +119,7 @@ export class AuthService {
 					const requestBody = params.toString();
 
 					// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-					this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe<boolean>(
-						map((d: any) => {
-							d.user = d.user || {};
-							d.user.displayName = d.userName;
-							this.authState.user = of(d.user);
-							return d;
-						})
-					).toPromise()
+					this.http.post<boolean>('/connect/token', requestBody, httpOptions).toPromise()
 						.then(d => resolve(d));
 				});
 			});
@@ -172,19 +145,7 @@ export class AuthService {
 		const requestBody = params.toString();
 
 		// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-		return this.http.post<boolean>('/connect/token', requestBody, httpOptions).pipe(
-			map((d: any) => {
-				// console.log('response: ', value)
-				const token = d as AuthTokenModel;
-				localStorage.setItem('refresh-token', token.refresh_token);
-				this.parseToken(token);
-
-				d.user = d.user || {};
-				d.user.displayName = userId;
-				this.authState.user = of(d.user);
-				return d;
-			})
-		).toPromise();
+		return this.http.post<boolean>('/connect/token', requestBody, httpOptions).toPromise();
 	}
 
 	refreshToken(): Observable<any> {
@@ -221,8 +182,10 @@ export class AuthService {
 		token.expiration_date = new Date(now.getTime() + token.expires_in * 1000).getTime().toString();
 
 		this.storeToken(token);
-		this.authState.user = this.http.get('/api/User/GetSettings', this.authJsonHeaders()).pipe(
-			catchError((error: any) => this.errorCheck(error))
+		this.http.get('/api/User/GetSettings', this.authJsonHeaders()).subscribe(
+			d => {
+				this.authState.user.next(d);
+			}
 		);
 	}
 
@@ -263,7 +226,7 @@ export class AuthService {
 
 	logout(): void {
 		this.removeToken();
-		this.authState.user = of(null);
+		this.authState.user.next(null);
 	}
 
 	get isLoggedIn(): boolean {

@@ -51,15 +51,22 @@ export class NavComponent {
   initThemeName: string;
 
   constructor(public zone: NgZone,
-              private breakpointObserver: BreakpointObserver,
-              public overlayContainer: OverlayContainer,
-              private themeStorage: ThemeStorage,
-              private authService: AuthService,
-              private router: Router) {
+    private breakpointObserver: BreakpointObserver,
+    public overlayContainer: OverlayContainer,
+    private themeStorage: ThemeStorage,
+    private authService: AuthService,
+    private router: Router) {
 
     // must do theme here, as nav a parent component for the whole app --
     this.componentCssClass = this.initThemeName = this.themeStorage.getStoredThemeName();
     this.onThemeChanged(this.initThemeName);
+    this.authService.authState.user.pipe(map(d => {
+      console.log(d);
+    }));
+
+    this.authService.authState.user.subscribe(d => {
+      console.log(d);
+    });
   }
 
   goTo(link: string) {
@@ -72,7 +79,7 @@ export class NavComponent {
 
   logOut() {
     this.authService.logout();
-    this.router.navigateByUrl('/dashboard');
+    this.router.navigateByUrl('/');
   }
 
   onThemeChanged(theme: string) {

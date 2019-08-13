@@ -4,6 +4,7 @@ import { ICredentials, ISignInProcess, ISignUpProcess } from '../interfaces/main
 import { NgxAuthFirebaseUIConfig } from '../interfaces/config.interface';
 import { Accounts, AuthProvider } from '../enums';
 import { AuthService } from './auth.service';
+import { map } from 'rxjs/operators';
 
 // import User = firebase.User;
 
@@ -31,7 +32,20 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 		private _snackBar: MatSnackBar,
 		public afa: AuthService,
 		@Inject(forwardRef(() => NgxAuthFirebaseUIConfigToken)) public config: NgxAuthFirebaseUIConfig
-	) { }
+	) {
+
+		this.afa.currentUser$.subscribe(currentUser => {
+			if (currentUser) {
+				this.onSuccessEmitter.emit();
+				if (this.config.toastMessageOnAuthSuccess) {
+					this._snackBar.open(this.messageOnAuthSuccess ? this.messageOnAuthSuccess :
+						`Hello ${currentUser.email ? currentUser.email : ''}!`,
+						'OK', { duration: 5000 });
+				}
+			}
+		});
+
+	}
 
 	/**
 	 * Reset the password of the ngx-auth-firebaseui-user via email
@@ -55,7 +69,6 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 	 * @returns
 	 */
 	public async signInWith(provider: AuthProvider, credentials?: ICredentials) {
-		console.log('this.config on signInWith', this.config);
 		try {
 			this.isLoading = true;
 			let signInResult: any;
@@ -112,7 +125,7 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 					.getUserDocRefByUID(user.uid)
 					.set({
 						uid: user.uid,
-						displayName: displayName,
+						displayName,
 						email: user.email,
 						photoURL: user.photoURL
 					});
@@ -187,20 +200,13 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 
 		this.afa.parseRefreshToken(userCredential);
 		this.afa.parseToken(userCredential);
-
-		this.onSuccessEmitter.next(userCredential.user);
-		if (this.config.toastMessageOnAuthSuccess) {
-			this._snackBar.open(this.messageOnAuthSuccess ? this.messageOnAuthSuccess :
-				`Hello ${userCredential.user.displayName ? userCredential.user.displayName : ''}!`,
-				'OK', { duration: 5000 });
-		}
 	}
 
 	handleError(error: any) {
-		this.onErrorEmitter.next(error);
+		this.onErrorEmitter.next(error.message);
 		if (this.config.toastMessageOnAuthError) {
 			this._snackBar.open(this.messageOnAuthError ? this.messageOnAuthError :
-				error.message, 'OK', { duration: 5000 });
+				error.error.error_description, 'OK', { duration: 5000 });
 		}
 		console.error(error);
 	}

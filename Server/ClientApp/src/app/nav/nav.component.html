@@ -1,28 +1,29 @@
 <mat-sidenav-container class="sidenav-container">
 	<mat-sidenav  #drawer class="sidenav" fixedInViewport="true"
 		[attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
-		[opened]="!(isHandset$ | async) && (authService.authState.user|async)">
+		[opened]="!(isHandset$ | async) && (authService.currentUser$|async)">
 		<mat-toolbar>Menu</mat-toolbar>
 		<mat-nav-list>
 			<a mat-list-item  [routerLink]="['/dashboard']">Dashboard</a>
 			<a mat-list-item [routerLink]="['/chart']">Chart</a>
-			<a mat-list-item [routerLink]="['/login/sign-up']">Sign-Up</a>
+			<a mat-list-item [routerLink]="['/login']">Sign-Up</a>
 			<a mat-list-item [routerLink]="['/login/user']">User Info</a>
 			<a mat-list-item (click)="logOut()">Log Out</a>
 		</mat-nav-list>
 	</mat-sidenav>
 	<mat-sidenav-content >
-		<mat-toolbar *ngIf="authService.authState.user|async" color="primary">
+		<mat-toolbar *ngIf="authService.currentUser$|async" color="primary">
 			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
 				*ngIf="isHandset$ | async">
 				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
 			</button>
-			<span>{{ authService.authState.user | async | json  }}</span>
+			<span>Hello {{ (authService.currentUser$ | async).email  }}</span>
 
 			<div class="flex-spacer"></div>
 			<theme-picker (onThemeChanged)="onThemeChanged($event)" initThemeName="initThemeName"></theme-picker>
 
 		</mat-toolbar>
+
 		<!-- Add Content Here -->
 		<ng-content></ng-content>
 

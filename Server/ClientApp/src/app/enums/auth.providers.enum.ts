@@ -1,7 +1,7 @@
 export enum AuthProvider {
 	ALL = 'all',
 	ANONYMOUS = 'anonymous',
-	EmailAndPassword = 'firebase',
+	EmailAndPassword = 'emailAndpPassword',
 	Google = 'google',
 	Facebook = 'facebook',
 	Twitter = 'twitter',

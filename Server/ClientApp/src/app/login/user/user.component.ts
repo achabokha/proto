@@ -51,7 +51,7 @@ export class UserComponent {
   ) { }
 
   protected initUpdateFormGroup() {
-    const currentUser: any = this.auth.authState.currentUser;
+    const currentUser: any = this.auth.currentUser;
     this.updateFormGroup = new FormGroup({
       name: this.updateNameFormControl = new FormControl(
         { value: currentUser.displayName, disabled: this.editMode },

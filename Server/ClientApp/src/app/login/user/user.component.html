@@ -1,9 +1,9 @@
-\<div *ngIf="auth.authState.user | async as user; then authenticated else none">
+<div *ngIf="auth.authState.user | async as user; then authenticated else none">
 
 	</div>
 	
 	<ng-template #authenticated>
-	  <mat-card *ngIf="auth.authState.user | async as user">
+	  <mat-card *ngIf="auth.currentUser$ | async as user">
 		<!--<form [formGroup]="updateFormGroup" >-->
 		<!--card header-->
 		<mat-card-header fxLayout="column" fxLayoutAlign="center center">
