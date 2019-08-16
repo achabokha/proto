@@ -3,21 +3,17 @@ $facebook: #385899;
 $twitter: #1da1f2;
 $github: #000000;
 $phone: #02bd7e;
-$microsoft: #00A4EF;
+$microsoft: #00a4ef;
 $microsoft_fab: #f8f9fa;
 $yahoo: #720e9e;
 
 :host {
   display: block;
-
-  .mat-icon {
-    vertical-align: inherit;
-  }
 }
 
 .space-full-xs {
   width: 100%;
-  margin: .4rem;
+  margin: 0.4rem;
 }
 
 .facebook-filled {
@@ -33,7 +29,6 @@ $yahoo: #720e9e;
 }
 
 .buttons-raised {
-
   button {
     color: white !important;
   }
@@ -68,7 +63,6 @@ $yahoo: #720e9e;
 }
 
 .buttons-classic {
-
   button.google-classic {
     color: $google !important;
   }

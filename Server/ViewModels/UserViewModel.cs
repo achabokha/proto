@@ -31,4 +31,14 @@ namespace Server.ViewModels
 
 
     }
+
+    public class UserUpdateViewModel {
+        
+        public string DisplayName { get; set; }
+
+        
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        
+    }
 }

@@ -32,23 +32,21 @@ export class AuthService {
 			displayName: '',
 			userID: '',
 			delete: (): Promise<any> => new Promise((res) => res()),
-			updatePhoneNumber: (phone: string): Promise<any> => new Promise((res) => res()),
-			updateEmail: (email: string): Promise<any> => new Promise((res) => res()),
-			updateProfile: (props: any): Promise<any> => new Promise((res) => res())
+			updateProfile: (displayName: string, email: string, phone: string): Promise<any> => this.updateDisplayName.call(this, displayName, email, phone)
 		},
 		signOut: (): Promise<any> => {
 
 			return new Promise<any>(resolve => {
 				this.logout();
-				resolve();
+				resolve(this.router.navigateByUrl("/"));
 			});
 		},
 		checkAuthStatus: () => { this.checkAuthorization(); },
-		signInAnonymously: (): Promise<any> => new Promise((res) => res()),
+		signInAnonymously: (): Promise<any> => this.signInAnonymously.call(this),
 		signInWithEmailAndPassword: (email: string, password: string): Promise<any> => this.login.call(this, email, password),
 		signInWithPopup: (authProvider: any): Promise<any> => this.loginWithFaceBook.call(this, authProvider),
-		sendPasswordResetEmail: (email: string): Promise<any> => new Promise((res) => res()),
-		createUserWithEmailAndPassword: (email: string, password: string): Promise<any> => this.createUserWithEmailAndPassword.call(this, email, password)
+		sendPasswordResetEmail: (email: string): Promise<any> => this.sendPasswordReset.call(this, email),
+		createUserWithEmailAndPassword: (userName: string, email: string, password: string): Promise<any> => this.createUserWithEmailAndPassword.call(this, userName, email, password)
 	};
 
 	currentUser$ = this.authState.user;
@@ -56,6 +54,10 @@ export class AuthService {
 
 	constructor(private http: HttpClient, private router: Router) {
 		this.authState.checkAuthStatus();
+		this.currentUser$.subscribe(d => {
+			console.log(d);
+			this.currentUser = d;
+		})
 	}
 
 	checkAuthorization() {
@@ -72,7 +74,15 @@ export class AuthService {
 			return token;
 		}
 		return null;
-	};
+	}
+
+	updateDisplayName(displayName: string, email, phone): Promise<any> {
+		return new Promise((resolve) => {
+			this.http.post('/api/User/UpdateProfile', { displayName, email, phone } , this.authJsonHeaders()).subscribe(d => {
+				resolve(this.authState.user.next(d));
+			});
+		});
+	}
 
 	login(username: string, password: string): Promise<any> {
 
@@ -96,8 +106,33 @@ export class AuthService {
 		})).toPromise();
 	}
 
-	createUserWithEmailAndPassword(email: string, password: string): Promise<any> {
-		return this.http.post('/api/signup/register', { email, password }).toPromise();
+	createUserWithEmailAndPassword(userName: string, email: string, password: string): Promise<any> {
+		return new Promise((resolve) => {
+			this.http.post('/api/signup/register', { userName, email, password }).subscribe(d => {
+				resolve(this.login(email, password));
+			});
+		});
+	}
+
+	signInAnonymously(): Promise<any> {
+		return new Promise(async (resolve) => {
+			const httpOptions = {
+				headers: new HttpHeaders({
+					'Content-Type': 'application/x-www-form-urlencoded'
+				})
+			};
+
+			const params = new HttpParams()
+				.append('grant_type', 'urn:ietf:params:oauth:grant-type:guest_user')
+				.append('access_token', 'guestUser')
+				.append('scope', 'openid email phone profile offline_access');
+
+			const requestBody = params.toString();
+
+			// this call will give 401 (access denied HTTP status code) if login unsuccessful)
+			this.http.post<boolean>('/connect/token', requestBody, httpOptions).toPromise()
+				.then(d => resolve(d));
+		});
 	}
 
 	loginWithFaceBook(authProvider: any): Promise<any> {
@@ -124,6 +159,23 @@ export class AuthService {
 				});
 			});
 		}
+	}
+
+	resetPassword(user: any): Promise<any> {
+		return new Promise((resolve) => {
+			this.http.post('/api/User/ResetPassword', user).subscribe(d => {
+				resolve(d);
+			});
+		});
+	}
+
+
+	sendPasswordReset(email: string): Promise<any> {
+		return new Promise((resolve) => {
+			this.http.post('/api/User/ForgotPassword', { email }).subscribe(d => {
+				resolve(d);
+			});
+		});
 	}
 
 

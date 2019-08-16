@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Inject, Input, Output, forwardRef} from '@angular/core';
-import {MatFormFieldAppearance, MatSnackBar} from '@angular/material';
-import {AuthProcessService, NgxAuthFirebaseUIConfigToken} from '../../services/auth-process.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { Component, EventEmitter, Inject, Input, Output, forwardRef } from '@angular/core';
+import { MatFormFieldAppearance, MatSnackBar } from '@angular/material';
+import { AuthProcessService, NgxAuthFirebaseUIConfigToken } from '../../services/auth-process.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { NgxAuthFirebaseUIConfig } from 'src/app/interfaces/config.interface';
 import { EMAIL_REGEX, PHONE_NUMBER_REGEX } from '../auth-ui/auth-ui.component';
@@ -63,15 +63,14 @@ export class UserComponent {
       ),
 
       email: this.updateEmailFormControl = new FormControl(
-        {value: currentUser.email, disabled: this.editMode},
+        { value: currentUser.email, disabled: this.editMode },
         [
           Validators.required,
           Validators.pattern(EMAIL_REGEX)
         ]),
 
       phoneNumber: this.updatePhoneNumberFormControl = new FormControl(
-        {value: currentUser.phoneNumber, disabled: this.editMode},
-        [Validators.pattern(PHONE_NUMBER_REGEX)])
+        { value: currentUser.phoneNumber, disabled: this.editMode })
     });
 
     this.updateFormGroup.enable();
@@ -91,7 +90,7 @@ export class UserComponent {
 
   async save() {
     if (this.updateFormGroup.dirty) {
-      const user = this.auth.authState.currentUser;
+      const userAuth = this.auth.authState.currentUser;
       // ngx-auth-firebaseui-user.updateProfile()
       // ngx-auth-firebaseui-user.updateEmail()
       // console.log('form = ', this.updateFormGroup);
@@ -99,24 +98,19 @@ export class UserComponent {
       const snackBarMsg: string[] = [];
 
       try {
+        await userAuth.updateProfile(this.updateNameFormControl.value,
+          this.updateEmailFormControl.value,
+          this.updatePhoneNumberFormControl.value);
         if (this.updateNameFormControl.dirty) {
-          await user.updateProfile({displayName: this.updateNameFormControl.value, photoURL: null});
-          snackBarMsg.push(`your name has been updated to ${user.displayName}`);
+          snackBarMsg.push(`your name has been updated to ${this.auth.currentUser.displayName}`);
         }
 
         if (this.updateEmailFormControl.dirty) {
-          await user.updateEmail(this.updateEmailFormControl.value);
-          snackBarMsg.push(`your email has been updated to ${user.email}`);
+          snackBarMsg.push(`your email has been updated to ${this.auth.currentUser.email}`);
         }
 
         if (this.updatePhoneNumberFormControl.dirty) {
-          await user.updatePhoneNumber(this.updatePhoneNumberFormControl.value);
-          console.log('phone number = ', this.updatePhoneNumberFormControl.value);
-          snackBarMsg.push(`your phone number has been updated to ${user.phoneNumber}`);
-        }
-
-        if (this.config.enableFirestoreSync) {
-          // await this._fireStoreService.updateUserData(this.authProcess.parseUserInfo(user));
+          snackBarMsg.push(`your phone number has been updated to ${this.auth.currentUser.phoneNumber}`);
         }
 
       } catch (error) {

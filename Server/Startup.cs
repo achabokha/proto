@@ -102,6 +102,7 @@ namespace Server
 					options.AllowPasswordFlow();
 					options.AllowRefreshTokenFlow();
 					options.AllowCustomFlow("urn:ietf:params:oauth:grant-type:facebook_access_token");
+					options.AllowCustomFlow("urn:ietf:params:oauth:grant-type:guest_user");
 
 
 					// Accept anonymous clients (i.e clients that don't send a client_id).

@@ -261,7 +261,7 @@
 			  mat-mini-fab
 			  class="facebook-raised"
 			  (click)="authProcess.signInWith(authProvider.Facebook)">
-		<mat-icon svgIcon="facebook"></mat-icon>
+		<mat-icon class="svg-provider-icon" svgIcon="facebook"></mat-icon>
 	  </button>
 	  <button *ngIf="providers === authProvider.ALL || providers.includes(authProvider.Twitter)"
 			  mat-mini-fab

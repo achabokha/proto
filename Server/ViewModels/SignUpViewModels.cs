@@ -7,27 +7,29 @@ using Microsoft.AspNetCore.Http;
 
 namespace Server.ViewModels
 {
-    public class UserRegisterViewModel
-    {
-        [Required]
-        public string Email { get; set; }
+	public class UserRegisterViewModel
+	{
+		[Required]
+		public string Email { get; set; }
 
-        [Required]
-        public string Password { get; set; }
+		[Required]
+		public string Password { get; set; }
 
-        public string LastName { get; set; }
+		public string LastName { get; set; }
 
-        public string FirstName { get; set; }
+		public string FirstName { get; set; }
 
-        public string Token { get; set; }
-    }
+		public string UserName { get; set; }
 
-    public class ConfirmEmail
-    {
-        [Required]
-        public string UserId { get; set; }
+		public string Token { get; set; }
+	}
 
-        [Required]
-        public string Code { get; set; }
-    }
+	public class ConfirmEmail
+	{
+		[Required]
+		public string UserId { get; set; }
+
+		[Required]
+		public string Code { get; set; }
+	}
 }

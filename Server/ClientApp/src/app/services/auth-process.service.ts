@@ -116,25 +116,9 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 	public async signUp(displayName: string, credentials: ICredentials) {
 		try {
 			this.isLoading = true;
-			const userCredential: any = await this.afa.authState.createUserWithEmailAndPassword(credentials.email, credentials.password);
+			const userCredential: any = await
+				this.afa.authState.createUserWithEmailAndPassword(displayName, credentials.email, credentials.password);
 			const user = userCredential.user;
-			await this.updateProfile(displayName, user.photoURL);
-
-			if (this.config.enableFirestoreSync) {
-				await this._fireStoreService
-					.getUserDocRefByUID(user.uid)
-					.set({
-						uid: user.uid,
-						displayName,
-						email: user.email,
-						photoURL: user.photoURL
-					});
-			}
-
-			await user.sendEmailVerification();
-			this.emailConfirmationSent = true;
-			this.emailToConfirm = credentials.email;
-
 			await this.handleSuccess(userCredential);
 		} catch (err) {
 			this.handleError(err);

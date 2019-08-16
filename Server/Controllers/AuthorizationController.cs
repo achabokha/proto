@@ -49,7 +49,7 @@ namespace Server.Controllers
 
 			if (request.IsPasswordGrantType())
 			{
-				var user = await _userManager.FindByNameAsync(request.Username);
+				var user = await _userManager.FindByEmailAsync(request.Username);
 				if (user == null)
 				{
 					return BadRequest(new OpenIdConnectResponse
@@ -160,10 +160,23 @@ namespace Server.Controllers
 
 				// Create a new authentication ticket.
 				var ticket = await CreateTicketAsync(request, user == null ? userData : user);
-				ticket.AddProperty("userEmail#public_string", userData.Email);
-				ticket.AddProperty("userID#public_string", userData.Id);
-				ticket.AddProperty("userName#public_string", userData.UserName);
 
+				return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+			}
+			else if (request.GrantType == "urn:ietf:params:oauth:grant-type:guest_user")
+			{
+				var user = await _userManager.FindByEmailAsync("dwight.schrute@office.com");
+				if (user == null)
+				{
+
+					return BadRequest(new OpenIdConnectResponse
+					{
+						Error = OpenIdConnectConstants.Errors.InvalidRequest,
+						ErrorDescription = "Can't find guest user account"
+					});
+				}
+
+				var ticket = await CreateTicketAsync(request, user);
 				return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
 			}
 			return BadRequest(new OpenIdConnectResponse
