@@ -25,6 +25,8 @@ namespace Server
 			Configuration = configuration;
 		}
 
+		readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 		public IConfiguration Configuration { get; }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
@@ -41,6 +43,17 @@ namespace Server
 			});
 
 			//services.AddMemoryCache();
+
+			services.AddCors(options =>
+			{
+				options.AddPolicy(MyAllowSpecificOrigins,
+				builder =>
+				{
+					builder.WithOrigins("ionic://localhost")
+					.AllowAnyHeader()
+					.AllowAnyMethod();
+				});
+			});
 
 			services.AddAutoMapper();
 
@@ -151,10 +164,11 @@ namespace Server
 				app.UseHsts();
 			}
 
-			app.UseHttpsRedirection();
+			//app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
 			app.UseAuthentication();
+			app.UseCors(MyAllowSpecificOrigins); 
 
 			app.UseMvc(routes =>
 			{

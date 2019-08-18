@@ -12,6 +12,7 @@ import { ProviderAst } from '@angular/compiler';
 import { AuthProvider } from '../enums';
 import { resolve } from 'q';
 import { EventEmitter } from 'events';
+import { environment } from 'src/environments/environment';
 
 declare var FB: any;
 // TODO: implement token refresh at some point --
@@ -78,7 +79,7 @@ export class AuthService {
 
 	updateDisplayName(displayName: string, email, phone): Promise<any> {
 		return new Promise((resolve) => {
-			this.http.post('/api/User/UpdateProfile', { displayName, email, phone } , this.authJsonHeaders()).subscribe(d => {
+			this.http.post(environment.apiUrl + '/api/User/UpdateProfile', { displayName, email, phone } , this.authJsonHeaders()).subscribe(d => {
 				resolve(this.authState.user.next(d));
 			});
 		});
@@ -101,14 +102,14 @@ export class AuthService {
 		const requestBody = params.toString();
 
 		// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-		return this.http.post<any>('/connect/token', requestBody, httpOptions).pipe(map(d => {
+		return this.http.post<any>(environment.apiUrl + '/connect/token', requestBody, httpOptions).pipe(map(d => {
 			return d;
 		})).toPromise();
 	}
 
 	createUserWithEmailAndPassword(userName: string, email: string, password: string): Promise<any> {
 		return new Promise((resolve) => {
-			this.http.post('/api/signup/register', { userName, email, password }).subscribe(d => {
+			this.http.post(environment.apiUrl + '/api/signup/register', { userName, email, password }).subscribe(d => {
 				resolve(this.login(email, password));
 			});
 		});
@@ -130,7 +131,7 @@ export class AuthService {
 			const requestBody = params.toString();
 
 			// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-			this.http.post<boolean>('/connect/token', requestBody, httpOptions).toPromise()
+			this.http.post<boolean>(environment.apiUrl + '/connect/token', requestBody, httpOptions).toPromise()
 				.then(d => resolve(d));
 		});
 	}
@@ -154,7 +155,7 @@ export class AuthService {
 					const requestBody = params.toString();
 
 					// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-					this.http.post<boolean>('/connect/token', requestBody, httpOptions).toPromise()
+					this.http.post<boolean>(environment.apiUrl + '/connect/token', requestBody, httpOptions).toPromise()
 						.then(d => resolve(d));
 				});
 			});
@@ -163,7 +164,7 @@ export class AuthService {
 
 	resetPassword(user: any): Promise<any> {
 		return new Promise((resolve) => {
-			this.http.post('/api/User/ResetPassword', user).subscribe(d => {
+			this.http.post(environment.apiUrl + '/api/User/ResetPassword', user).subscribe(d => {
 				resolve(d);
 			});
 		});
@@ -172,7 +173,7 @@ export class AuthService {
 
 	sendPasswordReset(email: string): Promise<any> {
 		return new Promise((resolve) => {
-			this.http.post('/api/User/ForgotPassword', { email }).subscribe(d => {
+			this.http.post(environment.apiUrl + '/api/User/ForgotPassword', { email }).subscribe(d => {
 				resolve(d);
 			});
 		});
@@ -197,7 +198,7 @@ export class AuthService {
 		const requestBody = params.toString();
 
 		// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-		return this.http.post<boolean>('/connect/token', requestBody, httpOptions).toPromise();
+		return this.http.post<boolean>(environment.apiUrl + '/connect/token', requestBody, httpOptions).toPromise();
 	}
 
 	refreshToken(): Observable<any> {
@@ -213,7 +214,7 @@ export class AuthService {
 
 		const requestBody = params.toString();
 
-		return this.http.post<boolean>('/connect/token', requestBody, { headers: header }).pipe(
+		return this.http.post<boolean>(environment.apiUrl + '/connect/token', requestBody, { headers: header }).pipe(
 			map((value: any) => {
 				// console.log('response: ', value)
 				const token = value as AuthTokenModel;
@@ -234,7 +235,7 @@ export class AuthService {
 		token.expiration_date = new Date(now.getTime() + token.expires_in * 1000).getTime().toString();
 
 		this.storeToken(token);
-		this.http.get('/api/User/GetSettings', this.authJsonHeaders()).subscribe(
+		this.http.get(environment.apiUrl + '/api/User/GetSettings', this.authJsonHeaders()).subscribe(
 			d => {
 				this.authState.user.next(d);
 			}
