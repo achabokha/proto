@@ -8,7 +8,7 @@ import { NgZone } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatSidenav, MatSidenavContent, MatToolbar } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -43,9 +43,13 @@ export class NavComponent {
 
   isOpen = false;
 
+  isHandset = false;
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
-      map(result => result.matches)
+      map(result => {
+        this.isHandset = result.matches;
+        return result.matches
+      })
     );
   @HostBinding('class') componentCssClass;
   initThemeName: string;
@@ -67,6 +71,14 @@ export class NavComponent {
     this.authService.authState.user.subscribe(d => {
       console.log(d);
     });
+
+    if (!this.isHandset$) {
+      this.router.events.subscribe(e => {
+        if (e instanceof NavigationStart) {
+          this.sideNav.close();
+        }
+      })
+    }
   }
 
   goTo(link: string) {
