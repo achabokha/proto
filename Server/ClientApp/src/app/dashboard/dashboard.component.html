@@ -4,9 +4,9 @@
 
   <!-- <mat-grid-tile  | async" [colspan]="card.cols" [rowspan]="card.rows"> -->
   <div gdGap="10px" style="height: calc(100vh - 152px)" gdArea="area1"
-  gdRows="50% 50%" gdColumns="50% 50%">
+  gdColumns="50% 50%">
 
-    <mat-card   *ngFor="let card of cards | async">
+    <mat-card [gdColumn]="'auto / span ' + card.cols" [gdRow]="'auto / span ' + card.rows"  *ngFor="let card of cards | async">
       <mat-card-header>
         <mat-card-title>
           {{card.title}}
