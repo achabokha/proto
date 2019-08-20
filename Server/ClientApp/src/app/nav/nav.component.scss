@@ -1,5 +1,5 @@
 .sidenav-container {
-  height: 100%;
+  height: calc(100vh - 56px);
 }
 
 .sidenav {
@@ -18,4 +18,15 @@
 
 .flex-spacer {
   flex-grow: 1;
+}
+
+#bottom-bar {
+  display: flex; justify-content: space-around; align-items: center;
+  z-index: 2;
+  width: 100%; height: 56px;
+
+  i {
+    padding: 8px;
+    cursor: pointer;
+  }
 }

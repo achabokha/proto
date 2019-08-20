@@ -1,16 +1,16 @@
 <mat-sidenav-container class="sidenav-container">
-	<mat-sidenav  #drawer class="sidenav" fixedInViewport="true"
+	<mat-sidenav #drawer class="sidenav" fixedInViewport="true"
 		[attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
 		[opened]="!(isHandset$ | async) && (authService.currentUser$|async)">
 		<mat-toolbar>Menu</mat-toolbar>
 		<mat-nav-list>
-			<a mat-list-item  [routerLink]="['/dashboard']">Dashboard</a>
+			<a mat-list-item [routerLink]="['/dashboard']">Dashboard</a>
 			<a mat-list-item [routerLink]="['/chart']">Chart</a>
 			<a mat-list-item [routerLink]="['/login/user']">User Info</a>
 			<a mat-list-item (click)="logOut()">Log Out</a>
 		</mat-nav-list>
 	</mat-sidenav>
-	<mat-sidenav-content >
+	<mat-sidenav-content>
 		<mat-toolbar *ngIf="authService.currentUser$|async" color="primary">
 			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
 				*ngIf="isHandset$ | async">
@@ -26,5 +26,20 @@
 		<!-- Add Content Here -->
 		<ng-content></ng-content>
 
+
+
 	</mat-sidenav-content>
 </mat-sidenav-container>
+<mat-toolbar id="bottom-bar" *ngIf="authService.currentUser$|async" color="primary">
+	<button mat-icon-button routerLink="dashboard" aria-label="Example icon-button with a heart icon">
+		<mat-icon>featured_play_list</mat-icon>
+	</button>
+
+	<button mat-icon-button routerLink="login/user" aria-label="Example icon-button with a heart icon">
+		<mat-icon>perm_identity</mat-icon>
+	</button>
+
+	<button mat-icon-button routerLink="chart" aria-label="Example icon-button with a heart icon">
+		<mat-icon>search</mat-icon>
+	</button>
+</mat-toolbar>

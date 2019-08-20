@@ -13,7 +13,7 @@ import { Router, NavigationStart } from '@angular/router';
 @Component({
   selector: 'app-nav',
   templateUrl: './nav.component.html',
-  styleUrls: ['./nav.component.css'],
+  styleUrls: ['./nav.component.scss'],
   animations: [
     trigger('openClose', [
       // ...
