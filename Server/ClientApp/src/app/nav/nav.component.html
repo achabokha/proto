@@ -1,4 +1,4 @@
-<mat-sidenav-container [ngClass]="{ 'sidenav-container': authService.currentUser, 'sidenav-container-full': !authService.currentUser}">
+<mat-sidenav-container [ngClass]="{ 'sidenav-container': authService.currentUser && this.plt.is('mobile'), 'sidenav-container-full': !authService.currentUser || !this.plt.is('mobile')}">
 	<mat-sidenav #drawer class="sidenav" fixedInViewport="true"
 		[attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
 		[opened]="!(isHandset$ | async) && (authService.currentUser$|async)">
@@ -30,7 +30,7 @@
 
 	</mat-sidenav-content>
 </mat-sidenav-container>
-<mat-toolbar id="bottom-bar" *ngIf="authService.currentUser$|async" color="primary">
+<mat-toolbar *ngIf="isHandset$ | async" id="bottom-bar" color="primary">
 	<button mat-icon-button routerLink="dashboard" aria-label="Example icon-button with a heart icon">
 		<mat-icon>featured_play_list</mat-icon>
 	</button>

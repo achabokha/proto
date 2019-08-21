@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatSidenav, MatSidenavContent, MatToolbar } from '@angular/material';
 import { Router, NavigationStart } from '@angular/router';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-nav',
@@ -55,11 +56,12 @@ export class NavComponent {
   initThemeName: string;
 
   constructor(public zone: NgZone,
-    private breakpointObserver: BreakpointObserver,
-    public overlayContainer: OverlayContainer,
-    private themeStorage: ThemeStorage,
-    private authService: AuthService,
-    private router: Router) {
+              private breakpointObserver: BreakpointObserver,
+              public overlayContainer: OverlayContainer,
+              private themeStorage: ThemeStorage,
+              private authService: AuthService,
+              private router: Router,
+              public plt: Platform) {
 
     // must do theme here, as nav a parent component for the whole app --
     this.componentCssClass = this.initThemeName = this.themeStorage.getStoredThemeName();
@@ -68,16 +70,12 @@ export class NavComponent {
       console.log(d);
     }));
 
-    this.authService.authState.user.subscribe(d => {
-      console.log(d);
-    });
-
-    if (!this.isHandset$) {
+    if (this.plt.is("mobile")) {
       this.router.events.subscribe(e => {
         if (e instanceof NavigationStart) {
           this.sideNav.close();
         }
-      })
+      });
     }
   }
 

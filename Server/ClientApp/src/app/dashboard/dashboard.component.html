@@ -3,25 +3,18 @@
 
 
   <!-- <mat-grid-tile  | async" [colspan]="card.cols" [rowspan]="card.rows"> -->
-  <div gdGap="10px" style="height: calc(100vh - 208px)" gdArea="area1"
-  gdColumns="50% 50%">
+  <div gdGap="10px" gdArea="area1" [gdColumns]="columnSplit">
 
-    <mat-card [gdColumn]="'auto / span ' + card.cols" [gdRow]="'auto / span ' + card.rows"  *ngFor="let card of cards | async">
-      <mat-card-header>
-        <mat-card-title>
-          {{card.title}}
-          <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu" xPosition="before">
-            <button mat-menu-item>Expand</button>
-            <button mat-menu-item>Remove</button>
-          </mat-menu>
-        </mat-card-title>
-      </mat-card-header>
+    <mat-card [gdColumn]="'auto / span ' + card.cols" [gdRow]="'auto / span ' + card.rows"
+      *ngFor="let card of cards">
       <mat-card-content>
-        <div>Card Content Here</div>
+        <img mat-card-image [attr.src]="'/assets/img/cover' + card.imgSrc +  '.jpg'" alt="Photo of a Shiba Inu">
       </mat-card-content>
+      <mat-card-footer>
+        <div fxLayout="row" class="cardFooter" fxLayoutAlign="space-around start">
+          {{ card.title }}
+        </div>
+      </mat-card-footer>
     </mat-card>
   </div>
 
