@@ -32,7 +32,7 @@ export class DashboardComponent {
       } else if (matches.breakpoints[Breakpoints.Small]) {
         this.columnSplit = '50% 50%';
       } else {
-        this.columnSplit = '100%';
+        this.columnSplit = '50% 50%';
       }
     });
 
