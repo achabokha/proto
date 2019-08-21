@@ -82,5 +82,5 @@ Run and build in Xcode, this should launch simulator.
 
 # Run on iPhone itself 
 
-Andrej's will write it up...
+Andrejs will write it up...
 
