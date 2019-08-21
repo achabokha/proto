@@ -60,7 +60,24 @@ the server proxy localhost:5000 to localhost:4200 for the angular client.
 
 # Run on iPhone Simulator
 
-Andrej's will write it up...
+## For Mac
+
+cd Server/ClientApp/
+
+ionic cordova build ios
+
+xed platforme/ios/
+
+If you are running Xcode 8, the code signing error will appear as a buildtime error, rather than as a pop-up:
+
+To select the certificate to sign your app with, do the following:
+1. Go to the ‘Project Editor’ by clicking the name or your project in the ‘Project Navigator’
+2. Select the ‘General’ section
+3. Update "Bundle Identifier" to something unique
+4. Select the team associate with your signing certificate from the ‘Team’ dropdown in the ‘Signing’ section
+
+Run and build in Xcode, this should launch simulator.
+
 
 # Run on iPhone itself 
 
