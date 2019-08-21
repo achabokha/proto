@@ -12,57 +12,57 @@ interface ExampleFlatNode {
 
 const TREE_DATA: ExampleFlatNode[] = [
     {
-        name: "Anton",
+        name: "John",
         expandable: true,
         level: 0
     },
     {
-        name: "Andrei",
+        name: "Peter",
         expandable: false,
         level: 1
     },
     {
-        name: "Anton",
+        name: "John",
         expandable: false,
         level: 1
     },
     {
-        name: "Andrei",
+        name: "Peter",
         expandable: false,
         level: 1
     },
     {
-        name: "Anton",
+        name: "John",
         expandable: true,
         level: 0
     },
     {
-        name: "Andrei",
+        name: "Karen",
         expandable: true,
         level: 1
     },
     {
-        name: "Anton",
+        name: "John",
         expandable: false,
         level: 2
     },
     {
-        name: "Anton",
+        name: "John",
         expandable: false,
         level: 2
     },
     {
-        name: "Anton",
+        name: "John",
         expandable: true,
         level: 1
     },
     {
-        name: "Andrei",
+        name: "Peter",
         expandable: false,
         level: 2
     },
     {
-        name: "Anton",
+        name: "John",
         expandable: false,
         level: 2
     }
