@@ -61,12 +61,11 @@ the server proxy localhost:5000 to localhost:4200 for the angular client.
 # Run on iPhone Simulator
 
 ## For Mac
-
+```bash
 cd Server/ClientApp/
-
 ionic cordova build ios
-
 xed platforme/ios/
+```
 
 If you are running Xcode 8, the code signing error will appear as a buildtime error, rather than as a pop-up:
 
