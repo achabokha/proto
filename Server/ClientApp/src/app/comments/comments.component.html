@@ -1,0 +1,73 @@
+<!-- ln 8 -->
+<!-- [style.display]="shouldRender(node) ? 'flex' : 'none'" -->
+<!-- ln 14 -->
+<!-- [style.display]="shouldRender(node) ? 'flex' : 'none'" -->
+<div class="container">
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <!-- This is the tree node template for leaf nodes -->
+        <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding class="example-tree-node">
+            <!-- use a disabled button to provide padding for tree leaf -->
+            <button mat-icon-button disabled>
+                <mat-icon>account_circle</mat-icon>
+            </button>
+            {{ node.name }}
+            <div class='comment'>
+                where might be a part of code missing, we need to check original source code. <br />
+            </div>
+            <div class="buttons">
+                <button mat-icon-button><mat-icon>thumb_up</mat-icon></button>
+                <button mat-icon-button><mat-icon>thumb_down</mat-icon></button>
+                <button mat-icon-button><mat-icon>favorite</mat-icon></button>
+                <button mat-button>REPLY</button>
+            </div>
+        </cdk-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding class="example-tree-node">
+            <button
+                mat-icon-button
+                cdkTreeNodeToggle
+                [attr.aria-label]="'toggle ' + node.filename"
+                (click)="node.isExpanded = !node.isExpanded"
+                [style.visibility]="node.expandable ? 'visible' : 'hidden'"
+            >
+                <!-- <mat-icon class="mat-icon-rtl-mirror">
+              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+            </mat-icon> -->
+                <mat-icon>account_circle</mat-icon>
+            </button>
+            {{ node.name }}
+            <div class='comment'>
+            where might be a part of code missing, we need to check original source code. <br />
+            </div>
+            <div class="buttons">
+                <button mat-icon-button><mat-icon>thumb_up</mat-icon></button>
+                <button mat-icon-button><mat-icon>thumb_down</mat-icon></button>
+                <button mat-icon-button><mat-icon>favorite</mat-icon></button>
+                <button mat-button>REPLY</button>
+            </div>
+        </cdk-tree-node>
+    </cdk-tree>
+
+    <!-- <div class="comment1">
+        <div class="header">
+            <mat-icon>account_circle</mat-icon> Anton Silivonchyk (SGQY) 5 days ago          
+            <div class="content"> This module diagram might not have all call modules indicated. Needs to be investigated!</div>
+        </div>
+
+        <div class="header">
+            <mat-icon>account_circle</mat-icon>  Andrei Chabokha (CSQY) 3 days ago          
+            <div class="content"> looking at it!</div>
+        </div>
+
+        <div class="header">
+            <mat-icon>account_circle</mat-icon> Andrei Chabokha (CSQY) 2 days ago       
+            <div class="content"> where might be a part of code missing, we need to check original source code.</div>
+            <button mat-icon-button><mat-icon>thumb_down</mat-icon></button>
+            <button mat-icon-button><mat-icon>thumb_up</mat-icon></button>
+            <button mat-icon-button><mat-icon>favorite</mat-icon></button>
+            <button mat-button>REPLY</button>
+        </div>
+    </div> -->
+    
+    <app-commentform [reply]="false" class="new_component"></app-commentform> 
+</div>

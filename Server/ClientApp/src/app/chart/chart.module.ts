@@ -3,15 +3,14 @@ import { CommonModule } from '@angular/common';
 
 import { ChartRoutingModule } from './chart-routing.module';
 import { ChartComponent } from './chart.component';
-import { CustomMaterialModuleModule } from '../custom-material-module/custom-material-module.module';
-import { IonicModule } from '@ionic/angular';
+import { MaterialModule } from '../material-modules';
 
 
 @NgModule({
   declarations: [ ChartComponent ],
   imports: [
     CommonModule,
-    CustomMaterialModuleModule,
+    MaterialModule,
     ChartRoutingModule
   ]
 })

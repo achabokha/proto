@@ -1,0 +1,13 @@
+
+<div class="container">
+    <mat-form-field appearance="outline" class="comment">
+        <textarea matInput placeholder="Enter your comment" #message maxlength="250" rows="4"></textarea>
+        <mat-hint align="end">{{ message.value.length }} / 250</mat-hint>
+    </mat-form-field>
+    <div class="buttons">
+        <button mat-button>Submit</button>
+        <button mat-button *ngIf="reply">Cancel</button>
+        <button mat-button *ngIf="!reply" (click)="message.value = ''">Reset</button>
+    </div>
+</div>
+
