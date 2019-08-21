@@ -68,6 +68,7 @@ xed platforme/ios/
 ```
 
 > see https://ionicframework.com/docs/v3/intro/deploying/ for details
+
 If you are running Xcode 8, the code signing error will appear as a buildtime error, rather than as a pop-up:
 
 To select the certificate to sign your app with, do the following:
