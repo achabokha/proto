@@ -1,14 +1,24 @@
 .container {
-	margin: 20px
+  margin: 20px;
 }
 
-.search-input{
-	width: 50%;
-	min-width: 200px;
-	text-decoration: underline;
+.search-input {
+  width: 50%;
+  min-width: 300px;
+  text-decoration: underline;
 }
 
-.mat-form-field-label-wrapper{
-	
-	text-size-adjust: 4;
+.mat-form-field-label-wrapper {
+  text-size-adjust: 4;
+}
+
+.app-tile-content{
+overflow: hidden;
+}
+
+.tile-image {
+  transform: translateX(77px) translateY(60px) rotate(45deg) scale(1.2);
+  border: 5px;
+  border-radius: 2px;
+  width: 50%
 }

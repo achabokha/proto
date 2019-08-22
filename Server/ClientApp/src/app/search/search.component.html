@@ -4,7 +4,41 @@
 	<div fxLayout="row" fxLayoutAlign="start center">
 		<mat-form-field floatLabel="never" class="search-input">
 			<mat-icon matPrefix>search</mat-icon>
-			<input  type="text" matInput placeholder="Artists, songs, or podcasts">
+			<input type="text" matInput placeholder="Artists, songs, or podcasts">
 		</mat-form-field>
+	</div>
+
+	<h1>Your Top genres</h1>
+
+	<div gdGap="10px" gdArea="area1" [gdColumns]="columnSplit" [gdRows]="'min-content!'">
+
+		<mat-card [style.background]="card.color" class="app-tile-content" [gdColumn]="'auto / span ' + card.cols"
+			[gdRow]="'auto / span ' + card.rows" *ngFor="let card of cardList">
+			<mat-card-header>
+				<mat-card-title>{{card.title}}</mat-card-title>
+				<mat-card-subtitle>{{ card.title }}</mat-card-subtitle>
+			</mat-card-header>
+			<mat-card-content>
+				<img mat-card-image class="tile-image" [attr.src]="'/assets/img/cover' + card.imgSrc +  '.jpg'"
+					[attr.alt]="card.title">
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<h1>Browse all</h1>
+
+	<div gdGap="10px" gdArea="area1" [gdColumns]="columnSplit" [gdRows]="'min-content!'">
+
+		<mat-card [style.background]="card.color" class="app-tile-content" [gdColumn]="'auto / span ' + card.cols"
+			[gdRow]="'auto / span ' + card.rows" *ngFor="let card of cards">
+			<mat-card-header>
+				<mat-card-title>{{card.title}}</mat-card-title>
+				<mat-card-subtitle>{{ card.title }}</mat-card-subtitle>
+			</mat-card-header>
+			<mat-card-content>
+				<img mat-card-image class="tile-image" [attr.src]="'/assets/img/cover' + card.imgSrc +  '.jpg'"
+					[attr.alt]="card.title">
+			</mat-card-content>
+		</mat-card>
 	</div>
 </div>
