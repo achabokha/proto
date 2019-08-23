@@ -5,20 +5,23 @@
 .search-input {
   width: 50%;
   min-width: 300px;
-  text-decoration: underline;
 }
 
 .mat-form-field-label-wrapper {
   text-size-adjust: 4;
 }
 
-.app-tile-content{
-overflow: hidden;
+.app-tile-content {
+  overflow: hidden;
+}
+
+.search-text {
+	text-decoration: underline;
 }
 
 .tile-image {
   transform: translateX(160%) translateY(50%) rotate(45deg) scale(1.2);
   border: 5px;
   border-radius: 2px;
-  width: 50%
+  width: 50%;
 }
