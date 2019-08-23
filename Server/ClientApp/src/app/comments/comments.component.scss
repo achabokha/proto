@@ -1,6 +1,6 @@
 .container {
-    padding: 10px;
-    font-size: 75%;
+  padding: 10px;
+  font-size: 75%;
 }
 
 // .comment2 {
@@ -8,27 +8,32 @@
 // }
 
 .mat-icon {
-    font-size: 16px;
-    color: lightgray;
+  font-size: 16px;
+  color: lightgray;
 }
 
 .example-tree-node {
-    // display: inline-flex;
-    // align-items: center;
-    float: left;
-    width: 100%;
-
+  // display: inline-flex;
+  // align-items: center;
+  float: left;
+  width: 100%;
 }
 
 .comment {
-    padding-left: 10px;
-    width: 100%;
+  padding-left: 10px;
+  width: 100%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
 }
 
 .buttons {
-    display: inline-block;
+  display: inline-block;
 }
 
 .new_component {
-    margin-top: 30px;
+  margin-top: 30px;
 }

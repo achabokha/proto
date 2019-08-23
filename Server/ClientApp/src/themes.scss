@@ -1,6 +1,19 @@
 @import "~@angular/material/theming";
 @include mat-core();
 
+// mixin name will be used in main style.scss
+@mixin comment-theme($theme) {
+  
+  // retrieve variables from theme 
+  // (all possible variables, use only what you really need)
+  $primary: map-get($theme, primary);
+  
+  // all of these variables contain many additional variables
+
+  .comment {
+    border-color: mat-color($primary);
+  }
+}
 // themes and themes picker is taking from material.angular.io (sort of, heavily modified)
 // NOTE: -- default theme is not set here it is being set in ThemeStorage.ts !!! --
 
@@ -12,6 +25,7 @@ $deeppurple-amber-theme: mat-light-theme($deeppurple-amber-primary, $deeppurple-
 
 .deeppurple-amber {
     @include angular-material-theme($deeppurple-amber-theme);
+    @include comment-theme($deeppurple-amber-theme);
 }
 
 // indigo-pink theme based on the light theme.
@@ -22,6 +36,7 @@ $indigo-pink-theme: mat-light-theme($indigo-pink-primary, $indigo-pink-accent);
 
 .indigo-pink {
     @include angular-material-theme($indigo-pink-theme);
+    @include comment-theme($indigo-pink-theme);
 }
 
 // pink-bluegrey based on the dark theme.
@@ -31,6 +46,7 @@ $pink-bluegrey-accent: mat-palette($mat-blue-grey, A200, A100, A400);
 $pink-bluegrey-theme: mat-dark-theme($pink-bluegrey-primary, $pink-bluegrey-accent);
 .pink-bluegrey {
     @include angular-material-theme($pink-bluegrey-theme);
+    @include comment-theme($pink-bluegrey-theme);
 }
 
 // Define the dark theme.
@@ -41,6 +57,7 @@ $purple-green-theme: mat-dark-theme($purple-green-primary, $purple-green-accent)
 
 .purple-green {
     @include angular-material-theme($purple-green-theme);
+    @include comment-theme($purple-green-theme);
 }
 
 
