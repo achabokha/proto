@@ -7,43 +7,60 @@
         <!-- This is the tree node template for leaf nodes -->
         <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding class="example-tree-node">
             <!-- use a disabled button to provide padding for tree leaf -->
-            <button mat-icon-button disabled>
-                <mat-icon color="primary">account_circle</mat-icon>
-            </button>
-            {{ node.name }}
-            <div class='comment'>
-                You might want to consider to widen your options.  <br />
-            </div>
-            <div class="buttons">
-                <button mat-icon-button><mat-icon color="primary">thumb_up</mat-icon></button>
-                <button mat-icon-button><mat-icon color="primary">thumb_down</mat-icon></button>
-                <button mat-icon-button><mat-icon color="primary">favorite</mat-icon></button>
-                <button mat-button>REPLY</button>
+            <div fxLayout="column" class="comment-container" fxLayoutAlign="space-around center">
+                <div fxLayout="row" fxLayoutAlign="space-around center">
+                    <button mat-icon-button disabled>
+                        <mat-icon color="primary">account_circle</mat-icon>
+                    </button>
+                    {{ node.name }}
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-around center" class='comment'>
+                    You might want to consider to widen your options. <br />
+                </div>
+                <div fxLayout="row" fxLayoutAlign="space-around center" class="buttons">
+                    <button mat-icon-button>
+                        <mat-icon color="primary">thumb_up</mat-icon>
+                    </button>
+                    <button mat-icon-button>
+                        <mat-icon color="primary">thumb_down</mat-icon>
+                    </button>
+                    <button mat-icon-button>
+                        <mat-icon color="primary">favorite</mat-icon>
+                    </button>
+                    <button mat-button color="primary">REPLY</button>
+                </div>
             </div>
         </cdk-tree-node>
         <!-- This is the tree node template for expandable nodes -->
         <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding class="example-tree-node">
-            <button
-                mat-icon-button
-                cdkTreeNodeToggle
-                [attr.aria-label]="'toggle ' + node.filename"
-                (click)="node.isExpanded = !node.isExpanded"
-                [style.visibility]="node.expandable ? 'visible' : 'hidden'"
-            >
-                <!-- <mat-icon class="mat-icon-rtl-mirror">
+            <div fxLayout="column" class="comment-container" fxLayoutAlign="space-around center">
+                <div fxFlex="100">
+
+                    <button mat-icon-button cdkTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename"
+                        (click)="node.isExpanded = !node.isExpanded"
+                        [style.visibility]="node.expandable ? 'visible' : 'hidden'">
+                        <!-- <mat-icon class="mat-icon-rtl-mirror">
               {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
             </mat-icon> -->
-                <mat-icon color="primary">account_circle</mat-icon>
-            </button>
-            {{ node.name }}
-            <div class='comment'>
-            This highlights are great. I think I might do more of it. <br />
-            </div>
-            <div class="buttons">
-                <button mat-icon-button><mat-icon color="primary">thumb_up</mat-icon></button>
-                <button mat-icon-button><mat-icon color="primary">thumb_down</mat-icon></button>
-                <button mat-icon-button><mat-icon color="primary">favorite</mat-icon></button>
-                <button mat-button>REPLY</button>
+                        <mat-icon color="primary">account_circle</mat-icon>
+                    </button>
+                    {{ node.name }}
+                </div>
+                <div fxFlex="100" class='comment'>
+                    This highlights are great. I think I might do more of it. <br />
+                </div>
+                <div fxFlex="100" class="buttons">
+                    <button mat-icon-button>
+                        <mat-icon color="primary">thumb_up</mat-icon>
+                    </button>
+                    <button mat-icon-button>
+                        <mat-icon color="primary">thumb_down</mat-icon>
+                    </button>
+                    <button mat-icon-button>
+                        <mat-icon color="primary">favorite</mat-icon>
+                    </button>
+                    <button mat-button color="primary">REPLY</button>
+                </div>
             </div>
         </cdk-tree-node>
     </cdk-tree>
@@ -68,6 +85,6 @@
             <button mat-button>REPLY</button>
         </div>
     </div> -->
-    
-    <app-commentform [reply]="false" class="new_component"></app-commentform> 
+
+    <app-commentform [reply]="false" class="new_component"></app-commentform>
 </div>
