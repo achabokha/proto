@@ -82,7 +82,7 @@ Run and build in Xcode, this should launch simulator.
 
 # Run on iPhone itself 
 
-Connect your IPhone to Mac, in the XCode settings select your IPhone as run
+Connect your IPhone to Mac, in the XCode settings select your IPhone as run the run environment
 
 This should deploy app to your phone before running it you need to trust certificate with which app was signed
 
