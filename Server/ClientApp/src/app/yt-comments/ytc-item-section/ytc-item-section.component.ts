@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { YtComment } from '../model';
-
-
+import { YtComment } from '../model/yt-comment.model';
 
 @Component({
     selector: 'ytc-item-section',

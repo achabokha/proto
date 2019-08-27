@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { YtComment } from './model';
+import { Component, OnInit } from '@angular/core';
 import { ArrayDataSource } from '@angular/cdk/collections';
+import { YtComment } from './model/yt-comment.model';
 
 const data: YtComment[] = [
     {
@@ -131,11 +131,16 @@ const data: YtComment[] = [
     styleUrls: ['./yt-comments.component.scss']
 })
 
-export class YtCommentsComponent {
-
+export class YtCommentsComponent implements OnInit {
+    
     dataSource = data;
 
     constructor() {
 
+        this.dataSource = this.dataSource.sort((one, two) => (one.id > two.id ? -1 : 1));
+    }
+
+    ngOnInit(): void {
+        
     }
 }
