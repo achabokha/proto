@@ -1,5 +1,6 @@
 import { Component, ViewChild, Input, OnInit } from '@angular/core';
 import { YtComment } from '../model/yt-comment.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'ytc-header',
@@ -14,7 +15,7 @@ export class YtcHeaderComponent implements OnInit {
     private newMessage: YtComment;
     newComment: string;
 
-    constructor() {
+    constructor(private authService: AuthService) {
 
     }
 
@@ -32,7 +33,7 @@ export class YtcHeaderComponent implements OnInit {
     addComment(): void {
         this.newMessage = new YtComment;
         this.newMessage.id = this.dataSource.length ? Math.max.apply(Math, this.dataSource.map((e) => e.id)) + 1 : 1;
-        this.newMessage.name = 'John Doe';
+        this.newMessage.name = this.authService.currentUser.firstName + ' ' + this.authService.currentUser.lastName;
         this.newMessage.comment = this.newComment;
         this.newMessage.replies = [];
         this.newMessage.like = 0;
@@ -42,6 +43,8 @@ export class YtcHeaderComponent implements OnInit {
         this.dataSource = this.dataSource.sort((one, two) => (one.id > two.id ? -1 : 1));
 
         console.info(this.dataSource);
+
+        this.newComment = '';
     }
 
     cancel() {

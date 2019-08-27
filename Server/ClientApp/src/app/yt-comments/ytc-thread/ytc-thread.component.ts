@@ -20,11 +20,11 @@ export class YtcThreadComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        console.info("OnInit: " + this.dataSource);
+
     }
 
     ngAfterViewInit(): void {
-        console.info("AfterViewInit: " + this.dataSource);
+
     }
 
 
