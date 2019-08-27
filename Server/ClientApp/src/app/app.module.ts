@@ -30,9 +30,24 @@ import { AuthProcessService } from "./services/auth-process.service";
 import { CommentsComponent } from "./comments/comments.component";
 import { CommentformComponent } from "./comments/commentform/commentform.component";
 import { MaterialModule } from "./material-modules";
+import { YtCommentsComponent } from './yt-comments/yt-comments.component';
+import { YtcSpinnerComponent } from './yt-comments/ytc-spinner/ytc-spinner.component';
+import { YtcItemSectionComponent } from './yt-comments/ytc-item-section/ytc-item-section.component';
+import { YtcHeaderComponent } from './yt-comments/ytc-header/ytc-header.component';
+import { YtcThreadComponent } from './yt-comments/ytc-thread/ytc-thread.component';
 
 @NgModule({
-    declarations: [AppComponent, NavComponent, CommentsComponent, CommentformComponent],
+    declarations: [
+        AppComponent,
+        NavComponent,
+        CommentsComponent,
+        CommentformComponent,
+        YtCommentsComponent,
+        YtcSpinnerComponent,
+        YtcItemSectionComponent,
+        YtcHeaderComponent,
+        YtcThreadComponent
+    ],
     imports: [
         BrowserModule,
         FormsModule,

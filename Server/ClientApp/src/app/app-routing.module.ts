@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 import { LoggedInGuard } from "./guards/logged-in.guard";
 import { CommentsComponent } from './comments/comments.component';
+import { YtCommentsComponent } from './yt-comments/yt-comments.component';
 
 const routes: Routes = [
     {
@@ -12,6 +13,10 @@ const routes: Routes = [
     {
         path: "comments",
         component: CommentsComponent
+    },
+    {
+        path: "yt-comments",
+        component: YtCommentsComponent
     },
     {
         path: "dashboard",

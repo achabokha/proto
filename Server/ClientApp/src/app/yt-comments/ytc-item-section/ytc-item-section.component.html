@@ -1,0 +1,8 @@
+<ytc-spinner *ngIf="!dataSource"></ytc-spinner>
+
+<div *ngIf="dataSource" class="header">
+    <ytc-header [dataSource]="dataSource"></ytc-header>
+</div>
+<div *ngIf="dataSource">
+    <ytc-thread [dataSource]="dataSource"></ytc-thread>
+</div>

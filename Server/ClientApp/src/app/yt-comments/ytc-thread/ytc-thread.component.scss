@@ -1,0 +1,82 @@
+.comment-dialog {
+    display: flex;
+}
+
+.img-block {
+    margin-right: 10px;
+    padding-top: 10px;
+}
+
+.nick-block {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.material-icons {
+    font-size: 40px;
+}
+
+/*.mat-icon {
+    height: 40px;
+    width: 40px;
+}*/
+/*.ytc-img {
+    display: block;
+    border-radius: 30px;
+}*/
+
+.message-block {
+    width: 100%;
+}
+
+.message {
+    width: 100%;
+}
+
+.buttons-block {
+    display: inline-block;
+}
+
+.button-ico {
+    padding: 8px;
+    font-size: 16px;
+}
+
+.count-like {
+    font-size: 12px;
+}
+
+.comment-block {
+    font-size: 14px;
+    /*font-weight: 400;
+    line-height: 2.1rem;
+    line-height: 2rem*/;
+    /*color:#111*/
+}
+
+.toggle-block {
+    display: flex;
+    //align-items: center;
+    padding-bottom: 10px;
+}
+
+.replies-block {
+    margin-left: 50px;
+}
+
+.toggle-ico-drop-down {
+   font-size: 14px;
+   width: 14px;
+   height: 14px;
+}
+
+.toggle-ico-drop-up {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+.text-replies {
+    font-size: 14px;
+    font-weight: 500;
+}
