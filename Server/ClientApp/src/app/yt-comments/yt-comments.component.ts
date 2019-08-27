@@ -48,7 +48,26 @@ const data: YtComment[] = [
         comment: 'This highlights are great. I think I might do more of it. 🤣',
         like: 10,
         dislike: 0,
-        replies: []
+        replies: [
+            {
+                name: "John",
+                id: '12',
+                parent_id: '5',
+                comment: 'You might want to consider to widen your options.😋',
+                like: 10,
+                dislike: 0,
+                replies: []
+            },
+            {
+                name: "Peter",
+                id: '13',
+                parent_id: '5',
+                comment: 'You might want to consider to widen your options.',
+                like: 10,
+                dislike: 0,
+                replies: []
+            },
+        ]
     },
     {
         name: "Karen",

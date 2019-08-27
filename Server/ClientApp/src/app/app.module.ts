@@ -35,6 +35,7 @@ import { YtcSpinnerComponent } from './yt-comments/ytc-spinner/ytc-spinner.compo
 import { YtcItemSectionComponent } from './yt-comments/ytc-item-section/ytc-item-section.component';
 import { YtcHeaderComponent } from './yt-comments/ytc-header/ytc-header.component';
 import { YtcThreadComponent } from './yt-comments/ytc-thread/ytc-thread.component';
+import { YtcRepliesComponent } from './yt-comments/ytc-replies/ytc-replies.component';
 
 @NgModule({
     declarations: [
@@ -46,7 +47,8 @@ import { YtcThreadComponent } from './yt-comments/ytc-thread/ytc-thread.componen
         YtcSpinnerComponent,
         YtcItemSectionComponent,
         YtcHeaderComponent,
-        YtcThreadComponent
+        YtcThreadComponent,
+        YtcRepliesComponent
     ],
     imports: [
         BrowserModule,
