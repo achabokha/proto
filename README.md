@@ -82,5 +82,19 @@ Run and build in Xcode, this should launch simulator.
 
 # Run on iPhone itself 
 
-Andrejs will write it up...
+Connect your IPhone to Mac, in the XCode settings select your IPhone as run the run environment
+
+This should deploy app to your phone before running it you need to trust certificate with which app was signed
+
+![Xcode platform selection](readme/xcode.jpg?raw=true "Xcode platform selection")
+![Pick your Iphone](readme/IphoneSelect.png?raw=true "Pick your Iphone")
+
+
+1. Open the ‘Settings’ app on your iOS device
+2. Go to ‘General > Device Management’. You’ll see the email address associated with the Apple ID or Apple Developer account you used to code sign your app.
+3. Tap the email address
+4. Tap ‘Trust <your_email>’:
+
+
+
 

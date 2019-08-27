@@ -13,10 +13,14 @@
 }
 
 .example-tree-node {
-  // display: inline-flex;
-  // align-items: center;
-  float: left;
+  display: flex;
+  //align-items: center;
+  //float: left;
+}
+
+.comment-container {
   width: 100%;
+  padding-right: 10px;
 }
 
 .comment {
