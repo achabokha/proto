@@ -1,0 +1,17 @@
+table {
+  width: 100%;
+}
+
+mat-table {
+  height: calc(100vh - 66px);
+  overflow: auto;
+}
+
+mat-row:hover {
+  cursor: pointer;
+}
+
+.firstName-cell, .lastName-cell{
+  max-width: 150px;
+  justify-content: center;
+}

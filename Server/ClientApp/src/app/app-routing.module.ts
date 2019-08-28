@@ -30,6 +30,10 @@ const routes: Routes = [
     {
         path: "search",
         loadChildren: () => import("./search/search.module").then(mod => mod.SearchModule)
+    },
+    {
+        path: "user-list",
+        loadChildren: () => import("./user/user.module").then(mod => mod.UserModule)
     }
 ];
 

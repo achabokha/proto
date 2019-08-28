@@ -1,0 +1,45 @@
+<h1 mat-dialog-title>User {{data.email}}</h1>
+<div mat-dialog-content>
+	<div fxLayout="column" fxLayoutAlign="space-around center">
+		<div class="input-row">
+			<mat-form-field fxFlex>
+				<input matInput placeholder="Email" autocomplete="off" [(ngModel)]="data.email">
+			</mat-form-field>
+		</div>
+		<div class="input-row">
+			<mat-form-field fxFlex>
+				<input matInput placeholder="First Name" autocomplete="off" [(ngModel)]="data.firstName">
+			</mat-form-field>
+		</div>
+		<div class="input-row">
+			<mat-form-field fxFlex>
+				<input matInput placeholder="Last Name" autocomplete="off" [(ngModel)]="data.lastName">
+			</mat-form-field>
+		</div>
+		<div class="input-row">
+			<mat-form-field fxFlex>
+				<input matInput placeholder="Phone" autocomplete="off" [(ngModel)]="data.phoneNumber">
+			</mat-form-field>
+		</div>
+		<div class="input-row">
+			<mat-form-field fxFlex>
+				<input matInput placeholder="Date last accessed" autocomplete="off" [(ngModel)]="data.dateLastAccessed">
+			</mat-form-field>
+		</div>
+		<div class="input-row-check">
+			<mat-checkbox fxFlex [disabled]="true" [(ngModel)]="data.phoneNumberConfirmed" [disabled]="disabled">
+				Phone confirmed
+			</mat-checkbox>
+		</div>
+		<div class="input-row-check" >
+			<mat-checkbox fxFlex [disabled]="true" [(ngModel)]="data.emailConfirmed" [disabled]="disabled">
+				Email confirmed
+			</mat-checkbox>
+		</div>
+	</div>
+</div>
+<div mat-dialog-actions class="dialogActions">
+
+	<button mat-button (click)="onNoClick()">Cancel</button>
+	<button mat-button class="updateButton" [mat-dialog-close]="data.animal" cdkFocusInitial>Update</button>
+</div>
