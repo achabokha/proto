@@ -1,0 +1,41 @@
+<div class="row header">
+
+    <div class="col-md-12">
+        <h4>
+            {{ renderCountComments(dataSource.length) }} Comments
+        </h4>
+        <div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-12 comment-dialog">
+        <div class="img-block">
+            <mat-icon color="primary">account_circle</mat-icon>
+            <!--<img class="ytc-img" width="40" height="40" src="https://yt3.ggpht.com/-LHFEmeb-H98/AAAAAAAAAAI/AAAAAAAAAAA/Eba29497V_o/s48-c-k-no-mo-rj-c0xffffff/photo.jpg" />-->
+        </div>
+        <div class="message-block">
+            <mat-form-field class="message">
+                <textarea matInput
+                          cdkTextareaAutosize
+                          cdkAutosizeMinRows="1"
+                          cdkAutosizeMaxRows="100"
+                          placeholder="Add a comment..."
+                          [(ngModel)]="newComment"></textarea>
+            </mat-form-field>
+        </div>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-12 button-block">
+        <button mat-flat-button (click)="cancel()">CANCEL</button>
+        <button [disabled]="!newComment" mat-flat-button color="primary" (click)="addComment()">COMMENT</button>
+    </div>
+
+</div>

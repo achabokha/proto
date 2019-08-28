@@ -1,0 +1,43 @@
+<div class="row replies-block" *ngIf="replies.length > 0">
+    <div class="col-md-12 toggle-block" (click)="toggleComment()">
+        <div *ngIf="!isCommentCollapsed" class="text-replies">View {{ replies.length }} replies</div>
+        <div *ngIf="isCommentCollapsed" class="text-replies">Hide replies</div>
+        <div>
+            <mat-icon *ngIf="!isCommentCollapsed" class="toggle-ico-drop-down">keyboard_arrow_down</mat-icon>
+            <mat-icon *ngIf="isCommentCollapsed" class="toggle-ico-drop-up">keyboard_arrow_up</mat-icon>
+        </div>
+    </div>
+    <div *ngIf="isCommentCollapsed">
+        <div *ngFor="let reply of replies">
+            <div class="col-md-12 comment-dialog">
+                <div class="img-block">
+                    <mat-icon color="primary" style="width: 40px; height: 40px;">account_circle</mat-icon>
+                </div>
+                <div class="message-block">
+                    <div class="row">
+                        <div class="col-md-12 nick-block">
+                            {{ reply.name }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div [innerHTML]="reply.comment" class="col-md-12 comment-block">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 buttons-block">
+                            <button mat-icon-button>
+                                <mat-icon class="button-ico" color="primary">thumb_up</mat-icon>
+                            </button>
+                            <span class="count-like">{{ reply.like }}</span>
+                            <button mat-icon-button>
+                                <mat-icon class="button-ico" color="primary">thumb_down</mat-icon>
+                            </button>
+                            <span class="count-like">{{ reply.dislike }}</span>
+                            <button mat-button>REPLY</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
