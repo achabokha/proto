@@ -1,43 +1,64 @@
 .container {
-  padding: 10px;
-  font-size: 75%;
+    padding: 10px;
+    font-size: 75%;
 }
-
-// .comment2 {
-//     margin-left: 40px;
-// }
 
 .mat-icon {
-  font-size: 16px;
-  color: lightgray;
+    font-size: 16px;
+    color: lightgray;
 }
 
-.example-tree-node {
-  display: flex;
-  //align-items: center;
-  //float: left;
+// .comment-container {
+//   width: 100%;
+//   padding-right: 10px;
+// }
+
+// .comment {
+//   padding-left: 10px;
+//   width: 100%;
+//   padding-top: 5px;
+//   padding-bottom: 5px;
+
+//   border-radius: 5px;
+//   border-width: 1px;
+//   border-style: solid;
+// }
+
+// .buttons {
+//     display: inline-block;
+// }
+
+// .new_component {
+//     margin-top: 30px;
+// }
+
+.tree-node {
+    display: inline-flex;
+    align-items: start;
+    // float: left;
+    // width: 100%;
+    // border: 1px solid lavender;
 }
 
-.comment-container {
-  width: 100%;
-  padding-right: 10px;
+button {
+    font-size: 75%;
 }
 
-.comment {
-  padding-left: 10px;
-  width: 100%;
-  padding-top: 5px;
-  padding-bottom: 5px;
-
-  border-radius: 5px;
-  border-width: 1px;
-  border-style: solid;
+.divider {
+    width: 50px;
 }
 
-.buttons {
-  display: inline-block;
+.name-clicked {
+    margin-right: 40px;
 }
 
-.new_component {
-  margin-top: 30px;
+.smaller {
+    font-size: 16px;
+    color: gray;
+}
+
+// https://stackoverflow.com/questions/46502294/angular-change-matinput-size/46502615
+.edit {
+    width: 500px !important;
+    font-size: 90%;
 }

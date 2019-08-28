@@ -1,72 +1,21 @@
-import { Component, OnInit } from "@angular/core";
-import { ArrayDataSource } from "@angular/cdk/collections";
+import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FlatTreeControl } from "@angular/cdk/tree";
+import { Observable, of as observableOf } from "rxjs";
+import { MatTreeFlattener, MatTreeFlatDataSource } from "@angular/material/tree";
+import { CommentsService, TreeNode } from "../services/comments.service";
 
 /** Flat node with expandable and level information */
-interface ExampleFlatNode {
+interface FlatNode {
     expandable: boolean;
-    name: string;
     level: number;
     isExpanded?: boolean;
+    id: string;
+    parentId: string;
+    content: string;
+    datetime: string;
+    likes: number;
+    dislikes: number;
 }
-
-const TREE_DATA: ExampleFlatNode[] = [
-    {
-        name: "John",
-        expandable: true,
-        level: 0
-    },
-    {
-        name: "Peter",
-        expandable: false,
-        level: 1
-    },
-    {
-        name: "John",
-        expandable: false,
-        level: 1
-    },
-    {
-        name: "Peter",
-        expandable: false,
-        level: 1
-    },
-    {
-        name: "John",
-        expandable: true,
-        level: 0
-    },
-    {
-        name: "Karen",
-        expandable: true,
-        level: 1
-    },
-    {
-        name: "John",
-        expandable: false,
-        level: 2
-    },
-    {
-        name: "John",
-        expandable: false,
-        level: 2
-    },
-    {
-        name: "John",
-        expandable: true,
-        level: 1
-    },
-    {
-        name: "Peter",
-        expandable: false,
-        level: 2
-    },
-    {
-        name: "John",
-        expandable: false,
-        level: 2
-    }
-];
 
 @Component({
     selector: "app-comments",
@@ -74,30 +23,140 @@ const TREE_DATA: ExampleFlatNode[] = [
     styleUrls: ["./comments.component.scss"]
 })
 export class CommentsComponent implements OnInit {
-    treeControl = new FlatTreeControl<ExampleFlatNode>(node => node.level, node => node.expandable);
+    @Output() onTreeNodeChanged = new EventEmitter();
 
-    dataSource = new ArrayDataSource(TREE_DATA);
+    private _getLevel = (node: FlatNode) => node.level;
 
-    constructor() {}
+    private _isExpandable = (node: FlatNode) => node.expandable;
 
-    ngOnInit() {}
+    private _getChildren = (node: TreeNode): Observable<TreeNode[]> => observableOf(node.children);
 
-    hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+    hasChild = (_: number, node: FlatNode) => node.expandable;
 
-    getParentNode(node: ExampleFlatNode) {
-        const nodeIndex = TREE_DATA.indexOf(node);
+    isLoadMore = (index: number, node: FlatNode) => index > 3;
 
-        for (let i = nodeIndex - 1; i >= 0; i--) {
-            if (TREE_DATA[i].level === node.level - 1) {
-                return TREE_DATA[i];
+    private transformer = (node: TreeNode, level: number): FlatNode => {
+        return {
+            expandable: node.children.length > 0,
+            level: level,
+            id: node.id,
+            content: node.content,
+            parentId: node.parentId,
+            dislikes: node.dislikes,
+            likes: node.likes,
+            datetime: node.datetime
+        };
+    };
+
+    expandedNodeSet = new Set<string>();
+
+    private treeFlattener: MatTreeFlattener<TreeNode, FlatNode> = new MatTreeFlattener(
+        this.transformer,
+        this._getLevel,
+        this._isExpandable,
+        this._getChildren
+    );
+
+    treeControl = new FlatTreeControl<FlatNode>(this._getLevel, this._isExpandable);
+    dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+    selectedNode: FlatNode;
+
+    isSelected = (node: FlatNode) => this.selectedNode && node.id == this.selectedNode.id;
+
+    constructor(private commentsService: CommentsService) {}
+
+    ngOnInit() {
+        this.commentsService.getCommentTree().subscribe((result: any) => {
+            this.dataSource.data = result;
+        });
+    }
+
+    selectNode(node: FlatNode) {
+        this.onTreeNodeChanged.emit(node);
+        this.selectedNode = node;
+    }
+
+    loadMore(node: FlatNode) {
+
+    } 
+
+    edit(node) {
+        // save edit here --
+    }
+
+    delete(node) {
+        this.rememberExpandedTreeNodes(this.treeControl, this.expandedNodeSet);
+
+        // console.log("looking for: ", node.parentId);
+
+        let parentNode = this.findTreeNodeById(this.dataSource.data[0], node.parentId);
+
+        // console.log('found: ', parentNode);
+
+        parentNode.children = parentNode.children.filter(n => n.id != node.id);
+
+        this.dataSource.data = this.dataSource.data;
+        this.expandNodesById(this.treeControl.dataNodes, Array.from(this.expandedNodeSet));
+    }
+
+    private rememberExpandedTreeNodes(treeControl: FlatTreeControl<FlatNode>, expandedNodeSet: Set<string>) {
+        if (treeControl.dataNodes) {
+            treeControl.dataNodes.forEach(node => {
+                if (treeControl.isExpandable(node) && treeControl.isExpanded(node)) {
+                    // capture latest expanded state
+                    expandedNodeSet.add(node.id);
+                }
+            });
+        }
+    }
+
+    private expandNodesById(flatNodes: FlatNode[], ids: string[]) {
+        if (!flatNodes || flatNodes.length === 0) return;
+        const idSet = new Set(ids);
+        return flatNodes.forEach(node => {
+            if (idSet.has(node.id)) {
+                this.treeControl.expand(node);
+                let parent = this.getParentNode(node);
+                while (parent) {
+                    this.treeControl.expand(parent);
+                    parent = this.getParentNode(parent);
+                }
+            }
+        });
+    }
+
+    private getParentNode(node: FlatNode): FlatNode | null {
+        const currentLevel = node.level;
+        if (currentLevel < 1) {
+            return null;
+        }
+        const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+        for (let i = startIndex; i >= 0; i--) {
+            const currentNode = this.treeControl.dataNodes[i];
+            if (currentNode.level < currentLevel) {
+                return currentNode;
             }
         }
-
         return null;
     }
 
-    shouldRender(node: ExampleFlatNode) {
-        const parent = this.getParentNode(node);
-        return !parent || parent.isExpanded;
+    // todo: removal --
+    findTreeNodeById(node: TreeNode, id: string): TreeNode {
+        // console.log("name: ", node.name, "id: ", node.id, "#ch: ", node.children.length, "looking for: ", id);
+
+        if(node.parentId == null) return node;
+
+        for (var i = 0; node.children && i < node.children.length; i++) {
+            const n = node.children[i];
+            if (n.id == id) {
+                console.log("found! ", n);
+                return n;
+            }
+            var found = this.findTreeNodeById(n, id);
+            if (found) return found;
+        }
+
+        return null;
     }
 }

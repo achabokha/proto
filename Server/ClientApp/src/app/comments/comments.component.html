@@ -1,90 +1,69 @@
-<!-- ln 8 -->
-<!-- [style.display]="shouldRender(node) ? 'flex' : 'none'" -->
-<!-- ln 14 -->
-<!-- [style.display]="shouldRender(node) ? 'flex' : 'none'" -->
-<div class="container">
-    <cdk-tree [dataSource]="dataSource" color="primary" [treeControl]="treeControl">
-        <!-- This is the tree node template for leaf nodes -->
-        <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding class="example-tree-node">
-            <!-- use a disabled button to provide padding for tree leaf -->
-            <div fxLayout="column" class="comment-container" fxLayoutAlign="space-around center">
-                <div fxLayout="row" fxLayoutAlign="space-around center">
-                    <button mat-icon-button disabled>
-                        <mat-icon color="primary">account_circle</mat-icon>
-                    </button>
-                    {{ node.name }}
-                </div>
-                <div fxLayout="row" fxLayoutAlign="space-around center" class='comment'>
-                    You might want to consider to widen your options. <br />
-                </div>
-                <div fxLayout="row" fxLayoutAlign="space-around center" class="buttons">
-                    <button mat-icon-button>
-                        <mat-icon color="primary">thumb_up</mat-icon>
-                    </button>
-                    <button mat-icon-button>
-                        <mat-icon color="primary">thumb_down</mat-icon>
-                    </button>
-                    <button mat-icon-button>
-                        <mat-icon color="primary">favorite</mat-icon>
-                    </button>
-                    <button mat-button color="primary">REPLY</button>
-                </div>
-            </div>
-        </cdk-tree-node>
-        <!-- This is the tree node template for expandable nodes -->
-        <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding class="example-tree-node">
-            <div fxLayout="column" class="comment-container" fxLayoutAlign="space-around center">
-                <div fxFlex="100">
+<cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <!-- This is the tree node template for expandable nodes -->
+    <cdk-tree-node
+        *cdkTreeNodeDef="let node; when: hasChild"
+        cdkTreeNodePadding
+        [style.display]="'flex'"
+        class="tree-node"
+    >
+        <div>
+            <mat-form-field *ngIf="node.isEdit" class="edit">
+                <textarea matInput [(ngModel)]="node.content"></textarea>
+                <button mat-icon-button (click)="node.isEdit = false" matSuffix><mat-icon>save</mat-icon></button>
+            </mat-form-field>
+            <button
+                *ngIf="!node.isEdit"
+                mat-icon-button
+                cdkTreeNodeToggle
+                [disableRipple]="true"
+                (click)="node.isExpanded = !node.isExpanded"
+            >
+                <mat-icon class="mat-icon-rtl-mirror">
+                    {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
+                </mat-icon>
 
-                    <button mat-icon-button cdkTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename"
-                        (click)="node.isExpanded = !node.isExpanded"
-                        [style.visibility]="node.expandable ? 'visible' : 'hidden'">
-                        <!-- <mat-icon class="mat-icon-rtl-mirror">
-              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-            </mat-icon> -->
-                        <mat-icon color="primary">account_circle</mat-icon>
-                    </button>
-                    {{ node.name }}
-                </div>
-                <div fxFlex="100" class='comment'>
-                    This highlights are great. I think I might do more of it. <br />
-                </div>
-                <div fxFlex="100" class="buttons">
-                    <button mat-icon-button>
-                        <mat-icon color="primary">thumb_up</mat-icon>
-                    </button>
-                    <button mat-icon-button>
-                        <mat-icon color="primary">thumb_down</mat-icon>
-                    </button>
-                    <button mat-icon-button>
-                        <mat-icon color="primary">favorite</mat-icon>
-                    </button>
-                    <button mat-button color="primary">REPLY</button>
-                </div>
-            </div>
-        </cdk-tree-node>
-    </cdk-tree>
+                <span
+                    class="name-clicked"
+                    (click)="selectNode(node)"
+                    [ngStyle]="{ 'font-weight': isSelected(node) ? 'bold' : 'normal' }"
+                    >{{ node.content }}</span
+                >
 
-    <!-- <div class="comment1">
-        <div class="header">
-            <mat-icon>account_circle</mat-icon> Anton Silivonchyk (SGQY) 5 days ago          
-            <div class="content"> This module diagram might not have all call modules indicated. Needs to be investigated!</div>
+                <mat-icon
+                    *ngIf="isSelected(node)"
+                    class="smaller"
+                    (click)="node.isEdit = true; $event.stopPropagation()"
+                >
+                    edit
+                </mat-icon>
+                <mat-icon *ngIf="isSelected(node)" class="smaller" (click)="delete(node); $event.stopPropagation()">
+                    delete
+                </mat-icon>
+            </button>
         </div>
+    </cdk-tree-node>
+    <!-- This is the tree node template for leaf nodes -->
+    <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding class="tree-node" [style.display]="'flex'">
+        <mat-form-field *ngIf="node.isEdit" class="edit">
+            <textarea matInput [(ngModel)]="node.content"></textarea>
+            <button mat-icon-button (click)="node.isEdit = false" matSuffix><mat-icon>save</mat-icon></button>
+        </mat-form-field>
 
-        <div class="header">
-            <mat-icon>account_circle</mat-icon>  Andrei Chabokha (CSQY) 3 days ago          
-            <div class="content"> looking at it!</div>
-        </div>
-
-        <div class="header">
-            <mat-icon>account_circle</mat-icon> Andrei Chabokha (CSQY) 2 days ago       
-            <div class="content"> where might be a part of code missing, we need to check original source code.</div>
-            <button mat-icon-button><mat-icon>thumb_down</mat-icon></button>
-            <button mat-icon-button><mat-icon>thumb_up</mat-icon></button>
-            <button mat-icon-button><mat-icon>favorite</mat-icon></button>
-            <button mat-button>REPLY</button>
-        </div>
-    </div> -->
-
-    <app-commentform [reply]="false" class="new_component"></app-commentform>
-</div>
+        <button *ngIf="!node.isEdit" mat-button [disableRipple]="true" (click)="selectNode(node)">
+            <span class="name-clicked" [ngStyle]="{ 'font-weight': isSelected(node) ? 'bold' : 'normal' }">
+                {{ node.content }}
+            </span>
+            <mat-icon *ngIf="isSelected(node)" class="smaller" (click)="node.isEdit = true; $event.stopPropagation()">
+                edit
+            </mat-icon>
+            <mat-icon *ngIf="isSelected(node)" class="smaller" (click)="delete(node); $event.stopPropagation()">
+                delete
+            </mat-icon>
+        </button>
+    </cdk-tree-node>
+    <cdk-tree-node *cdkTreeNodeDef="let node; when: isLoadMore" cdkTreeNodePadding>
+        <button mat-button (click)="loadMore(node)">
+            more...
+        </button>
+    </cdk-tree-node>
+</cdk-tree>

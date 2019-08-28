@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { YtComment } from './model/yt-comment.model';
 
-const data: YtComment[] = [
+export const data: YtComment[] = [
     {
         name: "Segin",
         id: '1',
