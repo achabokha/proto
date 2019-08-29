@@ -5,7 +5,7 @@ import { map, catchError, retry } from "rxjs/operators";
 import { Observable, Subject } from "rxjs";
 
 import { AuthService } from "./auth.service";
-import { ChangePassword, ForgotPassword, ResetPassword } from "../models";
+import { ChangePassword, ForgotPassword, ResetPassword, User } from "../models";
 
 @Injectable()
 export class UserService extends BaseService {
@@ -35,15 +35,15 @@ export class UserService extends BaseService {
             catchError((error: any) => this.authService.errorCheck(error))
         );
 	}
-	
+
 	getCurrentUser(): Observable<any> {
         return this.http.get("api/users/getDetails?user", this.authService.authJsonHeaders()).pipe(
             catchError((error: any) => this.authService.errorCheck(error))
         );
 	}
 
-    getUsers(): Observable<any> {
-        return this.http.get("/api/Users/GetAll", this.authService.authJsonHeaders()).pipe(
+    getUsers(): Observable<User[]> {
+        return this.http.get<User[]>("/api/Users/GetAll", this.authService.authJsonHeaders()).pipe(
             catchError((error: any) => this.authService.errorCheck(error))
         );
     }

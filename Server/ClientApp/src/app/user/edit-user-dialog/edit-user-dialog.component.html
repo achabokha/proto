@@ -23,7 +23,7 @@
 		</div>
 		<div class="input-row">
 			<mat-form-field fxFlex>
-				<input matInput placeholder="Date last accessed" autocomplete="off" [(ngModel)]="data.dateLastAccessed">
+				<input matInput disabled placeholder="Date last accessed" autocomplete="off" [(ngModel)]="data.dateLastAccessed">
 			</mat-form-field>
 		</div>
 		<div class="input-row-check">
@@ -41,5 +41,5 @@
 <div mat-dialog-actions class="dialogActions">
 
 	<button mat-button (click)="onNoClick()">Cancel</button>
-	<button mat-button class="updateButton" [mat-dialog-close]="data.animal" cdkFocusInitial>Update</button>
+	<button mat-button (click)="updateUser()" class="updateButton" [mat-dialog-close]="data.animal" cdkFocusInitial>Update</button>
 </div>
