@@ -17,6 +17,12 @@
         <mat-cell class="lastName-cell"
                   *matCellDef="let element">{{element.lastName}}</mat-cell>
     </ng-container>
+
+    <ng-container matColumnDef="phoneNumber">
+            <mat-header-cell class="phoneNumber-cell" *matHeaderCellDef>Phone</mat-header-cell>
+            <mat-cell class="phoneNumber-cell"
+                      *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
+        </ng-container>
     
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     

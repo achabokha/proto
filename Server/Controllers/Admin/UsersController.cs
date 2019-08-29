@@ -45,21 +45,22 @@ namespace Server.Admin.Controllers
         }
 
         [HttpGet("[action]")]
-        public IActionResult GetAll()
+        public async Task<JsonResult> GetAll()
         {
             var users = _ctx.Users.OrderByDescending(u => u.DateCreated);
 
             var userList = new List<UserViewModel>();
             foreach (var user in users)
             {
-                userList.Add(MapToViewModel(user));
+                var roles = await _userManager.GetRolesAsync(user);
+                userList.Add(MapToViewModel(user, roles));
             }
 
             return Json(userList);
         }
 
         // TODO: use AutoMapper --
-        private static UserViewModel MapToViewModel(ApplicationUser user)
+        private static UserViewModel MapToViewModel(ApplicationUser user, IList<string> roles)
         {
             return new UserViewModel
             {
@@ -70,6 +71,7 @@ namespace Server.Admin.Controllers
                 PhoneNumber = user.PhoneNumber,
                 EmailConfirmed = user.EmailConfirmed,
                 PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+                Roles = roles.ToList(),
                 DateLastAccessed = (user.DateLastAccessed == DateTime.MinValue) ? "never" : user.DateLastAccessed.ToString("yyyy-MM-dd HH:mm:ss"),
             };
         }

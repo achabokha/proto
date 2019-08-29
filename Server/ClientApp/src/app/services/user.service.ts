@@ -2,7 +2,7 @@ import { BaseService } from "./base.service";
 import { Injectable, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { map, catchError, retry } from "rxjs/operators";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, throwError } from "rxjs";
 
 import { AuthService } from "./auth.service";
 import { ChangePassword, ForgotPassword, ResetPassword, User } from "../models";
@@ -25,7 +25,7 @@ export class UserService extends BaseService {
             catchError((error: any) => {
                 console.log("Error: ", error);
                 this.stateChange.next({ status: error.error.status, message: error.error.message });
-                return Observable.throw(error.json().message || "Server error");
+                return throwError(error.message || "Server error");
             })
         );
     }
