@@ -330,6 +330,6 @@ export class AuthService {
 		if (error.status === 401) {
 			this.router.navigateByUrl("/login");
 		}
-		return Observable.throw(error.json().message || "Server error");
+		return throwError(error.message || "Server error");
 	}
 }
