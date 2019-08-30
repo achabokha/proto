@@ -1,31 +1,37 @@
+<mat-table class="mat-elevation-z8" multiTemplateDataRows [dataSource]="data">
 
-<mat-table class="mat-elevation-z8" [dataSource]="data">
-  
     <ng-container matColumnDef="email">
         <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
         <mat-cell *matCellDef="let element">{{element.email}}</mat-cell>
     </ng-container>
-  
+
     <ng-container matColumnDef="firstName">
         <mat-header-cell class="firstName-cell" *matHeaderCellDef>First Name</mat-header-cell>
-        <mat-cell class="firstName-cell"
-                  *matCellDef="let element">{{element.firstName}}</mat-cell>
+        <mat-cell class="firstName-cell" *matCellDef="let element">{{element.firstName}}</mat-cell>
     </ng-container>
-  
+
     <ng-container matColumnDef="lastName">
         <mat-header-cell class="lastName-cell" *matHeaderCellDef>Last Name</mat-header-cell>
-        <mat-cell class="lastName-cell"
-                  *matCellDef="let element">{{element.lastName}}</mat-cell>
+        <mat-cell class="lastName-cell" *matCellDef="let element">{{element.lastName}}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="phoneNumber">
-            <mat-header-cell class="phoneNumber-cell" *matHeaderCellDef>Phone</mat-header-cell>
-            <mat-cell class="phoneNumber-cell"
-                      *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
-        </ng-container>
-    
+        <mat-header-cell class="phoneNumber-cell" *matHeaderCellDef>Phone</mat-header-cell>
+        <mat-cell class="phoneNumber-cell" *matCellDef="let element">{{element.phoneNumber}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+        <mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+                <app-edit-user-dialog [data]="element" (closeEvent)="updateData($event)"></app-edit-user-dialog>
+        </mat-cell>
+    </ng-container>
+
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    
-    <mat-row (click)="openDialog(row)" *matRowDef="let row; columns: displayedColumns"></mat-row>
-    
+
+    <mat-row (click)="expandedElement === row ? expandedElement = null : expandedElement = row "
+        *matRowDef="let row; columns: displayedColumns">
+    </mat-row>
+    <mat-row *matRowDef="let row; columns: ['expandedDetail']"
+        [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+    </mat-row>
 </mat-table>

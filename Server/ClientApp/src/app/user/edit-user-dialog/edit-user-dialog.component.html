@@ -1,5 +1,5 @@
 <h1 mat-dialog-title>User {{data.email}}</h1>
-<div mat-dialog-content>
+
 	<form [formGroup]="userForm" #formDir="ngForm">
 		<div fxLayout="column" fxLayoutAlign="space-around center">
 			<div class="input-row">
@@ -41,12 +41,13 @@
 					Email confirmed
 				</mat-checkbox>
 			</div>
+			<div>
+					<button mat-button (click)="onNoClick()">Cancel</button>
+					<button mat-button (click)="updateUser()" class="updateButton"
+						cdkFocusInitial>Update</button>
+			</div>
 		</div>
 	</form>
-</div>
-<div mat-dialog-actions class="dialogActions">
 
-	<button mat-button (click)="onNoClick()">Cancel</button>
-	<button mat-button (click)="updateUser()" class="updateButton"
-		cdkFocusInitial>Update</button>
-</div>
+
+	

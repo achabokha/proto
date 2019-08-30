@@ -11,6 +11,15 @@ mat-row:hover {
   cursor: pointer;
 }
 
+.element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+app-edit-user-dialog {
+  width: 100%;
+}
+
 .firstName-cell, .lastName-cell, .phoneNumber-cell{
   max-width: 150px;
   justify-content: center;

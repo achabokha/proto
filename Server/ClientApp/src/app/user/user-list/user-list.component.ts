@@ -6,20 +6,22 @@ import { User } from "../../models";
 import { EditUserDialogComponent } from "../edit-user-dialog/edit-user-dialog.component";
 import { MediaObserver, MediaChange } from "@angular/flex-layout";
 import { Subscription } from "rxjs";
+import { trigger, state, style, transition, animate } from "@angular/animations";
 
 @Component({
   selector: "app-user-list",
   templateUrl: "./user-list.component.html",
-  styleUrls: ["./user-list.component.scss"]
+  styleUrls: ["./user-list.component.scss"],
+  animations: [
+    trigger("detailExpand", [
+      state("collapsed", style({ height: "0px", minHeight: "0", overflow: "hidden" })),
+      state("expanded", style({ height: "*", overflow: "auto" })),
+      transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
+    ]),
+  ],
 })
 export class UserListComponent implements OnInit, OnDestroy {
 
-  data: User[];
-  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
-  currentScreenWidth = "";
-  flexMediaWatcher: Subscription;
-
-  displayedColumns: string[];
 
   constructor(private userService: UserService,
     private authService: AuthService,
@@ -36,6 +38,21 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
   }
 
+  data: User[];
+  @ViewChild(MatTable, { static: false }) table: MatTable<any>;
+  currentScreenWidth = "";
+  flexMediaWatcher: Subscription;
+
+  displayedColumns: string[];
+  expandedElement: any;
+
+  isExpansionDetailRow = (i: number, row: Object) => {
+    console.log(this.expandedElement);
+    return this.expandedElement === row;
+  }
+
+
+
   ngOnInit(): void {
     this.getUsers();
   }
@@ -46,6 +63,8 @@ export class UserListComponent implements OnInit, OnDestroy {
       this.displayedColumns = ["email", "firstName", "lastName"]; // remove 'internalId'
     }
   }
+
+
 
   openDialog(row): void {
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
@@ -60,6 +79,14 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.table.renderRows();
       }
     });
+  }
+
+  updateData(user: User) {
+    if (user != null) {
+      this.data.splice(this.data.findIndex(i => i.id === user.id), 1, user);
+      this.table.renderRows();
+    }
+    this.expandedElement = null;
   }
 
   getUsers() {

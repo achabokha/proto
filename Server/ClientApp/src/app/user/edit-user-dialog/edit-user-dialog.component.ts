@@ -1,28 +1,32 @@
-import { Component, Inject, forwardRef } from "@angular/core";
+import { Component, Inject, forwardRef, Input, EventEmitter, Output, OnInit } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from "@angular/material";
 import { User } from "src/app/models";
 import { UserService } from "src/app/services/user.service";
 import { NgxAuthFirebaseUIConfig } from "src/app/interfaces/config.interface";
 import { NgxAuthFirebaseUIConfigToken } from "src/app/services/auth-process.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { data } from 'src/app/yt-comments/yt-comments.component';
 
 @Component({
   selector: "app-edit-user-dialog",
   templateUrl: "./edit-user-dialog.component.html",
   styleUrls: ["./edit-user-dialog.component.scss"]
 })
-export class EditUserDialogComponent {
+export class EditUserDialogComponent implements OnInit {
 
   userForm: FormGroup;
 
+  @Input() data: User;
+  @Output() closeEvent = new EventEmitter<User>();
+
   constructor(
-    public dialogRef: MatDialogRef<EditUserDialogComponent>,
     private userService: UserService,
     private snackBar: MatSnackBar,
+  ) {
 
-    @Inject(forwardRef(() => NgxAuthFirebaseUIConfigToken)) public config: NgxAuthFirebaseUIConfig,
-    @Inject(MAT_DIALOG_DATA) public data: User) {
+  }
 
+  ngOnInit(): void {
     this.userForm = new FormGroup({
       email: new FormControl(this.data.email, [
         Validators.required
@@ -45,21 +49,21 @@ export class EditUserDialogComponent {
   get lastName() { return this.userForm.get("lastName"); }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.closeEvent.emit();
   }
 
   updateUser(): void {
     if (this.userForm.valid) {
-      const data = Object.assign(this.data, this.userForm.value);
-      this.userService.updateUser(data).subscribe(
+      const postData = Object.assign(this.data, this.userForm.value);
+      this.userService.updateUser(postData).subscribe(
         (d) => {
-          this.dialogRef.close(data);
+          this.closeEvent.emit(postData);
           this.snackBar.open(
             `${d.message}`,
             "OK",
             { duration: 2000 });
         }, (error) => {
-          this.dialogRef.close();
+          this.closeEvent.emit();
           this.snackBar.open(
             `${error}`,
             "OK",
