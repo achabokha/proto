@@ -15,7 +15,7 @@ import { trigger, state, style, transition, animate, group } from "@angular/anim
   animations: [
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0", overflow: "hidden" })),
-      state("expanded", style({ height: "100%", overflow: "hidden" })),
+      state("expanded", style({ height: "*", overflow: "hidden" })),
       transition("expanded <=> collapsed",
         group([
           animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
