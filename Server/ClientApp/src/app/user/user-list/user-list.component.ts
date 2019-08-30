@@ -6,7 +6,7 @@ import { User } from "../../models";
 import { EditUserDialogComponent } from "../edit-user-dialog/edit-user-dialog.component";
 import { MediaObserver, MediaChange } from "@angular/flex-layout";
 import { Subscription } from "rxjs";
-import { trigger, state, style, transition, animate } from "@angular/animations";
+import { trigger, state, style, transition, animate, group } from "@angular/animations";
 
 @Component({
   selector: "app-user-list",
@@ -15,8 +15,12 @@ import { trigger, state, style, transition, animate } from "@angular/animations"
   animations: [
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0", overflow: "hidden" })),
-      state("expanded", style({ height: "*", overflow: "auto" })),
-      transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
+      state("expanded", style({ height: "100%", overflow: "hidden" })),
+      transition("expanded <=> collapsed",
+        group([
+          animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
+        ])
+      )
     ]),
   ],
 })
