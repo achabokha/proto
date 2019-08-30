@@ -50,7 +50,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   displayedColumns: string[];
   expandedElement: any;
 
-  isExpansionDetailRow = (i: number, row: Object) => {
+  isExpansionDetailRow = (i: number, row: object) => {
     console.log(this.expandedElement);
     return this.expandedElement === row;
   }
@@ -68,22 +68,12 @@ export class UserListComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
-  openDialog(row): void {
-    const dialogRef = this.dialog.open(EditUserDialogComponent, {
-      minWidth: "300px",
-      width: "50%",
-      maxWidth: "700px",
-      data: { ...row }
-    });
-    dialogRef.afterClosed().subscribe(d => {
-      if (d) {
-        this.data.splice(this.data.findIndex(i => i.id === d.id), 1, d);
-        this.table.renderRows();
-      }
-    });
-  }
+  // scrollInView(event: any) {
+  //   console.log(event.target.parentElement.nextSibling);
+  //   setTimeout(() => {
+  //     event.target.parentElement.scrollIntoView();
+  //   }, 260);
+  // }
 
   updateData(user: User) {
     if (user != null) {

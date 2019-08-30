@@ -5,7 +5,6 @@ import { UserService } from "src/app/services/user.service";
 import { NgxAuthFirebaseUIConfig } from "src/app/interfaces/config.interface";
 import { NgxAuthFirebaseUIConfigToken } from "src/app/services/auth-process.service";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { data } from 'src/app/yt-comments/yt-comments.component';
 
 @Component({
   selector: "app-edit-user-dialog",
