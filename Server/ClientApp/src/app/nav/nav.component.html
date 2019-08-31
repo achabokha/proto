@@ -20,7 +20,7 @@
 				*ngIf="isHandset$ | async">
 				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
 			</button>
-			<span>Hello {{ (authService.currentUser$ | async).email  }}</span>
+			<span class="greetingsText">Hello {{ (authService.currentUser$ | async).email  }}</span>
 
 			<div class="flex-spacer"></div>
 			<theme-picker (onThemeChanged)="onThemeChanged($event)" initThemeName="initThemeName"></theme-picker>
