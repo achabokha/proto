@@ -15,6 +15,7 @@ import { EventEmitter } from "events";
 import { environment } from "src/environments/environment";
 
 declare var FB: any;
+declare var gapi: any;
 // TODO: implement token refresh at some point --
 
 
@@ -45,7 +46,7 @@ export class AuthService {
 		checkAuthStatus: () => { this.checkAuthorization(); },
 		signInAnonymously: (): Promise<any> => this.signInAnonymously.call(this),
 		signInWithEmailAndPassword: (email: string, password: string): Promise<any> => this.login.call(this, email, password),
-		signInWithPopup: (authProvider: any): Promise<any> => this.loginWithFaceBook.call(this, authProvider),
+		signInWithPopup: (authProvider: any): Promise<any> => this.loginWithPopUp.call(this, authProvider),
 		sendPasswordResetEmail: (email: string): Promise<any> => this.sendPasswordReset.call(this, email),
 		createUserWithEmailAndPassword: (userName: string, email: string, password: string): Promise<any> => this.createUserWithEmailAndPassword.call(this, userName, email, password)
 	};
@@ -79,7 +80,7 @@ export class AuthService {
 
 	updateDisplayName(displayName: string, email, phone): Promise<any> {
 		return new Promise((resolve) => {
-			this.http.post(environment.apiUrl + "/api/User/UpdateProfile", { displayName, email, phone } , this.authJsonHeaders()).subscribe(d => {
+			this.http.post(environment.apiUrl + "/api/User/UpdateProfile", { displayName, email, phone }, this.authJsonHeaders()).subscribe(d => {
 				resolve(this.authState.user.next(d));
 			});
 		});
@@ -136,7 +137,7 @@ export class AuthService {
 		});
 	}
 
-	loginWithFaceBook(authProvider: any): Promise<any> {
+	loginWithPopUp(authProvider: any): Promise<any> {
 		if (authProvider === AuthProvider.Facebook) {
 			return new Promise(async (resolve) => {
 				FB.login((response) => {
@@ -157,6 +158,39 @@ export class AuthService {
 					// this call will give 401 (access denied HTTP status code) if login unsuccessful)
 					this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
 						.then(d => resolve(d));
+				});
+			});
+		} else if (authProvider === AuthProvider.Google) {
+			return new Promise(async (resolve) => {
+				gapi.load("auth2", () => {
+					const auth2 = gapi.auth2.init({
+						client_id: "994336992522-3jliemtatktsld6qkfn3vcrkqpjs61ck.apps.googleusercontent.com",
+					});
+
+					auth2.currentUser.listen((response) => {
+						const httpOptions = {
+							headers: new HttpHeaders({
+								"Content-Type": "application/x-www-form-urlencoded"
+							})
+						};
+
+						const params = new HttpParams()
+							.append("grant_type", "urn:ietf:params:oauth:grant-type:google_access_token")
+							.append("assertion", response.getAuthResponse().id_token)
+							.append("access_token", response.getAuthResponse().access_token)
+							.append("scope", "openid email phone profile offline_access");
+
+						const requestBody = params.toString();
+
+						// this call will give 401 (access denied HTTP status code) if login unsuccessful)
+						this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
+							.then(d => resolve(d));
+					});
+
+					auth2.signIn({
+						scope: "profile email"
+					})
+
 				});
 			});
 		}

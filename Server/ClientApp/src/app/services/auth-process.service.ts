@@ -85,6 +85,9 @@ export class AuthProcessService implements ISignInProcess, ISignUpProcess {
 				case AuthProvider.Facebook:
 					signInResult = await this.afa.authState.signInWithPopup(provider);
 					break;
+				case AuthProvider.Google:
+					signInResult = await this.afa.authState.signInWithPopup(provider);
+					break;
 
 				case AuthProvider.PhoneNumber:
 					// coming soon - see feature/sms branch

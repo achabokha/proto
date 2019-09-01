@@ -95,6 +95,12 @@ This should deploy app to your phone before running it you need to trust certifi
 3. Tap the email address
 4. Tap ‘Trust <your_email>’:
 
+# Integrating Google Sign-In
 
+Full guide here https://developers.google.com/identity/sign-in/web/sign-in?refresh=1
 
-
+1. Create Google API Console project and client ID 
+  1.Find Configure A project in https://developers.google.com/identity/sign-in/web/sign-in
+  2. Select Web Browser as your  app environment
+  3. If you need to change or edit any params visit https://console.developers.google.com
+  

@@ -27,7 +27,7 @@ export class AuthProvidersComponent {
 
   @Input() theme: string; // theme: string = Theme.DEFAULT;
   @Input() layout: string = Layout.ROW;
-  @Input() providers: string[] | string = [AuthProvider.Facebook]; //  google, facebook, twitter, github, microsoft, yahoo
+  @Input() providers: string[] | string = [AuthProvider.Facebook, AuthProvider.Google]; //  google, facebook, twitter, github, microsoft, yahoo
 
   @Output() onSuccess: any;
   @Output() onError: any;

@@ -4,7 +4,7 @@
 	<div *ngSwitchDefault
 		 [fxLayout]="layout"
 		 fxLayout.xs="column"
-		 [fxLayoutAlign]="layout == 'row' ? 'space-around center' : 'stretch'">
+		 [fxLayoutAlign]="layout == 'row' ? 'center center' : 'stretch'">
 	  <button *ngIf="providers === authProvider.ALL || providers.includes(authProvider.Google)"
 			  mat-button
 			  [ngClass.xs]="{'space-full-xs':true}"

@@ -115,6 +115,7 @@ namespace Server
 					options.AllowPasswordFlow();
 					options.AllowRefreshTokenFlow();
 					options.AllowCustomFlow("urn:ietf:params:oauth:grant-type:facebook_access_token");
+					options.AllowCustomFlow("urn:ietf:params:oauth:grant-type:google_access_token");
 					options.AllowCustomFlow("urn:ietf:params:oauth:grant-type:guest_user");
 
 

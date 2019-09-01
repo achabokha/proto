@@ -163,6 +163,58 @@ namespace Server.Controllers
 
 				return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
 			}
+			else if (request.GrantType == "urn:ietf:params:oauth:grant-type:google_access_token")
+			{
+				// Reject the request if the "assertion" parameter is missing.
+				if (string.IsNullOrEmpty(request.Assertion))
+				{
+					return BadRequest(new OpenIdConnectResponse
+					{
+						Error = OpenIdConnectConstants.Errors.InvalidRequest,
+						ErrorDescription = "The mandatory 'assertion' parameter was missing."
+					});
+				}
+
+				var userData = new ApplicationUser();
+
+				using (HttpClient client = new HttpClient())
+				{
+					string gURL = $"https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={request.Assertion}";
+					Console.WriteLine(gURL);
+					var resp = await client.GetAsync(gURL);
+					resp.EnsureSuccessStatusCode();
+					string responseBody = await resp.Content.ReadAsStringAsync();
+					dynamic respData = JsonConvert.DeserializeObject(responseBody);
+					var userId = Guid.NewGuid().ToString();
+					userData.Id = userId;
+					userData.UserName = respData.email;
+					userData.Email = respData.email;
+					userData.LastName = respData.name;
+					userData.FirstName = respData.given_name;
+
+				}
+
+				var user = await _userManager.FindByNameAsync(userData.UserName);
+				if (user == null)
+				{
+					var r = await _userManager.CreateAsync(userData);
+					if (!r.Succeeded)
+					{
+						return BadRequest(new OpenIdConnectResponse
+						{
+							Error = OpenIdConnectConstants.Errors.InvalidRequest,
+							ErrorDescription = r.Errors.First().Description
+						});
+					}
+				}
+
+
+
+				// Create a new authentication ticket.
+				var ticket = await CreateTicketAsync(request, user == null ? userData : user);
+
+				return SignIn(ticket.Principal, ticket.Properties, ticket.AuthenticationScheme);
+			}
 			else if (request.GrantType == "urn:ietf:params:oauth:grant-type:guest_user")
 			{
 				var user = await _userManager.FindByEmailAsync("dwight.schrute@office.com");
