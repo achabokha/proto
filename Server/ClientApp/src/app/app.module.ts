@@ -36,6 +36,7 @@ import { YtcItemSectionComponent } from './yt-comments/ytc-item-section/ytc-item
 import { YtcHeaderComponent } from './yt-comments/ytc-header/ytc-header.component';
 import { YtcThreadComponent } from './yt-comments/ytc-thread/ytc-thread.component';
 import { YtcRepliesComponent } from './yt-comments/ytc-replies/ytc-replies.component';
+import { Facebook } from '@ionic-native/facebook/ngx';
 
 @NgModule({
     declarations: [
@@ -68,6 +69,7 @@ import { YtcRepliesComponent } from './yt-comments/ytc-replies/ytc-replies.compo
     providers: [
         StatusBar,
         SplashScreen,
+        Facebook,
         { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
         ThemeStorage,
         LocationDataService,

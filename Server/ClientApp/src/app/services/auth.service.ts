@@ -1,21 +1,22 @@
-import { Injectable, Inject } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from "@angular/common/http";
 
 import { Router } from "@angular/router";
-import { Observable, Subject, throwError, of, BehaviorSubject } from "rxjs";
-import { map, catchError, retry } from "rxjs/operators";
+import { Observable, throwError, BehaviorSubject } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 
 import { AuthTokenModel } from "../models/security/auth-token-model";
-import { LoginModel } from "../models/security/login-model";
 
-import { ProviderAst } from "@angular/compiler";
 import { AuthProvider } from "../enums";
-import { resolve } from "q";
-import { EventEmitter } from "events";
 import { environment } from "src/environments/environment";
+
+import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
+import { Platform } from '@ionic/angular';
+
 
 declare var FB: any;
 declare var gapi: any;
+declare var cordova: any;
 // TODO: implement token refresh at some point --
 
 
@@ -34,7 +35,8 @@ export class AuthService {
 			displayName: "",
 			userID: "",
 			delete: (): Promise<any> => new Promise((res) => res()),
-			updateProfile: (displayName: string, email: string, phone: string): Promise<any> => this.updateDisplayName.call(this, displayName, email, phone)
+			updateProfile: (displayName: string, email: string, phone: string): Promise<any> =>
+				this.updateDisplayName.call(this, displayName, email, phone)
 		},
 		signOut: (): Promise<any> => {
 
@@ -48,18 +50,29 @@ export class AuthService {
 		signInWithEmailAndPassword: (email: string, password: string): Promise<any> => this.login.call(this, email, password),
 		signInWithPopup: (authProvider: any): Promise<any> => this.loginWithPopUp.call(this, authProvider),
 		sendPasswordResetEmail: (email: string): Promise<any> => this.sendPasswordReset.call(this, email),
-		createUserWithEmailAndPassword: (userName: string, email: string, password: string): Promise<any> => this.createUserWithEmailAndPassword.call(this, userName, email, password)
+		createUserWithEmailAndPassword: (userName: string, email: string, password: string): Promise<any> =>
+			this.createUserWithEmailAndPassword.call(this, userName, email, password)
 	};
 
 	currentUser$ = this.authState.user;
 	currentUser: any;
 
-	constructor(private http: HttpClient, private router: Router) {
+	constructor(
+		private http: HttpClient,
+		private router: Router,
+		private fb: Facebook,
+		private platform: Platform) {
 		this.authState.checkAuthStatus();
 		this.currentUser$.subscribe(d => {
-			console.log(d);
 			this.currentUser = d;
 		});
+		if (this.platform.is("cordova")) {
+			this.platform.ready().then(
+				() => {
+					cordova.plugins.certificates.trustUnsecureCerts(true);
+				}
+			);
+		}
 	}
 
 	checkAuthorization() {
@@ -110,7 +123,7 @@ export class AuthService {
 
 	createUserWithEmailAndPassword(userName: string, email: string, password: string): Promise<any> {
 		return new Promise((resolve) => {
-			this.http.post(environment.apiUrl + "/api/signup/register", { userName, email, password }).subscribe(d => {
+			this.http.post(environment.apiUrl + "/api/signup/register", { userName, email, password }).subscribe(() => {
 				resolve(this.login(email, password));
 			});
 		});
@@ -140,25 +153,48 @@ export class AuthService {
 	loginWithPopUp(authProvider: any): Promise<any> {
 		if (authProvider === AuthProvider.Facebook) {
 			return new Promise(async (resolve) => {
-				FB.login((response) => {
-					const httpOptions = {
-						headers: new HttpHeaders({
-							"Content-Type": "application/x-www-form-urlencoded"
-						})
-					};
+				if (this.platform.is("cordova")) {
+					this.fb.login(['public_profile', 'email'])
+						.then((response: FacebookLoginResponse) => {
+							const httpOptions = {
+								headers: new HttpHeaders({
+									"Content-Type": "application/x-www-form-urlencoded"
+								})
+							};
 
-					const params = new HttpParams()
-						.append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
-						.append("assertion", response.authResponse.userID)
-						.append("access_token", response.authResponse.accessToken)
-						.append("scope", "openid email phone profile offline_access");
+							const params = new HttpParams()
+								.append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
+								.append("assertion", response.authResponse.userID)
+								.append("access_token", response.authResponse.accessToken)
+								.append("scope", "openid email phone profile offline_access");
 
-					const requestBody = params.toString();
+							const requestBody = params.toString();
 
-					// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-					this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
-						.then(d => resolve(d));
-				});
+							// this call will give 401 (access denied HTTP status code) if login unsuccessful)
+							this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
+								.then(d => resolve(d));
+						});
+				} else {
+					FB.login((response) => {
+						const httpOptions = {
+							headers: new HttpHeaders({
+								"Content-Type": "application/x-www-form-urlencoded"
+							})
+						};
+
+						const params = new HttpParams()
+							.append("grant_type", "urn:ietf:params:oauth:grant-type:facebook_access_token")
+							.append("assertion", response.authResponse.userID)
+							.append("access_token", response.authResponse.accessToken)
+							.append("scope", "openid email phone profile offline_access");
+
+						const requestBody = params.toString();
+
+						// this call will give 401 (access denied HTTP status code) if login unsuccessful)
+						this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
+							.then(d => resolve(d));
+					});
+				}
 			});
 		} else if (authProvider === AuthProvider.Google) {
 			return new Promise(async (resolve) => {
@@ -167,7 +203,11 @@ export class AuthService {
 						client_id: "994336992522-3jliemtatktsld6qkfn3vcrkqpjs61ck.apps.googleusercontent.com",
 					});
 
-					auth2.currentUser.listen((response) => {
+					//auth2.currentUser.listen();
+
+					auth2.signIn({
+						scope: "profile email"
+					}).then((response) => {
 						const httpOptions = {
 							headers: new HttpHeaders({
 								"Content-Type": "application/x-www-form-urlencoded"
@@ -185,10 +225,6 @@ export class AuthService {
 						// this call will give 401 (access denied HTTP status code) if login unsuccessful)
 						this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
 							.then(d => resolve(d));
-					});
-
-					auth2.signIn({
-						scope: "profile email"
 					})
 
 				});

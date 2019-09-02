@@ -30,8 +30,10 @@
     "@ionic-native/status-bar": "^5.0.0",
     "@ionic/angular": "^4.7.1",
     "@types/d3": "^5.7.2",
+    "browser": "^0.2.6",
     "cordova-ios": "5.0.1",
     "cordova-plugin-applepay": "^5.0.0",
+    "cordova-plugin-certificates": "^0.6.4",
     "cordova-plugin-facebook4": "^6.0.0",
     "cordova-plugin-fingerprint-aio": "^1.7.0",
     "core-js": "^2.5.4",
@@ -80,7 +82,12 @@
       "cordova-plugin-fingerprint-aio": {
         "FACEID_USAGE_DESCRIPTION": " "
       },
-      "cordova-plugin-applepay": {}
+      "cordova-plugin-applepay": {},
+      "cordova-plugin-facebook4": {
+        "APP_ID": "307725046317139",
+        "APP_NAME": "DevLigt"
+      },
+      "cordova-plugin-certificates": {}
     },
     "platforms": [
       "ios"
