@@ -12,7 +12,7 @@ import { environment } from "src/environments/environment";
 
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { Platform } from '@ionic/angular';
-
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 declare var FB: any;
 declare var gapi: any;
@@ -61,7 +61,8 @@ export class AuthService {
 		private http: HttpClient,
 		private router: Router,
 		private fb: Facebook,
-		private platform: Platform) {
+		private platform: Platform,
+		private googlePlus: GooglePlus) {
 		this.authState.checkAuthStatus();
 		this.currentUser$.subscribe(d => {
 			this.currentUser = d;
@@ -198,36 +199,64 @@ export class AuthService {
 			});
 		} else if (authProvider === AuthProvider.Google) {
 			return new Promise(async (resolve) => {
-				gapi.load("auth2", () => {
-					const auth2 = gapi.auth2.init({
-						client_id: "994336992522-3jliemtatktsld6qkfn3vcrkqpjs61ck.apps.googleusercontent.com",
+				if (this.platform.is("cordova")) {
+					this.platform.ready().then(() => {
+						this.googlePlus.login(
+							{ 	webClientId: "994336992522-4v9iii4l79p8vg2q55t70u4a0r1pl5re.apps.googleusercontent.com",
+								scope: "profile email"
+							}).then(
+								(response) => {
+									const httpOptions = {
+										headers: new HttpHeaders({
+											"Content-Type": "application/x-www-form-urlencoded"
+										})
+									};
+
+									const params = new HttpParams()
+										.append("grant_type", "urn:ietf:params:oauth:grant-type:google_access_token")
+										.append("assertion", response.idToken)
+										.append("access_token", response.accessToken)
+										.append("scope", "openid email phone profile offline_access");
+
+									const requestBody = params.toString();
+
+									// this call will give 401 (access denied HTTP status code) if login unsuccessful)
+									this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
+										.then(d => resolve(d));
+								});
 					});
+				} else {
+					gapi.load("auth2", () => {
+						const auth2 = gapi.auth2.init({
+							cookie_policy: "none",
+							client_id: "994336992522-3jliemtatktsld6qkfn3vcrkqpjs61ck.apps.googleusercontent.com",
+						});
 
-					//auth2.currentUser.listen();
+						//auth2.currentUser.listen();
 
-					auth2.signIn({
-						scope: "profile email"
-					}).then((response) => {
-						const httpOptions = {
-							headers: new HttpHeaders({
-								"Content-Type": "application/x-www-form-urlencoded"
-							})
-						};
+						auth2.signIn({
+							scope: "profile email"
+						}).then((response) => {
+							const httpOptions = {
+								headers: new HttpHeaders({
+									"Content-Type": "application/x-www-form-urlencoded"
+								})
+							};
 
-						const params = new HttpParams()
-							.append("grant_type", "urn:ietf:params:oauth:grant-type:google_access_token")
-							.append("assertion", response.getAuthResponse().id_token)
-							.append("access_token", response.getAuthResponse().access_token)
-							.append("scope", "openid email phone profile offline_access");
+							const params = new HttpParams()
+								.append("grant_type", "urn:ietf:params:oauth:grant-type:google_access_token")
+								.append("assertion", response.getAuthResponse().id_token)
+								.append("access_token", response.getAuthResponse().access_token)
+								.append("scope", "openid email phone profile offline_access");
 
-						const requestBody = params.toString();
+							const requestBody = params.toString();
 
-						// this call will give 401 (access denied HTTP status code) if login unsuccessful)
-						this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
-							.then(d => resolve(d));
-					})
-
-				});
+							// this call will give 401 (access denied HTTP status code) if login unsuccessful)
+							this.http.post<boolean>(environment.apiUrl + "/connect/token", requestBody, httpOptions).toPromise()
+								.then(d => resolve(d));
+						})
+					});
+				}
 			});
 		}
 	}
