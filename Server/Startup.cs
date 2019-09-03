@@ -47,16 +47,7 @@ namespace Server
 
 			services.AddSignalR();
 
-			services.AddCors(options =>
-			{
-				options.AddPolicy(MyAllowSpecificOrigins,
-				builder =>
-				{
-					builder.WithOrigins("ionic://localhost")
-					.AllowAnyHeader()
-					.AllowAnyMethod();
-				});
-			});
+
 
 			services.AddAutoMapper();
 
@@ -168,6 +159,15 @@ namespace Server
 				app.UseHsts();
 			}
 
+			app.UseCors(builder =>
+			{
+				builder
+				.WithOrigins("ionic://localhost")
+				.WithOrigins("http://localhost:5000")
+				.AllowAnyHeader()
+				.AllowAnyMethod()
+				.AllowCredentials();
+			});
 
 			app.UseSignalR(routes =>
 			{
@@ -179,7 +179,7 @@ namespace Server
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
 			app.UseAuthentication();
-			app.UseCors(MyAllowSpecificOrigins); 
+			app.UseCors(MyAllowSpecificOrigins);
 
 			app.UseMvc(routes =>
 			{
