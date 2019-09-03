@@ -38,7 +38,8 @@ import { YtcThreadComponent } from './yt-comments/ytc-thread/ytc-thread.componen
 import { YtcRepliesComponent } from './yt-comments/ytc-replies/ytc-replies.component';
 import { Facebook } from '@ionic-native/facebook/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
-
+import { ChatService } from './services/chat.service';
+import { NgChatModule } from 'ng-chat';
 
 @NgModule({
     declarations: [
@@ -66,6 +67,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
         DashboardModule,
         ChartModule,
         LoginModule,
+        NgChatModule,
         MatPasswordStrengthModule.forRoot()
     ],
     providers: [
@@ -81,6 +83,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
         AuthService,
         HttpClientModule,
         AuthProcessService,
+        ChatService,
         { provide: UserProvidedConfigToken, useValue: {} }
     ],
     bootstrap: [AppComponent]

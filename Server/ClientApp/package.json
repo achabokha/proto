@@ -23,6 +23,7 @@
     "@angular/platform-browser": "~8.1.3",
     "@angular/platform-browser-dynamic": "~8.1.3",
     "@angular/router": "~8.1.3",
+    "@aspnet/signalr": "^1.1.4",
     "@ionic-native/core": "^5.0.0",
     "@ionic-native/facebook": "^5.13.0",
     "@ionic-native/fingerprint-aio": "^5.11.0",
@@ -41,6 +42,7 @@
     "core-js": "^2.5.4",
     "d3": "^5.9.7",
     "hammerjs": "^2.0.8",
+    "ng-chat": "^2.0.5",
     "rxjs": "~6.5.2",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

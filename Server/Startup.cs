@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using System;
+using Server.Hubs;
 
 namespace Server
 {
@@ -43,6 +44,8 @@ namespace Server
 			});
 
 			//services.AddMemoryCache();
+
+			services.AddSignalR();
 
 			services.AddCors(options =>
 			{
@@ -164,6 +167,13 @@ namespace Server
 				app.UseExceptionHandler("/Error");
 				app.UseHsts();
 			}
+
+
+			app.UseSignalR(routes =>
+			{
+				routes.MapHub<ChatHub>("/hubs/chat");
+				routes.MapHub<GroupChatHub>("/hubs/groupchat");
+			});
 
 			//app.UseHttpsRedirection();
 			app.UseStaticFiles();
