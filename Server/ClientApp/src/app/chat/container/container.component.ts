@@ -3,8 +3,8 @@ import { ChatService } from "src/app/services/chat.service";
 import { SignalRGroupAdapter } from "./signalr-group-adapter";
 import { HttpClient } from "@angular/common/http";
 import { AuthService } from "src/app/services/auth.service";
-import { ChatAdapter } from 'ng-chat';
-import { SignalRAdapter } from './signaIr-adapter';
+import { ChatAdapter } from "src/app/ng-chat";
+import { SignalRAdapter } from "./signaIr-adapter";
 
 @Component({
   selector: "app-container",

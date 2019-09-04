@@ -30,16 +30,16 @@ import { AuthProcessService } from "./services/auth-process.service";
 import { CommentsComponent } from "./comments/comments.component";
 import { CommentformComponent } from "./comments/commentform/commentform.component";
 import { MaterialModule } from "./material-modules";
-import { YtCommentsComponent } from './yt-comments/yt-comments.component';
-import { YtcSpinnerComponent } from './yt-comments/ytc-spinner/ytc-spinner.component';
-import { YtcItemSectionComponent } from './yt-comments/ytc-item-section/ytc-item-section.component';
-import { YtcHeaderComponent } from './yt-comments/ytc-header/ytc-header.component';
-import { YtcThreadComponent } from './yt-comments/ytc-thread/ytc-thread.component';
-import { YtcRepliesComponent } from './yt-comments/ytc-replies/ytc-replies.component';
-import { Facebook } from '@ionic-native/facebook/ngx';
-import { GooglePlus } from '@ionic-native/google-plus/ngx';
-import { ChatService } from './services/chat.service';
-import { NgChatModule } from 'ng-chat';
+import { YtCommentsComponent } from "./yt-comments/yt-comments.component";
+import { YtcSpinnerComponent } from "./yt-comments/ytc-spinner/ytc-spinner.component";
+import { YtcItemSectionComponent } from "./yt-comments/ytc-item-section/ytc-item-section.component";
+import { YtcHeaderComponent } from "./yt-comments/ytc-header/ytc-header.component";
+import { YtcThreadComponent } from "./yt-comments/ytc-thread/ytc-thread.component";
+import { YtcRepliesComponent } from "./yt-comments/ytc-replies/ytc-replies.component";
+import { Facebook } from "@ionic-native/facebook/ngx";
+import { GooglePlus } from "@ionic-native/google-plus/ngx";
+import { ChatService } from "./services/chat.service";
+
 
 @NgModule({
     declarations: [
@@ -67,7 +67,6 @@ import { NgChatModule } from 'ng-chat';
         DashboardModule,
         ChartModule,
         LoginModule,
-        NgChatModule,
         MatPasswordStrengthModule.forRoot()
     ],
     providers: [

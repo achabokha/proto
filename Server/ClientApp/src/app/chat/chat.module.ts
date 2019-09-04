@@ -5,8 +5,7 @@ import { ChatRoutingModule } from './chat-routing.module';
 import { ContainerComponent } from './container/container.component';
 import { MaterialModule } from '../material-modules';
 import { HttpClientModule } from '@angular/common/http';
-import { NgChatModule } from 'ng-chat';
-
+import { NgChatModule } from "src/app/ng-chat";
 
 @NgModule({
   declarations: [ContainerComponent],
