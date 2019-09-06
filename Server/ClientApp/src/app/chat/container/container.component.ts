@@ -5,6 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { AuthService } from "src/app/services/auth.service";
 import { ChatAdapter } from "src/app/ng-chat";
 import { SignalRAdapter } from "./signaIr-adapter";
+import { Platform } from "@ionic/angular";
 
 @Component({
   selector: "app-container",
@@ -19,9 +20,24 @@ export class ContainerComponent implements OnInit {
   currentTheme = "dark-theme";
   triggeredEvents = [];
 
-  signalRAdapter: SignalRGroupAdapter ;
+  isMobile = false;
+  isBrowser = false;
 
-  constructor(private http: HttpClient, private authService: AuthService) { }
+  signalRAdapter: SignalRGroupAdapter;
+
+  constructor(private http: HttpClient,
+              private authService: AuthService,
+              private platform: Platform) { 
+                this.platform.ready().then(
+                  () => {
+                    if (this.platform.is("cordova")) {
+                      this.isMobile = true;
+                    } else {
+                      this.isMobile = true;
+                    }
+                  }
+                )
+              }
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(d => {
