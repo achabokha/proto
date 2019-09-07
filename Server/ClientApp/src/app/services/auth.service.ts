@@ -13,6 +13,7 @@ import { environment } from "src/environments/environment";
 import { Facebook, FacebookLoginResponse } from '@ionic-native/facebook/ngx';
 import { Platform } from '@ionic/angular';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { User } from '../models';
 
 declare var FB: any;
 declare var gapi: any;
@@ -55,7 +56,7 @@ export class AuthService {
 	};
 
 	currentUser$ = this.authState.user;
-	currentUser: any;
+	currentUser: User;
 
 	constructor(
 		private http: HttpClient,

@@ -88,7 +88,7 @@
                             </ng-container>
                             <ng-container [ngSwitch]="message.type">
                                 <div *ngSwitchCase="MessageType.Text"
-                                    [ngClass]="{'sent-chat-message-container': message.fromId == userId, 'received-chat-message-container': message.fromId != userId}">
+                                    [ngClass]="{'sent-chat-message-container': isSentChatMessage(window, message), 'received-chat-message-container': isReceivedChatMessage(window, message)}">
                                     <span
                                         [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
                                     <span *ngIf="showMessageDate && message.dateSent"

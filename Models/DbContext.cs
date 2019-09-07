@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Models
 {
     public class DbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbContext(DbContextOptions<DbContext> options) : base(options)
         {
 

@@ -80,6 +80,9 @@ export class NgChat implements OnInit, IChatController {
     public userId: any;
 
     @Input()
+    public userEmail: any;
+
+    @Input()
     public isCollapsed: boolean = false;
 
     @Input()
@@ -421,7 +424,7 @@ export class NgChat implements OnInit, IChatController {
                 ).subscribe();
         }
         else {
-            this.adapter.getMessageHistory(window.participant.id)
+            this.adapter.getMessageHistory(window.participant.displayName)
                 .pipe(
                     map((result: Message[]) => {
                         result.forEach((message) => this.assertMessageType(message));
@@ -460,9 +463,9 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Handles received messages by the adapter
-    private onMessageReceived(participant: IChatParticipant, message: Message) {
+    private async onMessageReceived(participant: IChatParticipant, message: Message) {
         if (participant && message) {
-            let chatWindow = this.openChatWindow(participant);
+            let chatWindow = await this.openChatWindow(participant);
 
             this.assertMessageType(message);
 
@@ -499,11 +502,11 @@ export class NgChat implements OnInit, IChatController {
     // Opens a new chat whindow. Takes care of available viewport
     // Works for opening a chat window for an user or for a group
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
-    public openChatWindow(participant: IChatParticipant, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): [Window, boolean] {
+    public openChatWindow(participant: IChatParticipant, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): Promise<[Window, boolean]> {
         // Is this window opened?
         let openedWindow = this.windows.find(x => x.participant.id == participant.id);
 
-        this.togleSidePanel().then(() => {
+        return this.togleSidePanel().then(() => {
             if (!openedWindow) {
                 if (invokedByUserClick) {
                     this.onParticipantClicked.emit(participant);
@@ -719,6 +722,7 @@ export class NgChat implements OnInit, IChatController {
 
                     message.fromId = this.userId;
                     message.toId = window.participant.id;
+                    message.toEmail = window.participant.displayName;
                     message.message = window.newMessage;
                     message.dateSent = new Date();
 
@@ -781,7 +785,7 @@ export class NgChat implements OnInit, IChatController {
 
     // Asserts if a user avatar is visible in a chat cluster
     isAvatarVisible(window: Window, message: Message, index: number): boolean {
-        if (message.fromId != this.userId) {
+        if (this.isReceivedChatMessage(window, message)) {
             if (index == 0) {
                 return true; // First message, good to show the thumbnail
             }
@@ -794,6 +798,28 @@ export class NgChat implements OnInit, IChatController {
         }
 
         return false;
+    }
+
+    // Asserts is message is received from user or sent by user
+    isSentChatMessage(window: Window, message: Message) {
+        if (message.fromUser) {
+            return message.fromUser.email === window.participant.displayName;
+        } else if (message.fromId === this.userId) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Asserts if message is received by window participant
+    isReceivedChatMessage(window: Window, message: Message) {
+        if (message.toUser) {
+            return message.toUser.email === window.participant.displayName;
+        } else if (message.fromId !== this.userId) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     getChatWindowAvatar(participant: IChatParticipant, message: Message): string | null {

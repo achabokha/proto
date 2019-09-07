@@ -12,8 +12,9 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
   constructor(private username: string, private http: HttpClient,
     private authService: AuthService) {
     super();
-
-    this.initializeConnection();
+    this.authService.currentUser$.subscribe(() => {
+      this.initializeConnection();
+    });
   }
   public static serverBaseUrl: string = environment.apiUrl + "/hubs/"; // Set this to 'https://localhost:5001/' if running locally
   public userId: string;
@@ -23,7 +24,7 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
   private initializeConnection(): void {
     console.log(`${SignalRGroupAdapter.serverBaseUrl}groupchat`);
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${SignalRGroupAdapter.serverBaseUrl}groupchat`)
+      .withUrl(`${SignalRGroupAdapter.serverBaseUrl}groupchat`, { accessTokenFactory: this.authService.getAccessToken })
       .build();
 
     this.hubConnection
@@ -71,10 +72,15 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
       );
   }
 
-  getMessageHistory(destinataryId: any): Observable<Message[]> {
-    // This could be an API call to your web application that would go to the database
-    // and retrieve a N amount of history messages between the users.
-    return of([]);
+  getMessageHistory(destEmail: string): Observable<Message[]> {
+    return this.http
+      .post(`${SignalRGroupAdapter.serverBaseUrl}messageHistory`,
+        { mailA: this.authService.currentUser.email, mailB: destEmail },
+        this.authService.authJsonHeaders())
+      .pipe(
+        map((res: any) => res),
+        catchError((error: any) => throwError(error.error || "Server error"))
+      );
   }
 
   sendMessage(message: Message): void {

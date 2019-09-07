@@ -16,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 using System;
 using Server.Hubs;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -128,8 +129,19 @@ namespace Server
 					);
 
 					options.SetAccessTokenLifetime(TimeSpan.FromDays(30));
-				})
-				.AddValidation();
+				});
+				//.AddValidation();
+
+			services.AddAuthentication()
+				.AddOAuthValidation(options =>
+				{
+					options.Events.OnRetrieveToken = context =>
+					{
+						context.Token = context.Request.Query["access_token"];
+
+						return Task.CompletedTask;
+					};
+				});
 
 			// app services
 			services.AddTransient<IEmailQueueSender, EmailQueueSender>();

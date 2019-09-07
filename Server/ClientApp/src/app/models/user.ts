@@ -5,7 +5,8 @@ export class User {
     firstName: string | undefined;
     lastName: string | undefined;
 	id: string | undefined;
-	roles: string | undefined;
+    roles: string | undefined;
+    displayName: string | undefined;
 	dateLastAccessed: Date | undefined;
 	emailConfirmed: boolean | undefined;
 	phoneNumberConfirmed: boolean | undefined;

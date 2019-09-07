@@ -1,4 +1,8 @@
+using AspNet.Security.OAuth.Validation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Models;
+using Models.Entities;
 using Server.Hubs.Models;
 using System;
 using System.Collections.Concurrent;
@@ -6,12 +10,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+[Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
 public class GroupChatHub : Hub
 {
+    private readonly DbContext _ctx;
     private static List<ParticipantResponseViewModel> AllConnectedParticipants { get; set; } = new List<ParticipantResponseViewModel>();
     private static List<ParticipantResponseViewModel> DisconnectedParticipants { get; set; } = new List<ParticipantResponseViewModel>();
     private static List<GroupChatParticipantViewModel> AllGroupParticipants { get; set; } = new List<GroupChatParticipantViewModel>();
     private object ParticipantsConnectionLock = new object();
+
+    public GroupChatHub(DbContext ctx) {
+        this._ctx = ctx;
+    }
 
     private static IEnumerable<ParticipantResponseViewModel> FilteredGroupParticipants(string currentUserId)
     {
@@ -95,6 +105,20 @@ public class GroupChatHub : Hub
             }
             else
             {
+                var msg = new ChatMessage() {
+                    DateSeen = message.DateSeen,
+                    DownloadUrl = message.DownloadUrl,
+                    DateSent = message.DateSent,
+                    FileSizeInBytes = message.FileSizeInBytes, 
+                    FromId = message.FromId, 
+                    FromUser = this._ctx.Users.FirstOrDefault(d => d.Email == sender.Participant.DisplayName),
+                    Message = message.Message,
+                    ToId = message.ToId,
+                    ToUser = this._ctx.Users.FirstOrDefault(d => d.Email == message.ToEmail),
+                };
+                
+                this._ctx.ChatMessages.Add(msg);
+                this._ctx.SaveChanges();
                 Clients.Client(message.ToId).SendAsync("messageReceived", sender.Participant, message);
             }
         }
