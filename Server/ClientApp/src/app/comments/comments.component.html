@@ -1,69 +1,90 @@
-<cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
-    <!-- This is the tree node template for expandable nodes -->
-    <cdk-tree-node
-        *cdkTreeNodeDef="let node; when: hasChild"
-        cdkTreeNodePadding
-        [style.display]="'flex'"
-        class="tree-node"
-    >
-        <div>
-            <mat-form-field *ngIf="node.isEdit" class="edit">
-                <textarea matInput [(ngModel)]="node.content"></textarea>
-                <button mat-icon-button (click)="node.isEdit = false" matSuffix><mat-icon>save</mat-icon></button>
-            </mat-form-field>
-            <button
-                *ngIf="!node.isEdit"
-                mat-icon-button
-                cdkTreeNodeToggle
-                [disableRipple]="true"
-                (click)="node.isExpanded = !node.isExpanded"
-            >
-                <mat-icon class="mat-icon-rtl-mirror">
-                    {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
-                </mat-icon>
+<div class="container">
+    <app-commentform [reply]="false" class="new_component"></app-commentform>
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <!-- This is the tree node template for expandable nodes -->
+        <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding class="tree-node">
+            <div>
+                <mat-form-field *ngIf="node.isEdit" class="edit">
+                    <textarea matInput [(ngModel)]="node.content"></textarea>
+                    <button mat-icon-button (click)="node.isEdit = false" matSuffix><mat-icon>save</mat-icon></button>
+                </mat-form-field>
+                <!-- <button
+                    *ngIf="!node.isEdit"
+                    mat-icon-button
+                    cdkTreeNodeToggle
+                    [disableRipple]="true"
+                    (click)="node.isExpanded = !node.isExpanded"
+                >
+                    <mat-icon class="mat-icon-rtl-mirror">
+                        {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
+                    </mat-icon>
+
+                    <mat-icon
+                        *ngIf="isSelected(node)"
+                        class="smaller"
+                        (click)="node.isEdit = true; $event.stopPropagation()"
+                    >
+                        edit
+                    </mat-icon>
+                    <mat-icon *ngIf="isSelected(node)" class="smaller" (click)="delete(node); $event.stopPropagation()">
+                        delete
+                    </mat-icon>
+                </button> -->
+
+                <div><mat-icon>account_circle</mat-icon> {{ node.name }} {{ node.datetime }}</div>
 
                 <span
-                    class="name-clicked"
+                    class="content"
                     (click)="selectNode(node)"
                     [ngStyle]="{ 'font-weight': isSelected(node) ? 'bold' : 'normal' }"
                     >{{ node.content }}</span
                 >
 
-                <mat-icon
-                    *ngIf="isSelected(node)"
-                    class="smaller"
-                    (click)="node.isEdit = true; $event.stopPropagation()"
-                >
+                <div class="buttons">
+                    <button mat-icon-button><mat-icon>thumb_up</mat-icon></button>
+                    <button mat-icon-button><mat-icon>thumb_down</mat-icon></button>
+                    <button mat-icon-button><mat-icon>favorite</mat-icon></button>
+                    <button mat-button>REPLY</button>
+                </div>
+            </div>
+        </cdk-tree-node>
+        <!-- This is the tree node template for leaf nodes -->
+        <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding class="tree-node">
+            <div>
+                <!-- <mat-form-field *ngIf="node.isEdit" class="edit">
+                    <textarea matInput [(ngModel)]="node.content"></textarea>
+                    <button mat-icon-button (click)="node.isEdit = false" matSuffix><mat-icon>save</mat-icon></button>
+                </mat-form-field>
+        
+                <button *ngIf="!node.isEdit" mat-button [disableRipple]="true" (click)="selectNode(node)">
+                <mat-icon *ngIf="isSelected(node)" class="smaller" (click)="node.isEdit = true; $event.stopPropagation()">
                     edit
                 </mat-icon>
                 <mat-icon *ngIf="isSelected(node)" class="smaller" (click)="delete(node); $event.stopPropagation()">
                     delete
                 </mat-icon>
-            </button>
-        </div>
-    </cdk-tree-node>
-    <!-- This is the tree node template for leaf nodes -->
-    <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding class="tree-node" [style.display]="'flex'">
-        <mat-form-field *ngIf="node.isEdit" class="edit">
-            <textarea matInput [(ngModel)]="node.content"></textarea>
-            <button mat-icon-button (click)="node.isEdit = false" matSuffix><mat-icon>save</mat-icon></button>
-        </mat-form-field>
+                </button> -->
 
-        <button *ngIf="!node.isEdit" mat-button [disableRipple]="true" (click)="selectNode(node)">
-            <span class="name-clicked" [ngStyle]="{ 'font-weight': isSelected(node) ? 'bold' : 'normal' }">
-                {{ node.content }}
-            </span>
-            <mat-icon *ngIf="isSelected(node)" class="smaller" (click)="node.isEdit = true; $event.stopPropagation()">
-                edit
-            </mat-icon>
-            <mat-icon *ngIf="isSelected(node)" class="smaller" (click)="delete(node); $event.stopPropagation()">
-                delete
-            </mat-icon>
-        </button>
-    </cdk-tree-node>
-    <cdk-tree-node *cdkTreeNodeDef="let node; when: isLoadMore" cdkTreeNodePadding>
-        <button mat-button (click)="loadMore(node)">
-            more...
-        </button>
-    </cdk-tree-node>
-</cdk-tree>
+                <!-- <button mat-icon-button disabled></button> -->
+
+                <div><mat-icon>account_circle</mat-icon> {{ node.name }} {{ node.datetime }}</div>
+
+                <span class="content" [ngStyle]="{ 'font-weight': isSelected(node) ? 'bold' : 'normal' }">
+                    {{ node.content }}
+                </span>
+
+                <div class="buttons">
+                    <button mat-icon-button><mat-icon>thumb_up</mat-icon></button>
+                    <button mat-icon-button><mat-icon>thumb_down</mat-icon></button>
+                    <button mat-icon-button><mat-icon>favorite</mat-icon></button>
+                    <button mat-button>REPLY</button>
+                </div>
+            </div>
+        </cdk-tree-node>
+        <!-- <cdk-tree-node *cdkTreeNodeDef="let node; when: isLoadMore" cdkTreeNodePadding>
+            <button mat-button (click)="loadMore(node)">
+                more...
+            </button>
+        </cdk-tree-node> -->
+    </cdk-tree>
+</div>

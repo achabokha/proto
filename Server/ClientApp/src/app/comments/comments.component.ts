@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FlatTreeControl } from "@angular/cdk/tree";
 import { Observable, of as observableOf } from "rxjs";
 import { MatTreeFlattener, MatTreeFlatDataSource } from "@angular/material/tree";
-import { CommentsService, TreeNode } from "../services/comments.service";
+import { CommentsService, TreeNode } from "@services/comments.service";
 
 /** Flat node with expandable and level information */
 interface FlatNode {
@@ -11,10 +11,12 @@ interface FlatNode {
     isExpanded?: boolean;
     id: string;
     parentId: string;
+    name: string;
     content: string;
     datetime: string;
     likes: number;
     dislikes: number;
+    loves: number;
 }
 
 @Component({
@@ -40,10 +42,12 @@ export class CommentsComponent implements OnInit {
             expandable: node.children.length > 0,
             level: level,
             id: node.id,
-            content: node.content,
             parentId: node.parentId,
+            name: node.name,
+            content: node.content,
             dislikes: node.dislikes,
             likes: node.likes,
+            loves: node.loves,
             datetime: node.datetime
         };
     };
@@ -69,6 +73,7 @@ export class CommentsComponent implements OnInit {
     ngOnInit() {
         this.commentsService.getCommentTree().subscribe((result: any) => {
             this.dataSource.data = result;
+            this.treeControl.expandAll();
         });
     }
 
