@@ -10,7 +10,7 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DbContext))]
-    [Migration("20190906084712_chatMessage")]
+    [Migration("20190909140749_chatMessage")]
     partial class chatMessage
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -198,10 +198,26 @@ namespace Models.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Models.Entities.ChatGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatGroups");
+                });
+
             modelBuilder.Entity("Models.Entities.ChatMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("ChatGroupId");
 
                     b.Property<DateTime?>("DateSeen");
 
@@ -211,25 +227,37 @@ namespace Models.Migrations
 
                     b.Property<int?>("FileSizeInBytes");
 
-                    b.Property<string>("FromId");
-
                     b.Property<string>("FromUserId");
 
                     b.Property<string>("Message");
-
-                    b.Property<string>("ToId");
-
-                    b.Property<string>("ToUserId");
 
                     b.Property<int>("Type");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ChatGroupId");
+
                     b.HasIndex("FromUserId");
 
-                    b.HasIndex("ToUserId");
-
                     b.ToTable("ChatMessages");
+                });
+
+            modelBuilder.Entity("Models.Entities.Participant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid?>("GroupId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Participants");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictApplication", b =>
@@ -430,13 +458,24 @@ namespace Models.Migrations
 
             modelBuilder.Entity("Models.Entities.ChatMessage", b =>
                 {
+                    b.HasOne("Models.Entities.ChatGroup", "ChatGroup")
+                        .WithMany()
+                        .HasForeignKey("ChatGroupId");
+
                     b.HasOne("Models.ApplicationUser", "FromUser")
                         .WithMany()
                         .HasForeignKey("FromUserId");
+                });
 
-                    b.HasOne("Models.ApplicationUser", "ToUser")
+            modelBuilder.Entity("Models.Entities.Participant", b =>
+                {
+                    b.HasOne("Models.Entities.ChatGroup", "Group")
+                        .WithMany("Participants")
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("ToUserId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictAuthorization", b =>

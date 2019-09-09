@@ -14,6 +14,9 @@ namespace Models
     public class DbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<Participant> Participants { get; set; }
+        public DbSet<ChatGroup> ChatGroups { get; set; }
+
         public DbContext(DbContextOptions<DbContext> options) : base(options)
         {
 

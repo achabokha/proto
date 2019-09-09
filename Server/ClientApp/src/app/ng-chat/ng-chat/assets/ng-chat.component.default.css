@@ -175,6 +175,17 @@
   min-width: 300px;
 }
 
+.chatWindowHeaderButton {
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chatWindowHeaderContainer {
+  height: 36px;
+}
+
 .ng-chat-window-collapsed {
   height: 30px !important;
 }

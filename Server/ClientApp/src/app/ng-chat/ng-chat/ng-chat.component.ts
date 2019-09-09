@@ -208,7 +208,7 @@ export class NgChat implements OnInit, IChatController {
             return [{
                 isActive: false,
                 action: (chattingWindow: Window) => {
-
+                    this.sideNav.open();
                     this.selectedUsersFromFriendsList = this.selectedUsersFromFriendsList.concat(chattingWindow.participant as User);
                 },
                 validateContext: (participant: IChatParticipant) => {

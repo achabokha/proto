@@ -38,18 +38,19 @@ namespace Server.Controllers.Hubs
 		public async Task<IActionResult> MessageHistory([FromBody] dynamic payload)
 		{
 			string mailA = payload.mailA;
-			string mailB = payload.mailB;
+			string b = payload.mailB;
+			string[] mailB = b.Split(",");
 			var msgList = (from m in this._ctx.ChatMessages
                             .Include(d => d.FromUser)
-                            .Include(d => d.ToUser)
+                            .Include(d => d.ChatGroup.Participants) 
 						   where (m.FromUser.Email == mailA ||
-							   m.FromUser.Email == mailB) &&
-							   (m.ToUser.Email == mailA ||
-							   m.ToUser.Email == mailB)
+							   mailB.Contains(m.FromUser.Email)) &&
+							   (m.ChatGroup.Participants.Any(p => p.User.Email == mailA 
+							   || mailB.Contains(m.FromUser.Email)))
 						   orderby m.DateSent
 						   select m);
 
-
+			System.Console.WriteLine(msgList.ToString());
 			return Json(msgList);
 		}
 	}
