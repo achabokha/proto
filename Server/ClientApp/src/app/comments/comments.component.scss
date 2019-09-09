@@ -1,9 +1,45 @@
+// .container {
+//     padding: 10px;
+//     font-size: 75%;
+// }
+
+// // .comment2 {
+// //     margin-left: 40px;
+// // }
+
+// .mat-icon {
+//     font-size: 16px;
+//     color: lightgray;
+// }
+
+// .example-tree-node {
+//     // display: inline-flex;
+//     // align-items: center;
+//     float: left;
+//     width: 100%;
+
+// }
+
+// .comment {
+//     padding-left: 10px;
+//     width: 100%;
+// }
+
+// .buttons {
+//     display: inline-block;
+// }
+
+// .new_component {
+//     margin-top: 30px;
+// }
+
 .container {
     padding: 10px;
-    font-size: 75%;
+    font-size: 85%;
+    height: calc(100vh - 125px);
 }
 
-.mat-icon {
+.mat-icon.buttons {
     font-size: 16px;
     color: lightgray;
 }
@@ -33,16 +69,19 @@
 // }
 
 .tree-node {
+    
     display: inline-flex;
-    align-items: start;
+    align-items: flex-start;
     // float: left;
     // width: 100%;
+    // float: left;
+    width: 100%;
     // border: 1px solid lavender;
 }
 
-button {
-    font-size: 75%;
-}
+// button {
+//     font-size: 75%;
+// }
 
 .divider {
     width: 50px;
