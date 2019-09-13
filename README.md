@@ -95,6 +95,18 @@ This should deploy app to your phone before running it you need to trust certifi
 3. Tap the email address
 4. Tap ‘Trust <your_email>’:
 
+# Database/EF Errors
+
+if you run into SQL errors about missing fields, tables etc...
+
+```bash
+cd Models
+dotnet ef database update init
+dotent ef database update
+```
+
+This should reset DB to initial migration and after that apply all migrations sequentially 
+
 # Integrating Google Sign-In
 
 Full guide here https://developers.google.com/identity/sign-in/web/sign-in?refresh=1
