@@ -43,7 +43,8 @@ namespace Server.Controllers
 				displayName = user.UserName,
 				user.FirstName,
 				user.LastName,
-				user.Email
+				user.Email,
+				user.Id
 			});
 		}
 

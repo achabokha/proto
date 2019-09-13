@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AspNet.Security.OpenIdConnect.Extensions;
+using AspNet.Security.OpenIdConnect.Primitives;
 
 [Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
 public class GroupChatHub : Hub
@@ -19,6 +21,7 @@ public class GroupChatHub : Hub
 	private static List<ParticipantResponseViewModel> DisconnectedParticipants { get; set; } = new List<ParticipantResponseViewModel>();
 	private static List<GroupChatParticipantViewModel> AllGroupParticipants { get; set; } = new List<GroupChatParticipantViewModel>();
 	private object ParticipantsConnectionLock = new object();
+	
 
 	public GroupChatHub(Models.DbContext ctx)
 	{
@@ -29,28 +32,37 @@ public class GroupChatHub : Hub
 	{
 		return AllConnectedParticipants
 			.Where(p => p.Participant.ParticipantType == ChatParticipantTypeEnum.User
-				   || AllGroupParticipants.Any(g => g.Id == p.Participant.Id && g.ChattingTo.Any(u => u.Id == currentUserId))
+				   || AllGroupParticipants.Any(g => g.Id == p.Participant.Id && g.ChattingTo.Any(u => u.UserId == currentUserId))
 			);
 	}
 
 	public static IEnumerable<ParticipantResponseViewModel> ConnectedParticipants(string currentUserId)
 	{
-		return FilteredGroupParticipants(currentUserId).Where(x => x.Participant.Id != currentUserId);
+		return FilteredGroupParticipants(currentUserId).Where(x => x.Participant.Email != currentUserId);
+	}
+
+	public static IEnumerable<ParticipantResponseViewModel> getConnectedParticpant(string UserId)
+	{
+		return AllConnectedParticipants.Where(d => d.Participant.UserId == UserId);
 	}
 
 	public void Join(string userName)
 	{
 		lock (ParticipantsConnectionLock)
 		{
+			
 			AllConnectedParticipants.Add(new ParticipantResponseViewModel()
 			{
 				Metadata = new ParticipantMetadataViewModel()
 				{
 					TotalUnreadMessages = 0
 				},
-				Participant = new ChatParticipantViewModel()
+				Participant = new GroupChatParticipantViewModel()
 				{
 					DisplayName = userName,
+					Email = Context.User.Identity.Name,
+					Status = EnumChartParticipantStatus.Online,
+					UserId = Context.User.GetClaim(OpenIdConnectConstants.Claims.Subject),
 					Id = Context.ConnectionId
 				}
 			});
@@ -95,7 +107,8 @@ public class GroupChatHub : Hub
 			DateSent = message.DateSent,
 			FileSizeInBytes = message.FileSizeInBytes,
 			FromUser = this._ctx.Users.FirstOrDefault(d => d.Email == sender.Participant.DisplayName),
-			Message = message.Message
+			Message = message.Message,
+			ChatGroup = this._ctx.ChatGroups.FirstOrDefault(d => d.Id.ToString() == message.GroupId)	
 		};
 
 		var participants = new List<Participant>();
@@ -105,13 +118,6 @@ public class GroupChatHub : Hub
 			participant.User = this._ctx.Users.FirstOrDefault(d => d.Email == item.Participant.DisplayName);
 			participants.Add(participant);
 		}
-
-		var group = this._ctx.ChatGroups.Include(d => d.Participants).FirstOrDefault(d =>
-			d.Participants.All(dp => participants.Exists(p => p.User.Email == dp.User.Email))
-		);
-
-
-		msg.ChatGroup = group;
 
 		this._ctx.ChatMessages.Add(msg);
 		this._ctx.SaveChanges();
@@ -133,13 +139,13 @@ public class GroupChatHub : Hub
 												  && groupDestinatary.ChattingTo.Any(g => g.Id == p.Participant.Id)
 										   );
 
-                this.insertMessage(usersInGroupToNotify, message, sender);
+				this.insertMessage(usersInGroupToNotify, message, sender);
 
 				Clients.Clients(usersInGroupToNotify.Select(d => d.Participant.Id).ToList()).SendAsync("messageReceived", groupDestinatary, message);
 			}
 			else
 			{
-                var usersInGroupToNotify = AllConnectedParticipants
+				var usersInGroupToNotify = AllConnectedParticipants
 										   .Where(p => p.Participant.Id != sender.Participant.Id
 												  && p.Participant.Id == sender.Participant.Id
 										   );

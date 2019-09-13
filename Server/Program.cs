@@ -19,7 +19,12 @@ namespace Server
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseApplicationInsights()
+                //.UseApplicationInsights()
+                .ConfigureLogging((context, log) => {
+                    log.ClearProviders();
+                    log.AddConfiguration(context.Configuration.GetSection("Logging"));
+                    log.AddDebug();
+                })
                 .UseStartup<Startup>();
     }
 }

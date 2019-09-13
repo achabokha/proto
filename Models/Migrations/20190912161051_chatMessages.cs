@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Models.Migrations
 {
-    public partial class chatMessage : Migration
+    public partial class chatMessages : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,7 +25,8 @@ namespace Models.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     DateCreated = table.Column<DateTime>(nullable: false),
-                    Title = table.Column<string>(nullable: true)
+                    Title = table.Column<string>(nullable: true),
+                    ParticipantType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,7 +40,7 @@ namespace Models.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     FromUserId = table.Column<string>(nullable: true),
-                    ChatGroupId = table.Column<Guid>(nullable: true),
+                    ChatGroupId = table.Column<Guid>(nullable: false),
                     Message = table.Column<string>(nullable: true),
                     DateSent = table.Column<DateTime>(nullable: true),
                     DateSeen = table.Column<DateTime>(nullable: true),
@@ -54,7 +55,7 @@ namespace Models.Migrations
                         column: x => x.ChatGroupId,
                         principalTable: "ChatGroups",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ChatMessages_Users_FromUserId",
                         column: x => x.FromUserId,
@@ -69,7 +70,9 @@ namespace Models.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     GroupId = table.Column<Guid>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(nullable: true),
+                    ParticipantStatus = table.Column<int>(nullable: false),
+                    PermissionLevel = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

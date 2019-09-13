@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { FlatTreeControl } from "@angular/cdk/tree";
 import { Observable, of as observableOf } from "rxjs";
 import { MatTreeFlattener, MatTreeFlatDataSource } from "@angular/material/tree";
-import { CommentsService, TreeNode } from "@services/comments.service";
+import { CommentsService, TreeNode } from "src/app/services/comments.service";
 
 /** Flat node with expandable and level information */
 interface FlatNode {
@@ -47,7 +47,7 @@ export class CommentsComponent implements OnInit {
             content: node.content,
             dislikes: node.dislikes,
             likes: node.likes,
-            loves: node.loves,
+            loves: node.likes,
             datetime: node.datetime
         };
     };

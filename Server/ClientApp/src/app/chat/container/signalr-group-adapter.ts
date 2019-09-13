@@ -10,7 +10,7 @@ import { AuthService } from "src/app/services/auth.service";
 export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapter {
 
   constructor(private username: string, private http: HttpClient,
-    private authService: AuthService) {
+    public authService: AuthService) {
     super();
     this.authService.currentUser$.subscribe(() => {
       this.initializeConnection();
@@ -22,7 +22,6 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
   private hubConnection: signalR.HubConnection;
 
   private initializeConnection(): void {
-    console.log(`${SignalRGroupAdapter.serverBaseUrl}groupchat`);
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${SignalRGroupAdapter.serverBaseUrl}groupchat`, { accessTokenFactory: this.authService.getAccessToken })
       .build();
@@ -72,10 +71,19 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
       );
   }
 
-  getMessageHistory(destEmail: string): Observable<Message[]> {
+  userList(search: string): Observable<ParticipantResponse[]> {
+    return this.http
+      .post(`${SignalRGroupAdapter.serverBaseUrl}userList`, { searchText: search }, this.authService.authJsonHeaders())
+      .pipe(
+        map((res: any) => res),
+        catchError((error: any) => throwError(error.error || "Server error"))
+      );
+  }
+
+  getMessageHistory(participant: string): Observable<Message[]> {
     return this.http
       .post(`${SignalRGroupAdapter.serverBaseUrl}messageHistory`,
-        { mailA: this.authService.currentUser.email, mailB: destEmail },
+        { mailA: this.authService.currentUser.email, mailB: participant },
         this.authService.authJsonHeaders())
       .pipe(
         map((res: any) => res),
@@ -83,8 +91,34 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
       );
   }
 
+  getGroupMessageHistory(groupId: string): Observable<Message[]> {
+    return this.http
+      .post(`${SignalRGroupAdapter.serverBaseUrl}groupMessageHistory`,
+        { groupId },
+        this.authService.authJsonHeaders())
+      .pipe(
+        map((res: any) => res),
+        catchError((error: any) => throwError(error.error || "Server error"))
+      );
+  }
+
+  createNewGroup(participants: Group): Observable<string> {
+    if (participants.groupId === null || participants.groupId === "") {
+      return this.http
+        .post(`${SignalRGroupAdapter.serverBaseUrl}createGroup`,
+          { group: participants },
+          this.authService.authJsonHeaders())
+        .pipe(
+          map((res: any) => res.chatRoomId),
+          catchError((error: any) => throwError(error.error || "Server error"))
+        );
+    } else {
+      return of(participants.groupId);
+    }
+  }
+
   sendMessage(message: Message): void {
-    if (this.hubConnection && this.hubConnection.state == signalR.HubConnectionState.Connected) {
+    if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
       this.hubConnection.send("sendMessage", message);
     }
   }

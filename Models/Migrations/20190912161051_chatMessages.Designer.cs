@@ -10,8 +10,8 @@ using Models;
 namespace Models.Migrations
 {
     [DbContext(typeof(DbContext))]
-    [Migration("20190909140749_chatMessage")]
-    partial class chatMessage
+    [Migration("20190912161051_chatMessages")]
+    partial class chatMessages
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -205,6 +205,8 @@ namespace Models.Migrations
 
                     b.Property<DateTime>("DateCreated");
 
+                    b.Property<int>("ParticipantType");
+
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
@@ -217,7 +219,7 @@ namespace Models.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("ChatGroupId");
+                    b.Property<Guid>("ChatGroupId");
 
                     b.Property<DateTime?>("DateSeen");
 
@@ -248,6 +250,10 @@ namespace Models.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<Guid?>("GroupId");
+
+                    b.Property<int>("ParticipantStatus");
+
+                    b.Property<int>("PermissionLevel");
 
                     b.Property<string>("UserId");
 
@@ -460,7 +466,8 @@ namespace Models.Migrations
                 {
                     b.HasOne("Models.Entities.ChatGroup", "ChatGroup")
                         .WithMany()
-                        .HasForeignKey("ChatGroupId");
+                        .HasForeignKey("ChatGroupId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Models.ApplicationUser", "FromUser")
                         .WithMany()

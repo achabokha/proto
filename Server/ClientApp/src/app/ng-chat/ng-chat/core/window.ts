@@ -7,7 +7,7 @@ import { IChatParticipant } from "./chat-participant";
 
 export class Window
 {
-    constructor(participant: IChatParticipant, isLoadingHistory: boolean, isCollapsed: boolean)
+    constructor(participant: Group, isLoadingHistory: boolean, isCollapsed: boolean)
     {
         this.participant = participant;
         this.messages =  [];
@@ -18,7 +18,7 @@ export class Window
         this.historyPage = 0;
     }
 
-    public participant: IChatParticipant;    
+    public participant: Group;
     public messages: Message[] = [];
     public newMessage?: string = "";
 

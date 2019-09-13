@@ -10,6 +10,7 @@ namespace Models.Entities
         public int Type { get; set; }
         public ApplicationUser FromUser {get; set; }
 
+        [Required]
         public ChatGroup ChatGroup {get; set; }
         public string Message { get; set; }
         public DateTime? DateSent { get; set; }

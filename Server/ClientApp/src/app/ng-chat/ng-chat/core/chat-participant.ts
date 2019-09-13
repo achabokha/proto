@@ -3,8 +3,9 @@ import { ChatParticipantType } from "./chat-participant-type.enum";
 
 export interface IChatParticipant {
     readonly participantType: ChatParticipantType;
-    readonly id: any;
+    readonly hubContextId: any;
     readonly status: ChatParticipantStatus;
-    readonly avatar: string|null;
+    readonly avatar: string | null;
     readonly displayName: string;
+    userId: string;
 }

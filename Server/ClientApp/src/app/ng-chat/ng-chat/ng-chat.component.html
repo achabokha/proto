@@ -76,7 +76,7 @@
                         </div>
 
                         <div *ngFor="let message of window.messages; let i = index"
-                            [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromId != userId}">
+                            [ngClass]="{'ng-chat-message': true, 'ng-chat-message-received': message.fromUser.id != userId}">
                             <ng-container *ngIf="isAvatarVisible(window, message, i)">
                                 <div *ngIf="!getChatWindowAvatar(window.participant, message)" class="icon-wrapper">
                                     <i class="user-icon"></i>

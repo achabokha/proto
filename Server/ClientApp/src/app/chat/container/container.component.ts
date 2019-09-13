@@ -1,10 +1,8 @@
 import { Component, OnInit } from "@angular/core";
-import { ChatService } from "src/app/services/chat.service";
 import { SignalRGroupAdapter } from "./signalr-group-adapter";
 import { HttpClient } from "@angular/common/http";
 import { AuthService } from "src/app/services/auth.service";
 import { ChatAdapter } from "src/app/ng-chat";
-import { SignalRAdapter } from "./signaIr-adapter";
 import { Platform } from "@ionic/angular";
 
 @Component({
