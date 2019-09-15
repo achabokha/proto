@@ -506,12 +506,16 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    public togleSidePanel(): Promise<any> {
+    public togleSidePanel(cancel:bool): Promise<any> {
+        if(cancel) {
+            return new Promise((resolve) => resolve({}));
+        } else {
         if (this.sideNav.opened) {
             return this.sideNav.close();
         } else {
             return this.sideNav.open();
         }
+    }
     }
 
     // Opens a new chat whindow. Takes care of available viewport
@@ -522,7 +526,7 @@ export class NgChat implements OnInit, IChatController {
         const openedWindow = this.windows.find(x => x.participant.groupId === participants.groupId);
 
         return new Promise((resolve, reject) => {
-            this.togleSidePanel().then(() => {
+            this.togleSidePanel(!invokedByUserClick).then(() => {
                 if (!openedWindow) {
                     if (invokedByUserClick) {
                         this.onParticipantClicked.emit(participants);
@@ -545,7 +549,7 @@ export class NgChat implements OnInit, IChatController {
                             this.fetchMessageHistory(newChatWindow);
                         }
     
-                        this.windows.unshift(newChatWindow);
+                        this.windows = [newChatWindow];
     
                         this.updateWindowsState(this.windows);
     
