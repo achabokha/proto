@@ -42,9 +42,9 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
       this.userId = userId;
     });
 
-    this.hubConnection.on("messageReceived", (participant, message) => {
+    this.hubConnection.on("messageReceived", (message) => {
       // Handle the received message to ng-chat
-      this.onMessageReceived(participant, message);
+      this.onMessageReceived(message);
     });
 
     this.hubConnection.on("friendsListChanged", (participantsResponse: Array<ParticipantResponse>) => {

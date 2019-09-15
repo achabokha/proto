@@ -21,7 +21,7 @@ public class GroupChatHub : Hub
 	private static List<ParticipantResponseViewModel> DisconnectedParticipants { get; set; } = new List<ParticipantResponseViewModel>();
 	private static List<GroupChatParticipantViewModel> AllGroupParticipants { get; set; } = new List<GroupChatParticipantViewModel>();
 	private object ParticipantsConnectionLock = new object();
-	
+
 
 	public GroupChatHub(Models.DbContext ctx)
 	{
@@ -31,9 +31,7 @@ public class GroupChatHub : Hub
 	private static IEnumerable<ParticipantResponseViewModel> FilteredGroupParticipants(string currentUserId)
 	{
 		return AllConnectedParticipants
-			.Where(p => p.Participant.ParticipantType == ChatParticipantTypeEnum.User
-				   || AllGroupParticipants.Any(g => g.Id == p.Participant.Id && g.ChattingTo.Any(u => u.UserId == currentUserId))
-			);
+			.Where(p => p.Participant.ParticipantType == ChatParticipantTypeEnum.Group);
 	}
 
 	public static IEnumerable<ParticipantResponseViewModel> ConnectedParticipants(string currentUserId)
@@ -50,7 +48,7 @@ public class GroupChatHub : Hub
 	{
 		lock (ParticipantsConnectionLock)
 		{
-			
+
 			AllConnectedParticipants.Add(new ParticipantResponseViewModel()
 			{
 				Metadata = new ParticipantMetadataViewModel()
@@ -63,7 +61,7 @@ public class GroupChatHub : Hub
 					Email = Context.User.Identity.Name,
 					Status = EnumChartParticipantStatus.Online,
 					UserId = Context.User.GetClaim(OpenIdConnectConstants.Claims.Subject),
-					Id = Context.ConnectionId
+					HubContextId = Context.ConnectionId
 				}
 			});
 
@@ -77,25 +75,7 @@ public class GroupChatHub : Hub
 
 	public void GroupCreated(GroupChatParticipantViewModel group)
 	{
-		AllGroupParticipants.Add(group);
 
-		// Pushing the current user to the "chatting to" list to keep track of who's created the group as well.
-		// In your application you'll probably want a more sofisticated group persistency and management
-		group.ChattingTo.Add(new ChatParticipantViewModel()
-		{
-			Id = Context.ConnectionId
-		});
-
-		AllConnectedParticipants.Add(new ParticipantResponseViewModel()
-		{
-			Metadata = new ParticipantMetadataViewModel()
-			{
-				TotalUnreadMessages = 0
-			},
-			Participant = group
-		});
-
-		Clients.All.SendAsync("friendsListChanged", AllConnectedParticipants);
 	}
 
 	private void insertMessage(IEnumerable<ParticipantResponseViewModel> usersInGroupToNotify, MessageViewModel message, ParticipantResponseViewModel sender)
@@ -108,7 +88,7 @@ public class GroupChatHub : Hub
 			FileSizeInBytes = message.FileSizeInBytes,
 			FromUser = this._ctx.Users.FirstOrDefault(d => d.Email == sender.Participant.DisplayName),
 			Message = message.Message,
-			ChatGroup = this._ctx.ChatGroups.FirstOrDefault(d => d.Id.ToString() == message.GroupId)	
+			ChatGroup = this._ctx.ChatGroups.FirstOrDefault(d => d.Id.ToString() == message.GroupId)
 		};
 
 		var participants = new List<Participant>();
@@ -123,35 +103,27 @@ public class GroupChatHub : Hub
 		this._ctx.SaveChanges();
 	}
 
-	public void SendMessage(MessageViewModel message)
+	public async Task SendMessage(MessageViewModel message)
 	{
-		var sender = AllConnectedParticipants.Find(x => x.Participant.Id == message.FromId);
+
+		var sender = AllConnectedParticipants.Find(x => x.Participant.HubContextId == message.FromUser.HubContextId 
+			&& x.Participant.UserId == Context.User.GetClaim(OpenIdConnectConstants.Claims.Subject));
 
 		if (sender != null)
 		{
-			var groupDestinatary = AllGroupParticipants.Where(x => x.Id == message.ToId).FirstOrDefault();
+			var userList = await (from p in this._ctx.Participants
+						   where p.Group.Id.ToString() == message.GroupId
+						   select p.User.Id).ToArrayAsync();
 
-			if (groupDestinatary != null)
-			{
-				// Notify all users in the group except the sender
-				var usersInGroupToNotify = AllConnectedParticipants
-										   .Where(p => p.Participant.Id != sender.Participant.Id
-												  && groupDestinatary.ChattingTo.Any(g => g.Id == p.Participant.Id)
-										   );
+			// Notify all users in the group except the sender
+			var usersInGroupToNotify = AllConnectedParticipants
+									   .Where(p => p.Participant.HubContextId != sender.Participant.HubContextId
+											  && userList.Contains(p.Participant.UserId) );
 
-				this.insertMessage(usersInGroupToNotify, message, sender);
+			this.insertMessage(usersInGroupToNotify, message, sender);
 
-				Clients.Clients(usersInGroupToNotify.Select(d => d.Participant.Id).ToList()).SendAsync("messageReceived", groupDestinatary, message);
-			}
-			else
-			{
-				var usersInGroupToNotify = AllConnectedParticipants
-										   .Where(p => p.Participant.Id != sender.Participant.Id
-												  && p.Participant.Id == sender.Participant.Id
-										   );
-				this.insertMessage(usersInGroupToNotify, message, sender);
-				Clients.Client(message.ToId).SendAsync("messageReceived", sender.Participant, message);
-			}
+			Clients.Clients(usersInGroupToNotify.Select(d => d.Participant.HubContextId).ToList()).SendAsync("messageReceived", message);
+
 		}
 	}
 
@@ -159,19 +131,13 @@ public class GroupChatHub : Hub
 	{
 		lock (ParticipantsConnectionLock)
 		{
-			var connectionIndex = AllConnectedParticipants.FindIndex(x => x.Participant.Id == Context.ConnectionId);
+			var connectionIndex = AllConnectedParticipants.FindIndex(x => x.Participant.HubContextId == Context.ConnectionId);
 
 			if (connectionIndex >= 0)
 			{
 				var participant = AllConnectedParticipants.ElementAt(connectionIndex);
 
-				var groupsParticipantIsIn = AllGroupParticipants.Where(x => x.ChattingTo.Any(u => u.Id == participant.Participant.Id));
-
-				AllConnectedParticipants.RemoveAll(x => groupsParticipantIsIn.Any(g => g.Id == x.Participant.Id));
-				AllGroupParticipants.RemoveAll(x => groupsParticipantIsIn.Any(g => g.Id == x.Id));
-
 				AllConnectedParticipants.Remove(participant);
-				DisconnectedParticipants.Add(participant);
 
 				Clients.All.SendAsync("friendsListChanged", AllConnectedParticipants);
 			}
@@ -184,7 +150,7 @@ public class GroupChatHub : Hub
 	{
 		lock (ParticipantsConnectionLock)
 		{
-			var connectionIndex = DisconnectedParticipants.FindIndex(x => x.Participant.Id == Context.ConnectionId);
+			var connectionIndex = DisconnectedParticipants.FindIndex(x => x.Participant.HubContextId == Context.ConnectionId);
 
 			if (connectionIndex >= 0)
 			{

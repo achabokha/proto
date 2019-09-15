@@ -1,11 +1,12 @@
 using System;
+using Models.Entities;
 
 namespace Server.Hubs.Models
 {
 	public class MessageViewModel
 	{
 		public int Type { get; set; }
-		public string FromId { get; set; }
+		public ChatParticipantViewModel FromUser { get; set; }
 		public string ToId { get; set; }
 
 		public string GroupId {get; set;}

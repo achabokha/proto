@@ -27,11 +27,11 @@ export abstract class ChatAdapter {
         this.friendsListChangedHandler(participantsResponse);
     }
 
-    public onMessageReceived(participants: Group, message: Message): void {
-        this.messageReceivedHandler(participants, message);
+    public onMessageReceived(message: Message): void {
+        this.messageReceivedHandler(message);
     }
 
     // Event handlers
     friendsListChangedHandler: (participantsResponse: ParticipantResponse[]) => void = (participantsResponse: ParticipantResponse[]) => { };
-    messageReceivedHandler: (participants: Group, message: Message) => void = (participant: Group, message: Message) => { };
+    messageReceivedHandler: (message: Message) => void = (message: Message) => { };
 }

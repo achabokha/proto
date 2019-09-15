@@ -298,7 +298,7 @@ export class NgChat implements OnInit, IChatController {
                 this.initializeBrowserNotifications();
 
                 // Binding event listeners
-                this.adapter.messageReceivedHandler = (participant, msg) => this.onMessageReceived(participant, msg);
+                this.adapter.messageReceivedHandler = (msg) => this.onMessageReceived(msg);
                 this.adapter.friendsListChangedHandler = (participantsResponse) => this.onFriendsListChanged(participantsResponse);
 
                 this.activateFriendListFetch();
@@ -467,31 +467,42 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Handles received messages by the adapter
-    private async onMessageReceived(participants: Group, message: Message) {
-        if (participants && message) {
-            const chatWindow = await this.openChatWindow(participants);
-
-            this.assertMessageType(message);
-
-            if (!chatWindow[1] || !this.historyEnabled) {
-                chatWindow[0].messages.push(message);
-
-                this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
-
-                if (chatWindow[0].hasFocus) {
-                    this.markMessagesAsRead([message]);
-                    this.onMessagesSeen.emit([message]);
+    private async onMessageReceived(message: Message) {
+        if (message) {
+            let participant = new Group([message.fromUser]);
+            if (this.windows != null) {
+                let existingWindow = this.windows.find(d => d.participant.groupId === message.groupId);
+                if (existingWindow) {
+                    participant = existingWindow.participant;
+                } else {
+                    participant.groupId = message.groupId;
                 }
             }
 
-            this.emitMessageSound(chatWindow[0]);
+            this.openChatWindow(participant).then(chatWindow => {
 
-            // Github issue #58
-            // Do not push browser notifications with message content for privacy purposes if the 'maximizeWindowOnNewMessage' setting is off and this is a new chat window.
-            if (this.maximizeWindowOnNewMessage || (!chatWindow[1] && !chatWindow[0].isCollapsed)) {
-                // Some messages are not pushed because they are loaded by fetching the history hence why we supply the message here
-                this.emitBrowserNotification(chatWindow[0], message);
-            }
+                this.assertMessageType(message);
+
+                if (!chatWindow[1] || !this.historyEnabled) {
+                    chatWindow[0].messages.push(message);
+
+                    this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
+
+                    if (chatWindow[0].hasFocus) {
+                        this.markMessagesAsRead([message]);
+                        this.onMessagesSeen.emit([message]);
+                    }
+                }
+
+                this.emitMessageSound(chatWindow[0]);
+
+                // Github issue #58
+                // Do not push browser notifications with message content for privacy purposes if the 'maximizeWindowOnNewMessage' setting is off and this is a new chat window.
+                if (this.maximizeWindowOnNewMessage || (!chatWindow[1] && !chatWindow[0].isCollapsed)) {
+                    // Some messages are not pushed because they are loaded by fetching the history hence why we supply the message here
+                    this.emitBrowserNotification(chatWindow[0], message);
+                }
+            });
         }
     }
 
@@ -510,49 +521,52 @@ export class NgChat implements OnInit, IChatController {
         // Is this window opened?
         const openedWindow = this.windows.find(x => x.participant.groupId === participants.groupId);
 
-        return this.togleSidePanel().then(() => {
-            if (!openedWindow) {
-                if (invokedByUserClick) {
-                    this.onParticipantClicked.emit(participants);
+        return new Promise((resolve, reject) => {
+            this.togleSidePanel().then(() => {
+                if (!openedWindow) {
+                    if (invokedByUserClick) {
+                        this.onParticipantClicked.emit(participants);
+                    }
+    
+                    // Refer to issue #58 on Github
+                    const collapseWindow = invokedByUserClick ? false : !this.maximizeWindowOnNewMessage;
+    
+                    const newChatWindow: Window = new Window(participants, this.historyEnabled, collapseWindow);
+    
+                    this.adapter.createNewGroup(participants).subscribe(chatRoomId => {
+    
+                        participants.groupId = chatRoomId;
+                        if (this.groupAdapter) {
+                            this.groupAdapter.groupCreated(participants);
+                        }
+    
+                        // Loads the chat history via an RxJs Observable
+                        if (this.historyEnabled) {
+                            this.fetchMessageHistory(newChatWindow);
+                        }
+    
+                        this.windows.unshift(newChatWindow);
+    
+                        this.updateWindowsState(this.windows);
+    
+                        if (focusOnNewWindow && !collapseWindow) {
+                            this.focusOnWindow(newChatWindow);
+                        }
+    
+                        this.participantsInteractedWith.push(participants);
+                        this.onParticipantChatOpened.emit(participants);
+    
+                        resolve([newChatWindow, true]);
+                    });
+    
+    
+                } else {
+                    // Returns the existing chat window
+                    resolve([openedWindow, false]);
                 }
-
-                // Refer to issue #58 on Github
-                const collapseWindow = invokedByUserClick ? false : !this.maximizeWindowOnNewMessage;
-
-                const newChatWindow: Window = new Window(participants, this.historyEnabled, collapseWindow);
-
-                this.adapter.createNewGroup(participants).subscribe(chatRoomId => {
-
-                    participants.groupId = chatRoomId;
-                    if (this.groupAdapter) {
-                        this.groupAdapter.groupCreated(participants);
-                    }
-
-                    // Loads the chat history via an RxJs Observable
-                    if (this.historyEnabled) {
-                        this.fetchMessageHistory(newChatWindow);
-                    }
-
-                    this.windows.unshift(newChatWindow);
-
-                    this.updateWindowsState(this.windows);
-
-                    if (focusOnNewWindow && !collapseWindow) {
-                        this.focusOnWindow(newChatWindow);
-                    }
-
-                    this.participantsInteractedWith.push(participants);
-                    this.onParticipantChatOpened.emit(participants);
-
-                    return [newChatWindow, true];
-                });
-
-
-            } else {
-                // Returns the existing chat window
-                return [openedWindow, false];
-            }
+            });
         });
+        
 
 
     }
@@ -840,8 +854,6 @@ export class NgChat implements OnInit, IChatController {
         const userIndex = participant.chattingTo.findIndex(x => x.userId == message.fromUser.userId);
 
         return participant.chattingTo[userIndex >= 0 ? userIndex : 0].avatar;
-
-        return null;
     }
 
     // Toggles a window focus on the focus/blur of a 'newMessage' input

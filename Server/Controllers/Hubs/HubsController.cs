@@ -46,22 +46,35 @@ namespace Server.Controllers.Hubs
 		}
 
 		[HttpPost("[action]")]
-		public JsonResult CreateGroup([FromBody] dynamic payload)
+		public async Task<JsonResult> CreateGroup([FromBody] dynamic payload)
 		{
-			List<string> group = new List<string>();
+			List<string> userList = new List<string>();
 			foreach (var item in payload.group.chattingTo)
 			{
-				group.Add((string)item.userId);
+				userList.Add((string)item.userId);
 			};
 			var groupId = (string)payload.group.groupId;
-			var chatGroup = this._ctx.ChatGroups.Find(groupId);
+			var chatGroup = new ChatGroup();
+			if (string.IsNullOrEmpty(groupId))
+			{
+				chatGroup = await (from gr in this._ctx.ChatGroups 
+									join p in this._ctx.Participants.Include(d => d.User) on gr equals p.Group into arrPart
+									where gr.ParticipantType == EnumChatGroupParticipantType.user
+									&& arrPart.All(d => userList.Contains(d.User.Id))
+									select gr
+				).FirstOrDefaultAsync();
+			}
+			else
+			{
+				chatGroup = await this._ctx.ChatGroups.FirstOrDefaultAsync(d => d.Id.ToString() == groupId);
+			}
 			lock (ChatGroupCreationLock)
 			{
 				if (chatGroup == null)
 				{
 					chatGroup = new ChatGroup();
 					var participants = new List<Participant>();
-					foreach (var item in group)
+					foreach (var item in userList)
 					{
 						var participant = new Participant();
 						participant.User = this._ctx.Users.Find(item);
@@ -89,62 +102,106 @@ namespace Server.Controllers.Hubs
 		public async Task<IActionResult> UserList([FromBody] dynamic payload)
 		{
 			string srchTxt = payload.searchText;
+
+
 			string userId = this.HttpContext.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
-			var msgList = this._ctx.Users.Where(d => d.Id != userId && d.Email.Contains(srchTxt));
-			var user = this._ctx.Users.Find(HttpContext.User.GetClaim(OpenIdConnectConstants.Claims.Subject));
+			string userEmail = this._ctx.Users.Find(userId).Email;
+			var msgList = await (from g in this._ctx.ChatGroups
+								 join p in this._ctx.Participants.Include(d => d.User) on g equals p.Group into arrPart
+								 where g.ParticipantType == EnumChatGroupParticipantType.user
+								 && arrPart.Any(d => d.User.Id == userId)
+
+								 select new { Particpants = arrPart, ChatGroup = g }
+						   ).ToArrayAsync();
+			var userList = await (
+				from u in this._ctx.Users
+				where !msgList.Any(d => d.Particpants.Any(p => p.User == u))
+				&& u.Id != userId
+				select new { Id = u.Id, Email = u.Email,  }
+			).ToArrayAsync();
 
 
 			List<ParticipantResponseViewModel> resp = new List<ParticipantResponseViewModel>();
 
 			foreach (var item in msgList)
 			{
-				var connectedPart = GroupChatHub.getConnectedParticpant(item.Id).FirstOrDefault();
-
 				var part = new ParticipantResponseViewModel();
 				var group = new GroupChatParticipantViewModel();
 				group.ChattingTo = new List<ChatParticipantViewModel>();
 
-				var chatGroup = await this._ctx.ChatGroups.FirstOrDefaultAsync(d =>
-					d.Participants.Any(p => p.User.Id == item.Id)
-					&& d.Participants.Any(p => p.User.Id == user.Id)
-					&& d.ParticipantType == EnumChatGroupParticipantType.user
-				);
 
-				group.ChattingTo.Add(new ChatParticipantViewModel()
+				foreach (var p in item.Particpants.OrderBy(d => d.User.Id == userId))
 				{
-					DisplayName = item.Email,
-					UserId = item.Id,
-					ParticipantType = ChatParticipantTypeEnum.User,
-					Status = connectedPart == null ? EnumChartParticipantStatus.Offline : EnumChartParticipantStatus.Online,
-					Email = item.Email
-				});
+					var connectedPart = GroupChatHub.getConnectedParticpant(p.User.Id).FirstOrDefault();
 
-				var participant = new ChatParticipantViewModel()
-				{
-					DisplayName = user.Email,
-					UserId = user.Id,
-					ParticipantType = ChatParticipantTypeEnum.User,
-					Status = EnumChartParticipantStatus.Online,
-					Email = user.Email
-				};
+					group.ChattingTo.Add(new ChatParticipantViewModel()
+					{
 
-				group.ChattingTo.Add(participant);
+						DisplayName = p.User.Email,
+						UserId = p.User.Id,
+						ParticipantType = ChatParticipantTypeEnum.User,
+						Status = connectedPart == null ? EnumChartParticipantStatus.Offline : EnumChartParticipantStatus.Online,
+						Email = p.User.Email
+					});
+				}
+
+
 
 				part.Metadata = new ParticipantMetadataViewModel()
 				{
 					TotalUnreadMessages = 0,
-					GroupId = chatGroup != null ? chatGroup.Id.ToString() : ""
+					GroupId = item.ChatGroup != null ? item.ChatGroup.Id.ToString() : ""
 				};
 				part.Participant = group;
 				if (group.ChattingTo.Count == 2)
 				{
 					group.Status = group.ChattingTo.First().Status;
 				}
-
 				resp.Add(part);
 			}
 
 
+			foreach (var user in userList)
+			{
+				var part = new ParticipantResponseViewModel();
+				var group = new GroupChatParticipantViewModel();
+				group.ChattingTo = new List<ChatParticipantViewModel>();
+
+
+
+				var connectedPart = GroupChatHub.getConnectedParticpant(user.Id).FirstOrDefault();
+
+				group.ChattingTo.Add(new ChatParticipantViewModel()
+				{
+
+					DisplayName = user.Email,
+					UserId = user.Id,
+					ParticipantType = ChatParticipantTypeEnum.User,
+					Status = connectedPart == null ? EnumChartParticipantStatus.Offline : EnumChartParticipantStatus.Online,
+					Email = user.Email
+				});
+
+				group.ChattingTo.Add(new ChatParticipantViewModel()
+				{
+					DisplayName = userEmail,
+					UserId = userId,
+					ParticipantType = ChatParticipantTypeEnum.User,
+					Status = EnumChartParticipantStatus.Online,
+					Email = userEmail
+				});
+
+
+
+				part.Metadata = new ParticipantMetadataViewModel()
+				{
+					TotalUnreadMessages = 0,
+					GroupId = ""
+				};
+				part.Participant = group;
+				group.Status = group.ChattingTo.First().Status;
+
+				resp.Add(part);
+			}
 
 			return Json(resp.OrderBy(d => d.Participant.Status).ThenBy(d => d.Participant.Email));
 		}
