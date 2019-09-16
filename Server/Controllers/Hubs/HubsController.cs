@@ -224,6 +224,8 @@ namespace Server.Controllers.Hubs
 			var msgList = await (from m in this._ctx.ChatMessages
 							.Include(d => d.FromUser)
 							.Include(d => d.ChatGroup)
+							.Include(d => d.DateSeen)
+								.ThenInclude(s => s.User)
 								 where m.ChatGroup.Id.ToString() == groupId
 								 orderby m.DateSent
 								 select new
@@ -232,7 +234,8 @@ namespace Server.Controllers.Hubs
 									 GroupId = m.ChatGroup.Id,
 									 Message = m.Message,
 									 DateSent = m.DateSent,
-									 DateSeen = m.DateSeen,
+									 DateSeen = m.DateSeen.Select(d => new { UserId = d.User.Id, DateSeen = d.DateSeen, MsgId = m.Id  }),
+									 Id = m.Id, 
 									 FromUser = new
 									 {
 										 UserId = m.FromUser.Id,

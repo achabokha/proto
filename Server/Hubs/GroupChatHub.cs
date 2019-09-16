@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Primitives;
+using Models.Entities.Chat;
 
 [Authorize(AuthenticationSchemes = OAuthValidationDefaults.AuthenticationScheme)]
 public class GroupChatHub : Hub
@@ -43,14 +44,14 @@ public class GroupChatHub : Hub
 		lock (ParticipantsConnectionLock)
 		{
 			var userId = Context.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
-			AllConnectedParticipants.Add(  new ChatParticipantViewModel()
-				{
-					DisplayName = userName,
-					Email = Context.User.Identity.Name,
-					Status = EnumChatParticipantStatus.Online,
-					UserId = userId,
-					HubContextId = Context.ConnectionId
-				});
+			AllConnectedParticipants.Add(new ChatParticipantViewModel()
+			{
+				DisplayName = userName,
+				Email = Context.User.Identity.Name,
+				Status = EnumChatParticipantStatus.Online,
+				UserId = userId,
+				HubContextId = Context.ConnectionId
+			});
 
 			var chatGrooup = this._ctx.Participants.Include(d => d.User)
 			.Join(
@@ -83,13 +84,19 @@ public class GroupChatHub : Hub
 
 	private void insertMessage(IEnumerable<ChatParticipantViewModel> usersInGroupToNotify, MessageViewModel message, ChatParticipantViewModel sender)
 	{
+		var fromUser = this._ctx.Users.FirstOrDefault(d => d.Id == sender.UserId);
+		var m = new ChatMessageSeen()
+		{
+			DateSeen = DateTime.UtcNow,
+			User = fromUser
+		};
 		var msg = new ChatMessage()
 		{
-			DateSeen = message.DateSeen,
+			DateSeen = new ChatMessageSeen[] { m },
 			DownloadUrl = message.DownloadUrl,
 			DateSent = message.DateSent,
 			FileSizeInBytes = message.FileSizeInBytes,
-			FromUser = this._ctx.Users.FirstOrDefault(d => d.Id == sender.UserId),
+			FromUser = fromUser,
 			Message = message.Message,
 			ChatGroup = this._ctx.ChatGroups.FirstOrDefault(d => d.Id.ToString() == message.GroupId)
 		};
@@ -104,8 +111,26 @@ public class GroupChatHub : Hub
 
 		this._ctx.ChatMessages.Add(msg);
 		this._ctx.SaveChanges();
+
+		message.Id = msg.Id.ToString();
+		message.DateSeen  = new List<ChatMessageSeenViewModel>() { new ChatMessageSeenViewModel() { DateSeen = DateTime.UtcNow, UserId = sender.UserId, msgId = message.Id } };
+		
 	}
 
+	public async Task ChatMessageSeen(ChatMessageSeenViewModel[] message)
+	{
+		foreach (var msgSeen in message)
+		{
+			var chatMsgSeen = new ChatMessageSeen();
+			chatMsgSeen.DateSeen = msgSeen.DateSeen;
+			chatMsgSeen.User = await this._ctx.Users.FirstOrDefaultAsync(d => d.Id == msgSeen.UserId);
+
+			var msg = await this._ctx.ChatMessages.Include(d => d.DateSeen).FirstOrDefaultAsync(d => d.Id.ToString() == msgSeen.msgId);
+			msg.DateSeen.Add(chatMsgSeen);
+		}
+
+		await this._ctx.SaveChangesAsync();
+	}
 	public async Task SendMessage(MessageViewModel message)
 	{
 

@@ -5,7 +5,7 @@ import { ChatAdapter } from "./core/chat-adapter";
 import { IChatGroupAdapter } from "./core/chat-group-adapter";
 import { User } from "./core/user";
 import { ParticipantResponse } from "./core/participant-response";
-import { Message } from "./core/message";
+import { Message, MessageSeen } from "./core/message";
 import { FileMessage } from "./core/file-message";
 import { MessageType } from "./core/message-type.enum";
 import { Window } from "./core/window";
@@ -438,11 +438,12 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    private onFetchMessageHistoryLoaded(messages: Message[], window: Window, direction: ScrollDirection, forceMarkMessagesAsSeen: boolean = false): void {
+    private onFetchMessageHistoryLoaded(messages: Message[], window: Window, direction: ScrollDirection, forceMarkMessagesAsSeen: boolean = true): void {
         this.scrollChatWindow(window, direction);
 
         if (window.hasFocus || forceMarkMessagesAsSeen) {
-            const unseenMessages = messages.filter(m => !m.dateSeen);
+            const unseenMessages = messages.filter(m => m.fromUser.userId != this.adapter.authService.currentUser.id
+                && !m.dateSeen.some(d => d.userId === this.adapter.authService.currentUser.id));
 
             this.markMessagesAsRead(unseenMessages);
             this.onMessagesSeen.emit(unseenMessages);
@@ -451,12 +452,12 @@ export class NgChat implements OnInit, IChatController {
 
     // Updates the friends list via the event handler
     private onFriendsListChanged(participant: IChatParticipant): void {
-        if (participant) {
+        if (participant && this.participants) {
             this.participants = this.participants.map(m => {
                 const ind = m.chattingTo.findIndex(d => d.userId === participant.userId);
                 if (ind > -1) {
                     m.chattingTo[ind].status = participant.status;
-                    if(m.chattingTo.length == 2) {
+                    if (m.chattingTo.length == 2) {
                         m.status = participant.status;
                     }
                 }
@@ -486,14 +487,16 @@ export class NgChat implements OnInit, IChatController {
 
                 if (!chatWindow[1] || !this.historyEnabled) {
                     chatWindow[0].messages.push(message);
+                }
 
                     this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
 
-                    if (chatWindow[0].hasFocus) {
-                        this.markMessagesAsRead([message]);
-                        this.onMessagesSeen.emit([message]);
-                    }
-                }
+                    this.markMessagesAsRead([{ 
+                        dateSeen: new Date(), 
+                        userId: this.adapter.authService.currentUser.id, 
+                        msgId: message.id
+                    }]);
+                    this.onMessagesSeen.emit([message]);
 
                 this.emitMessageSound(chatWindow[0]);
 
@@ -508,15 +511,15 @@ export class NgChat implements OnInit, IChatController {
     }
 
     public togleSidePanel(cancel: boolean): Promise<any> {
-        if(cancel) {
+        if (cancel) {
             return new Promise((resolve) => resolve({}));
         } else {
-        if (this.sideNav.opened) {
-            return this.sideNav.close();
-        } else {
-            return this.sideNav.open();
+            if (this.sideNav.opened) {
+                return this.sideNav.close();
+            } else {
+                return this.sideNav.open();
+            }
         }
-    }
     }
 
     // Opens a new chat whindow. Takes care of available viewport
@@ -532,46 +535,46 @@ export class NgChat implements OnInit, IChatController {
                     if (invokedByUserClick) {
                         this.onParticipantClicked.emit(participants);
                     }
-    
+
                     // Refer to issue #58 on Github
                     const collapseWindow = invokedByUserClick ? false : !this.maximizeWindowOnNewMessage;
-    
+
                     const newChatWindow: Window = new Window(participants, this.historyEnabled, collapseWindow);
-    
+
                     this.adapter.createNewGroup(participants).subscribe(chatRoomId => {
-    
+
                         participants.groupId = chatRoomId;
                         if (this.groupAdapter) {
                             this.groupAdapter.groupCreated(participants);
                         }
-    
+
                         // Loads the chat history via an RxJs Observable
                         if (this.historyEnabled) {
                             this.fetchMessageHistory(newChatWindow);
                         }
-    
+
                         this.windows = [newChatWindow];
-    
+
                         this.updateWindowsState(this.windows);
-    
+
                         if (focusOnNewWindow && !collapseWindow) {
                             this.focusOnWindow(newChatWindow);
                         }
-    
+
                         this.participantsInteractedWith.push(participants);
                         this.onParticipantChatOpened.emit(participants);
-    
+
                         resolve([newChatWindow, true]);
                     });
-    
-    
+
+
                 } else {
                     // Returns the existing chat window
                     resolve([openedWindow, false]);
                 }
             });
         });
-        
+
 
 
     }
@@ -613,10 +616,17 @@ export class NgChat implements OnInit, IChatController {
     // Marks all messages provided as read with the current time.
     public markMessagesAsRead(messages: Message[]): void {
         const currentDate = new Date();
-
+        const uptdSeen: MessageSeen[] = [];
         messages.forEach((msg) => {
-            msg.dateSeen = currentDate;
+            let m = new MessageSeen();
+            m.dateSeen = currentDate;
+            m.userId = this.adapter.authService.currentUser.id;
+            m.msgId = msg.id;
+            msg.dateSeen.push(m);
+            uptdSeen.push(m);
         });
+
+        this.adapter.markMessagesAsRead(uptdSeen);
     }
 
     // Buffers audio file (For component's bootstrapping)
@@ -718,7 +728,8 @@ export class NgChat implements OnInit, IChatController {
         let totalUnreadMessages = 0;
 
         if (window) {
-            totalUnreadMessages = window.messages.filter(x => x.fromUser.userId != this.adapter.authService.currentUser.id && !x.dateSeen).length;
+            totalUnreadMessages = window.messages.filter(x => x.fromUser.userId != this.adapter.authService.currentUser.id
+                && !x.dateSeen.some(d => d.userId === this.adapter.authService.currentUser.id)).length;
         }
 
         return this.formatUnreadMessagesTotal(totalUnreadMessages);
@@ -731,8 +742,8 @@ export class NgChat implements OnInit, IChatController {
             return this.unreadMessagesTotal(openedWindow);
         } else {
             const totalUnreadMessages = this.participantsResponse
-                .filter(x => x.metadata.groupId == participant.groupId 
-                        && !this.participantsInteractedWith.find(u => u.groupId == participant.groupId) && x.metadata && x.metadata.totalUnreadMessages > 0)
+                .filter(x => x.metadata.groupId == participant.groupId
+                    && !this.participantsInteractedWith.find(u => u.groupId == participant.groupId) && x.metadata && x.metadata.totalUnreadMessages > 0)
                 .map((participantResponse) => {
                     return participantResponse.metadata.totalUnreadMessages;
                 })[0];
@@ -866,9 +877,8 @@ export class NgChat implements OnInit, IChatController {
     toggleWindowFocus(window: Window): void {
         window.hasFocus = !window.hasFocus;
         if (window.hasFocus) {
-            const unreadMessages = window.messages
-                .filter(message => message.dateSeen == null
-                    && (message.fromUser.userId == this.adapter.authService.currentUser.id));
+            const unreadMessages = window.messages.filter(x => x.fromUser.userId != this.adapter.authService.currentUser.id
+                && !x.dateSeen.some(d => d.userId === this.adapter.authService.currentUser.id));
 
             if (unreadMessages && unreadMessages.length > 0) {
                 this.markMessagesAsRead(unreadMessages);

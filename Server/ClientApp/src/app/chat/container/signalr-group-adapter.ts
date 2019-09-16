@@ -1,4 +1,4 @@
-import { ChatAdapter, IChatGroupAdapter, User, Group, Message, ChatParticipantStatus, ParticipantResponse, ParticipantMetadata, ChatParticipantType, IChatParticipant } from "src/app/ng-chat";
+import { ChatAdapter, IChatGroupAdapter, User, Group, Message, ChatParticipantStatus, ParticipantResponse, ParticipantMetadata, ChatParticipantType, IChatParticipant, MessageSeen } from "src/app/ng-chat";
 import { Observable, of, throwError } from "rxjs";
 import { map, catchError } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
@@ -120,6 +120,12 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
   sendMessage(message: Message): void {
     if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
       this.hubConnection.send("sendMessage", message);
+    }
+  }
+
+  markMessagesAsRead(arrSeen: MessageSeen[]): void {
+    if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
+      this.hubConnection.send("chatMessageSeen", arrSeen);
     }
   }
 

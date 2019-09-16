@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Models.Entities.Chat;
 
 namespace Models.Entities
 {
@@ -14,7 +15,7 @@ namespace Models.Entities
         public ChatGroup ChatGroup {get; set; }
         public string Message { get; set; }
         public DateTime? DateSent { get; set; }
-        public DateTime? DateSeen { get; set; }
+        public ICollection<ChatMessageSeen> DateSeen { get; set; }
         public string DownloadUrl { get; set; }
         public int? FileSizeInBytes { get; set; }
     }
