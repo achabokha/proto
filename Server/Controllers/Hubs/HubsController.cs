@@ -126,21 +126,20 @@ namespace Server.Controllers.Hubs
 			foreach (var item in msgList)
 			{
 				var part = new ParticipantResponseViewModel();
-				var group = new GroupChatParticipantViewModel();
-				group.ChattingTo = new List<ChatParticipantViewModel>();
+				part.Participants = new List<ChatParticipantViewModel>();
 
 
 				foreach (var p in item.Particpants.OrderBy(d => d.User.Id == userId))
 				{
 					var connectedPart = GroupChatHub.getConnectedParticpant(p.User.Id).FirstOrDefault();
 
-					group.ChattingTo.Add(new ChatParticipantViewModel()
+					part.Participants.Add(new ChatParticipantViewModel()
 					{
 
 						DisplayName = p.User.Email,
 						UserId = p.User.Id,
 						ParticipantType = ChatParticipantTypeEnum.User,
-						Status = connectedPart == null ? EnumChartParticipantStatus.Offline : EnumChartParticipantStatus.Online,
+						Status = connectedPart == null ? EnumChatParticipantStatus.Offline : EnumChatParticipantStatus.Online,
 						Email = p.User.Email
 					});
 				}
@@ -152,11 +151,6 @@ namespace Server.Controllers.Hubs
 					TotalUnreadMessages = 0,
 					GroupId = item.ChatGroup != null ? item.ChatGroup.Id.ToString() : ""
 				};
-				part.Participant = group;
-				if (group.ChattingTo.Count == 2)
-				{
-					group.Status = group.ChattingTo.First().Status;
-				}
 				resp.Add(part);
 			}
 
@@ -164,29 +158,28 @@ namespace Server.Controllers.Hubs
 			foreach (var user in userList)
 			{
 				var part = new ParticipantResponseViewModel();
-				var group = new GroupChatParticipantViewModel();
-				group.ChattingTo = new List<ChatParticipantViewModel>();
+				part.Participants = new List<ChatParticipantViewModel>();
 
 
 
 				var connectedPart = GroupChatHub.getConnectedParticpant(user.Id).FirstOrDefault();
 
-				group.ChattingTo.Add(new ChatParticipantViewModel()
+				part.Participants.Add(new ChatParticipantViewModel()
 				{
 
 					DisplayName = user.Email,
 					UserId = user.Id,
 					ParticipantType = ChatParticipantTypeEnum.User,
-					Status = connectedPart == null ? EnumChartParticipantStatus.Offline : EnumChartParticipantStatus.Online,
+					Status = connectedPart == null ? EnumChatParticipantStatus.Offline : EnumChatParticipantStatus.Online,
 					Email = user.Email
 				});
 
-				group.ChattingTo.Add(new ChatParticipantViewModel()
+				part.Participants.Add(new ChatParticipantViewModel()
 				{
 					DisplayName = userEmail,
 					UserId = userId,
 					ParticipantType = ChatParticipantTypeEnum.User,
-					Status = EnumChartParticipantStatus.Online,
+					Status = EnumChatParticipantStatus.Online,
 					Email = userEmail
 				});
 
@@ -195,15 +188,14 @@ namespace Server.Controllers.Hubs
 				part.Metadata = new ParticipantMetadataViewModel()
 				{
 					TotalUnreadMessages = 0,
-					GroupId = ""
+					GroupId = "",
+					Title = part.Participants.First().DisplayName
 				};
-				part.Participant = group;
-				group.Status = group.ChattingTo.First().Status;
 
 				resp.Add(part);
 			}
 
-			return Json(resp.OrderBy(d => d.Participant.Status).ThenBy(d => d.Participant.Email));
+			return Json(resp.OrderBy(d => d.Participants.Any(p => p.Status == EnumChatParticipantStatus.Online)).ThenBy(d => d.Metadata.Title));
 		}
 
 		[HttpPost("[action]")]
@@ -244,7 +236,7 @@ namespace Server.Controllers.Hubs
 									 FromUser = new
 									 {
 										 UserId = m.FromUser.Id,
-										 Status = EnumChartParticipantStatus.Online,
+										 Status = EnumChatParticipantStatus.Online,
 										 ParticipantType = EnumChatGroupParticipantType.user,
 										 Avatar = "",
 										 displayName = m.FromUser.UserName

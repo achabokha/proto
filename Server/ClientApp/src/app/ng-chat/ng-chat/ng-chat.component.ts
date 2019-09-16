@@ -341,7 +341,7 @@ export class NgChat implements OnInit, IChatController {
             if (this.pollFriendsList) {
                 // Setting a long poll interval to update the friends list
                 this.fetchFriendsList(true);
-                this.pollingIntervalWindowInstance = window.setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
+                //this.pollingIntervalWindowInstance = window.setInterval(() => this.fetchFriendsList(false), this.pollingInterval);
             } else {
                 // Since polling was disabled, a friends list update mechanism will have to be implemented in the ChatAdapter.
                 this.fetchFriendsList(true);
@@ -389,9 +389,9 @@ export class NgChat implements OnInit, IChatController {
                     this.participantsResponse = participantsResponse;
 
                     this.participants = participantsResponse.map((response: ParticipantResponse) => {
-                        const g = new Group(response.participant.chattingTo);
+                        const g = new Group(response.participants);
                         g.groupId = response.metadata.groupId;
-                        g.status = response.participant.chattingTo[0].status;
+                        g.status = response.participants[0].status;
                         g.unreadMessages = response.metadata.totalUnreadMessages;
                         return g;
                     });
@@ -450,16 +450,17 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Updates the friends list via the event handler
-    private onFriendsListChanged(participantsResponse: ParticipantResponse[]): void {
-        if (participantsResponse) {
-            this.participantsResponse = participantsResponse;
-
-            this.participants = participantsResponse.map((response: ParticipantResponse) => {
-                const g = new Group(response.participant.chattingTo);
-                g.groupId = response.participant.groupId;
-                g.status = response.participant.chattingTo[0].status;
-                g.unreadMessages = response.metadata.totalUnreadMessages;
-                return g;
+    private onFriendsListChanged(participant: IChatParticipant): void {
+        if (participant) {
+            this.participants = this.participants.map(m => {
+                const ind = m.chattingTo.findIndex(d => d.userId === participant.userId);
+                if (ind > -1) {
+                    m.chattingTo[ind].status = participant.status;
+                    if(m.chattingTo.length == 2) {
+                        m.status = participant.status;
+                    }
+                }
+                return m;
             });
 
             this.participantsInteractedWith = [];
@@ -506,7 +507,7 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    public togleSidePanel(cancel:bool): Promise<any> {
+    public togleSidePanel(cancel: boolean): Promise<any> {
         if(cancel) {
             return new Promise((resolve) => resolve({}));
         } else {
@@ -730,7 +731,8 @@ export class NgChat implements OnInit, IChatController {
             return this.unreadMessagesTotal(openedWindow);
         } else {
             const totalUnreadMessages = this.participantsResponse
-                .filter(x => x.participant.groupId == participant.groupId && !this.participantsInteractedWith.find(u => u.groupId == participant.groupId) && x.metadata && x.metadata.totalUnreadMessages > 0)
+                .filter(x => x.metadata.groupId == participant.groupId 
+                        && !this.participantsInteractedWith.find(u => u.groupId == participant.groupId) && x.metadata && x.metadata.totalUnreadMessages > 0)
                 .map((participantResponse) => {
                     return participantResponse.metadata.totalUnreadMessages;
                 })[0];

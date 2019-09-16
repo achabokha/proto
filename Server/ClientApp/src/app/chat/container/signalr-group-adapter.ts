@@ -47,10 +47,10 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
       this.onMessageReceived(message);
     });
 
-    this.hubConnection.on("friendsListChanged", (participantsResponse: Array<ParticipantResponse>) => {
+    this.hubConnection.on("friendsListChanged", (participant: IChatParticipant) => {
       // Use polling for the friends list for this simple group example
       // If you want to use push notifications you will have to send filtered messages through your hub instead of using the "All" broadcast channel
-      // this.onFriendsListChanged(participantsResponse.filter(x => x.participant.id != this.userId));
+      this.onFriendsListChanged(participant);
     });
   }
 

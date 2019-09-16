@@ -23,8 +23,8 @@ export abstract class ChatAdapter {
 
     // ### Adapter/Chat income/ingress events ###
 
-    public onFriendsListChanged(participantsResponse: ParticipantResponse[]): void {
-        this.friendsListChangedHandler(participantsResponse);
+    public onFriendsListChanged(participant: IChatParticipant): void {
+        this.friendsListChangedHandler(participant);
     }
 
     public onMessageReceived(message: Message): void {
@@ -32,6 +32,6 @@ export abstract class ChatAdapter {
     }
 
     // Event handlers
-    friendsListChangedHandler: (participantsResponse: ParticipantResponse[]) => void = (participantsResponse: ParticipantResponse[]) => { };
+    friendsListChangedHandler: (participant: IChatParticipant) => void = (participantsResponse: IChatParticipant) => { };
     messageReceivedHandler: (message: Message) => void = (message: Message) => { };
 }

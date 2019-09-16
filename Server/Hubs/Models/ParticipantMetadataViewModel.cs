@@ -4,5 +4,7 @@ namespace Server.Hubs.Models
 	{
 		public int TotalUnreadMessages { get; set; }
 		public string GroupId { get; set; }
+
+		public string Title {get; set;}
 	}
 }
