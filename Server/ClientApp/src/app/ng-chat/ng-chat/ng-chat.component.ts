@@ -491,11 +491,7 @@ export class NgChat implements OnInit, IChatController {
 
                     this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
 
-                    this.markMessagesAsRead([{ 
-                        dateSeen: new Date(), 
-                        userId: this.adapter.authService.currentUser.id, 
-                        msgId: message.id
-                    }]);
+                    this.markMessagesAsRead([message]);
                     this.onMessagesSeen.emit([message]);
 
                 this.emitMessageSound(chatWindow[0]);
