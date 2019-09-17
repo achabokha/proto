@@ -8,6 +8,7 @@ import { ParticipantResponse } from "./core/participant-response";
 import { Message, MessageSeen } from "./core/message";
 import { FileMessage } from "./core/file-message";
 import { MessageType } from "./core/message-type.enum";
+import { ChatWindowType } from "./core/chat-window-type.enum";
 import { Window } from "./core/window";
 import { ChatParticipantStatus } from "./core/chat-participant-status.enum";
 import { ScrollDirection } from "./core/scroll-direction.enum";
@@ -211,7 +212,7 @@ export class NgChat implements OnInit, IChatController {
 
     public currentActiveOption: IChatOption | null;
 
-    protected selectedUsersFromFriendsList: Group[] = [];
+    protected selectedUsersFromFriendsList: IChatParticipant[] = [];
 
     private pollingIntervalWindowInstance: number;
 
@@ -220,6 +221,8 @@ export class NgChat implements OnInit, IChatController {
 
     // Total width size of the friends list section
     public friendsListWidth = 262;
+
+    public openWindowType = ChatWindowType.Message;
 
     // Available area to render the plugin
     private viewPortTotalArea: number;
@@ -383,7 +386,7 @@ export class NgChat implements OnInit, IChatController {
 
     // Sends a request to load the friends list
     private fetchFriendsList(isBootstrapping: boolean): void {
-        this.adapter.userList("")
+        this.adapter.participantList("")
             .pipe(
                 map((participantsResponse: ParticipantResponse[]) => {
                     this.participantsResponse = participantsResponse;
@@ -748,6 +751,14 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
+    isMessageWindow() {
+        return this.openWindowType === ChatWindowType.Message;
+    }
+
+    isUserSelectionWindow() {
+        return this.openWindowType === ChatWindowType.UserSelection;
+    }
+
     /*  Monitors pressed keys on a chat window
         - Dispatches a message when the ENTER key is pressed
         - Tabs between windows on TAB or SHIFT + TAB
@@ -983,7 +994,7 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
-    onFriendsListCheckboxChange(selectedUser: Group, isChecked: boolean): void {
+    onFriendsListCheckboxChange(selectedUser: IChatParticipant, isChecked: boolean): void {
         if (isChecked) {
             this.selectedUsersFromFriendsList.push(selectedUser);
         } else {
@@ -999,10 +1010,15 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
+    createGroupSelection(): void {
+        this.openWindowType = ChatWindowType.UserSelection;
+        this.sideNav.close();
+    }
+
     onFriendsListActionConfirmClicked(): void {
         let chattingTo: IChatParticipant[];
         this.selectedUsersFromFriendsList.forEach(element => {
-            chattingTo.concat(element.chattingTo);
+            chattingTo.concat(element);
         });
         const newGroup = new Group(chattingTo);
 
@@ -1013,6 +1029,6 @@ export class NgChat implements OnInit, IChatController {
     }
 
     isUserSelectedFromFriendsList(group: Group): boolean {
-        return (this.selectedUsersFromFriendsList.filter(item => item.groupId == group.groupId)).length > 0;
+        return this.selectedUsersFromFriendsList.length > 0;
     }
 }

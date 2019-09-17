@@ -3,13 +3,8 @@
 <mat-sidenav-container class="chat-container">
     <mat-sidenav #sidenav mode="side" opened class="sideNavPanel">
         <div *ngIf="!hideFriendsList" id="ng-chat-people"
-            [ngClass]="{'primary-outline-color': true, 'primary-background': true, 'ng-chat-people-collapsed': isCollapsed}">
-            <a href="javascript:void(0);" class="ng-chat-title secondary-background shadowed"
-                (click)="onChatTitleClicked($event)">
-                <span>
-                    {{localization.title}}
-                </span>
-            </a>
+            [ngClass]="{'primary-outline-color': true, 'primary-background': true}">
+
             <div *ngIf="currentActiveOption" class="ng-chat-people-actions"
                 (click)="onFriendsListActionCancelClicked()">
                 <a href="javascript:void(0);" class="ng-chat-people-action">
@@ -20,8 +15,15 @@
                     <i class="check-icon"></i>
                 </a>
             </div>
-            <input *ngIf="searchEnabled" id="ng-chat-search_friend" class="friends-search-bar" type="search"
-                [placeholder]="localization.searchPlaceholder" [(ngModel)]="searchInput" />
+            <div id="ng-chat-search_friend_container">
+                <mat-form-field appearance="outline" id="ng-chat-search_friend_form">
+                    <input *ngIf="searchEnabled" matInput placeholder="Search" class="friends-search-bar"
+                        [(ngModel)]="searchInput" />
+                </mat-form-field>
+                <mat-icon (click)="createGroupSelection()">chat</mat-icon>
+            </div>
+
+
             <ul id="ng-chat-users" *ngIf="!isCollapsed" [ngClass]="{'offset-search': searchEnabled}">
                 <li *ngFor="let user of filteredParticipants">
                     <input *ngIf="currentActiveOption && currentActiveOption.validateContext(user)" type="checkbox"
@@ -46,22 +48,23 @@
             </ul>
         </div>
     </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav-content *ngIf="isMessageWindow()">
         <div id="ng-chat" [ngClass]="theme" *ngFor="let window of windows; let i = index"
             [ngStyle]="{'right': (!hideFriendsList ? friendsListWidth : 0) + 20 + windowSizeFactor * i + 'px'}">
 
             <ng-container>
                 <div class="chatWindowHeaderContainer">
                     <button mat-button class="chatWindowHeaderButton">
-                            <mat-icon aria-hidden="false" (click)="togleSidePanel()" aria-label="go back">arrow_back_ios
-                                </mat-icon>
-                        {{window.participant.displayName}}</button>
+                        <mat-icon aria-hidden="false" (click)="togleSidePanel()" aria-label="go back">arrow_back_ios
+                        </mat-icon>
+                        {{window.participant.displayName}}
+                    </button>
                     <span
                         [ngClass]="{'ng-chat-participant-status': true, 'online': window.participant.status == ChatParticipantStatus.Online, 'busy': window.participant.status == ChatParticipantStatus.Busy, 'away': window.participant.status == ChatParticipantStatus.Away, 'offline': window.participant.status == ChatParticipantStatus.Offline}"
                         title="{{getStatusTitle(window.participant.status)}}"></span>
                     <span *ngIf="unreadMessagesTotal(window).length > 0"
                         class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotal(window)}}</span>
-                    <ng-chat-options [ngClass]="'ng-chat-options-container'" [options]="defaultWindowOptions(window)" [chattingTo]="window" [(activeOptionTracker)]="currentActiveOption"></ng-chat-options>
+
 
                 </div>
                 <div class="ng-chat-window">
@@ -133,5 +136,18 @@
                 </div>
             </ng-container>
         </div>
+
+    </mat-sidenav-content>
+
+    <mat-sidenav-content *ngIf="isUserSelectionWindow()">
+        <ng-container>
+            <div class="chatWindowHeaderContainer">
+                <button mat-button class="chatWindowHeaderButton">
+                    <mat-icon aria-hidden="false" (click)="togleSidePanel()" aria-label="go back">arrow_back_ios
+                    </mat-icon>
+                    Select Users to Add
+                </button>
+            </div>
+        </ng-container>
     </mat-sidenav-content>
 </mat-sidenav-container>

@@ -57,11 +57,11 @@ namespace Server.Controllers.Hubs
 			var chatGroup = new ChatGroup();
 			if (string.IsNullOrEmpty(groupId))
 			{
-				chatGroup = await (from gr in this._ctx.ChatGroups 
-									join p in this._ctx.Participants.Include(d => d.User) on gr equals p.Group into arrPart
-									where gr.ParticipantType == EnumChatGroupParticipantType.user
-									&& arrPart.All(d => userList.Contains(d.User.Id))
-									select gr
+				chatGroup = await (from gr in this._ctx.ChatGroups
+								   join p in this._ctx.Participants.Include(d => d.User) on gr equals p.Group into arrPart
+								   where gr.ParticipantType == EnumChatGroupParticipantType.user
+								   && arrPart.All(d => userList.Contains(d.User.Id))
+								   select gr
 				).FirstOrDefaultAsync();
 			}
 			else
@@ -102,6 +102,31 @@ namespace Server.Controllers.Hubs
 		public async Task<IActionResult> UserList([FromBody] dynamic payload)
 		{
 			string srchTxt = payload.searchText;
+			string userId = this.HttpContext.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
+			var connectedPart = GroupChatHub.getConnectedParticpant(userId).FirstOrDefault();
+
+			var userList = (
+				from u in this._ctx.Users
+				where u.Id != userId
+				orderby u.Email
+				select new
+				{
+					DisplayName = u.Email,
+					UserId = u.Id,
+					ParticipantType = ChatParticipantTypeEnum.User,
+					Status = connectedPart == null ? EnumChatParticipantStatus.Offline : EnumChatParticipantStatus.Online,
+					Email = u.Email
+				}
+			);
+
+
+			return Json(await userList.ToArrayAsync());
+		}
+
+		[HttpPost("[action]")]
+		public async Task<IActionResult> Participants([FromBody] dynamic payload)
+		{
+			string srchTxt = payload.searchText;
 
 
 			string userId = this.HttpContext.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
@@ -117,7 +142,7 @@ namespace Server.Controllers.Hubs
 				from u in this._ctx.Users
 				where !msgList.Any(d => d.Particpants.Any(p => p.User == u))
 				&& u.Id != userId
-				select new { Id = u.Id, Email = u.Email,  }
+				select new { Id = u.Id, Email = u.Email, }
 			).ToArrayAsync();
 
 
@@ -234,8 +259,8 @@ namespace Server.Controllers.Hubs
 									 GroupId = m.ChatGroup.Id,
 									 Message = m.Message,
 									 DateSent = m.DateSent,
-									 DateSeen = m.DateSeen.Select(d => new { UserId = d.User.Id, DateSeen = d.DateSeen, MsgId = m.Id  }),
-									 Id = m.Id, 
+									 DateSeen = m.DateSeen.Select(d => new { UserId = d.User.Id, DateSeen = d.DateSeen, MsgId = m.Id }),
+									 Id = m.Id,
 									 FromUser = new
 									 {
 										 UserId = m.FromUser.Id,

@@ -10,7 +10,8 @@ export abstract class ChatAdapter {
     // ### Abstract adapter methods ###
 
     public abstract listFriends(): Observable<ParticipantResponse[]>;
-    public abstract userList(search: string): Observable<ParticipantResponse[]>;
+    public abstract participantList(search: string): Observable<ParticipantResponse[]>;
+    public abstract userList(search: string): Observable<IChatParticipant[]>;
 
     public abstract getMessageHistory(participant: string): Observable<Message[]>;
     public abstract getGroupMessageHistory(groupId: string): Observable<Message[]>;

@@ -71,7 +71,16 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
       );
   }
 
-  userList(search: string): Observable<ParticipantResponse[]> {
+  participantList(search: string): Observable<ParticipantResponse[]> {
+    return this.http
+      .post(`${SignalRGroupAdapter.serverBaseUrl}participants`, { searchText: search }, this.authService.authJsonHeaders())
+      .pipe(
+        map((res: any) => res),
+        catchError((error: any) => throwError(error.error || "Server error"))
+      );
+  }
+
+  userList(search: string): Observable<IChatParticipant[]> {
     return this.http
       .post(`${SignalRGroupAdapter.serverBaseUrl}userList`, { searchText: search }, this.authService.authJsonHeaders())
       .pipe(
