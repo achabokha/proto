@@ -10,6 +10,7 @@ export class Group
     {   
         this.chattingTo = participants;
         this.status = ChatParticipantStatus.Online;
+        this.groupId = "";
 
         // TODO: Add some customization for this in future releases
         this.displayName = participants[0].displayName;

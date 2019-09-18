@@ -141,12 +141,24 @@
 
     <mat-sidenav-content *ngIf="isUserSelectionWindow()">
         <ng-container>
-            <div class="chatWindowHeaderContainer">
-                <button mat-button class="chatWindowHeaderButton">
+            <div class="chatWindowHeaderContainer" fxLayout="row" fxLayoutAlign="space-between end">
+                <button mat-button>
                     <mat-icon aria-hidden="false" (click)="togleSidePanel()" aria-label="go back">arrow_back_ios
                     </mat-icon>
                     Select Users to Add
                 </button>
+
+                <button mat-button *ngIf="selectedUsersFromFriendsList.length > 0" (click)="createNewGroup(selectedUsersFromFriendsList)">
+                    Create Group
+                </button>
+            </div>
+            <div class="ng-chat-window">
+                <mat-list *ngFor="let item of userList; let i = index">
+                    <mat-divider *ngIf="i == 0 || userList[i - 1].displayName[0] != item.displayName[0]"></mat-divider>
+
+                    <mat-checkbox mat-line class="example-margin" (change)="onFriendsListCheckboxChange(item, $event.checked)" >{{item.displayName }}
+                    </mat-checkbox>
+                </mat-list>
             </div>
         </ng-container>
     </mat-sidenav-content>

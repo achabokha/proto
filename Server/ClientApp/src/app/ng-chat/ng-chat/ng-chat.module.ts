@@ -10,9 +10,10 @@ import { SanitizePipe } from './pipes/sanitize.pipe';
 import { GroupMessageDisplayNamePipe } from './pipes/group-message-display-name.pipe';
 import { NgChatOptionsComponent } from './components/ng-chat-options/ng-chat-options.component';
 import { MaterialModule } from 'src/app/material-modules';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, HttpClientModule, MaterialModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, MaterialModule, FlexLayoutModule],
   declarations: [NgChat, EmojifyPipe, LinkfyPipe, SanitizePipe, GroupMessageDisplayNamePipe, NgChatOptionsComponent],
   exports: [NgChat]
 })

@@ -206,6 +206,8 @@ export class NgChat implements OnInit, IChatController {
 
     protected participants: Group[];
 
+    protected userList: IChatParticipant[] = [];
+
     protected participantsResponse: ParticipantResponse[];
 
     private participantsInteractedWith: Group[] = [];
@@ -492,10 +494,10 @@ export class NgChat implements OnInit, IChatController {
                     chatWindow[0].messages.push(message);
                 }
 
-                    this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
+                this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
 
-                    this.markMessagesAsRead([message]);
-                    this.onMessagesSeen.emit([message]);
+                this.markMessagesAsRead([message]);
+                this.onMessagesSeen.emit([message]);
 
                 this.emitMessageSound(chatWindow[0]);
 
@@ -521,12 +523,19 @@ export class NgChat implements OnInit, IChatController {
         }
     }
 
+    createNewGroup(selectedUser: IChatParticipant[]):void {
+        let participants = new Group(selectedUser);
+        this.openChatWindow(participants, true, true).then(d => {
+            this.openWindowType = ChatWindowType.Message;
+        });
+    }
+
     // Opens a new chat whindow. Takes care of available viewport
     // Works for opening a chat window for an user or for a group
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
     public openChatWindow(participants: Group, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): Promise<[Window, boolean]> {
         // Is this window opened?
-        const openedWindow = this.windows.find(x => x.participant.groupId === participants.groupId);
+        const openedWindow = this.windows.find(x => x.participant.groupId === participants.groupId && participants.groupId != "");
 
         return new Promise((resolve, reject) => {
             this.togleSidePanel(!invokedByUserClick).then(() => {
@@ -1012,6 +1021,11 @@ export class NgChat implements OnInit, IChatController {
 
     createGroupSelection(): void {
         this.openWindowType = ChatWindowType.UserSelection;
+        this.adapter.userList("").pipe(
+            map((usersList: IChatParticipant[]) => {
+                this.userList = usersList;
+            })
+        ).subscribe();
         this.sideNav.close();
     }
 
