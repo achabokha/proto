@@ -53,14 +53,22 @@ namespace Server.Controllers.Hubs
 			{
 				userList.Add((string)item.userId);
 			};
+			
+			string participantUserId = this.HttpContext.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
+			if(!userList.Contains(participantUserId)) {
+				userList.Add(participantUserId);
+			}
+
 			var groupId = (string)payload.group.groupId;
 			var chatGroup = new ChatGroup();
 			if (string.IsNullOrEmpty(groupId))
 			{
 				chatGroup = await (from gr in this._ctx.ChatGroups
 								   join p in this._ctx.Participants.Include(d => d.User) on gr equals p.Group into arrPart
-								   where gr.ParticipantType == EnumChatGroupParticipantType.user
-								   && arrPart.All(d => userList.Contains(d.User.Id))
+								   where
+									   arrPart.Count() == userList.Count
+									&& gr.ParticipantType == EnumChatGroupParticipantType.user
+								   	&& arrPart.All(d => userList.Contains(d.User.Id))
 								   select gr
 				).FirstOrDefaultAsync();
 			}
@@ -174,6 +182,7 @@ namespace Server.Controllers.Hubs
 				part.Metadata = new ParticipantMetadataViewModel()
 				{
 					TotalUnreadMessages = 0,
+					Title = item.ChatGroup.Title,
 					GroupId = item.ChatGroup != null ? item.ChatGroup.Id.ToString() : ""
 				};
 				resp.Add(part);

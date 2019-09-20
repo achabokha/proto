@@ -18,6 +18,8 @@ export class Group
 
     public hubContextId: string = "";
     public chattingTo: IChatParticipant[];
+
+    public title: string | null;
     
     public status: ChatParticipantStatus;
     public avatar: string | null;

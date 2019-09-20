@@ -398,6 +398,7 @@ export class NgChat implements OnInit, IChatController {
                         g.groupId = response.metadata.groupId;
                         g.status = response.participants[0].status;
                         g.unreadMessages = response.metadata.totalUnreadMessages;
+                        g.title = response.metadata.title;
                         return g;
                     });
                 })
