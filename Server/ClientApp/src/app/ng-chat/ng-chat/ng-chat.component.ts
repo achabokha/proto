@@ -553,6 +553,7 @@ export class NgChat implements OnInit, IChatController {
     // Returns => [Window: Window object reference, boolean: Indicates if this window is a new chat window]
     public openChatWindow(participants: Group, focusOnNewWindow: boolean = false, invokedByUserClick: boolean = false): Promise<[Window, boolean]> {
         // Is this window opened?
+        this.openWindowType = ChatWindowType.Message;
         const openedWindow = this.windows.find(x => x.participant.groupId === participants.groupId && participants.groupId != "");
         return new Promise((resolve, reject) => {
             this.togleSidePanel(!invokedByUserClick).then(() => {
