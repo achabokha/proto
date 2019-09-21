@@ -73,6 +73,11 @@
 #ng-chat-search_friend_form {
   width: 90%;
 }
+
+.ng-chat-window-content {
+  padding: 0 16px;
+}
+
 #ng-chat-users {
   padding: 0 10px;
   list-style: none;
