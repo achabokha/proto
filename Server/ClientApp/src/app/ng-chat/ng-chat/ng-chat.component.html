@@ -49,11 +49,11 @@
             </ul>
         </div>
     </mat-sidenav>
-    <mat-sidenav-content *ngIf="isMessageWindow()">
+    <mat-sidenav-content >
         <div id="ng-chat" [ngClass]="theme" *ngFor="let window of windows; let i = index"
             [ngStyle]="{'right': (!hideFriendsList ? friendsListWidth : 0) + 20 + windowSizeFactor * i + 'px'}">
 
-            <ng-container>
+            <ng-container *ngIf="openWindowType ==  openWinType.Message">
                 <div class="chatWindowHeaderContainer">
                     <button mat-button class="chatWindowHeaderButton">
                         <mat-icon aria-hidden="false" (click)="togleSidePanel()" aria-label="go back">arrow_back_ios
@@ -137,11 +137,7 @@
                 </div>
             </ng-container>
         </div>
-
-    </mat-sidenav-content>
-
-    <mat-sidenav-content *ngIf="isUserSelectionWindow()">
-        <ng-container>
+        <ng-container *ngIf="openWindowType !=  openWinType.Message">
             <div class="chatWindowHeaderContainer" fxLayout="row" fxLayoutAlign="space-between end">
                 <button mat-button>
                     <mat-icon aria-hidden="false" (click)="togleSidePanel()" aria-label="go back">arrow_back_ios
@@ -167,5 +163,6 @@
                 </div>
             </div>
         </ng-container>
+
     </mat-sidenav-content>
 </mat-sidenav-container>

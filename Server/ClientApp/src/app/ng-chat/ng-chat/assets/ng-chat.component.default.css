@@ -1,3 +1,7 @@
+:root {
+  --heighOffset: 56px;
+}
+
 #ng-chat .shadowed {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
 }
@@ -10,7 +14,7 @@
   height: 30px;
 }
 .chat-container {
-  height: calc(100vh - 113px);
+  height: calc(100vh - 113px + var(--heighOffset));
 }
 
 .ng-chat-close {
@@ -171,7 +175,7 @@
   line-height: 30px;
 }
 .ng-chat-window {
-  height: calc(100vh - 149px);
+  height: calc(100vh - 149px + var(--heighOffset));
 }
 .sideNavPanel {
   min-width: 300px;
