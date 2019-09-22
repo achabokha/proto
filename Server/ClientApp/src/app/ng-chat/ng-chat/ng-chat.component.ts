@@ -466,7 +466,7 @@ export class NgChat implements OnInit, IChatController {
 
         if (window.hasFocus || forceMarkMessagesAsSeen) {
             const unseenMessages = messages.filter(m => m.fromUser.userId != this.adapter.authService.currentUser.id
-                && !m.dateSeen.some(d => d.userId === this.adapter.authService.currentUser.id));
+                && !m.isSeen);
 
             this.markMessagesAsRead(unseenMessages);
             this.onMessagesSeen.emit(unseenMessages);
@@ -494,38 +494,27 @@ export class NgChat implements OnInit, IChatController {
     // Handles received messages by the adapter
     private async onMessageReceived(message: Message) {
         if (message) {
-            let participant = new Group([message.fromUser]);
+            let existingWindow;
             if (this.windows != null) {
-                const existingWindow = this.windows.find(d => d.participant.groupId === message.groupId);
+                existingWindow = this.windows.find(d => d.participant.groupId === message.groupId);
                 if (existingWindow) {
-                    participant = existingWindow.participant;
-                } else {
-                    participant.groupId = message.groupId;
+                    existingWindow.messages.push(message);
+                    this.scrollChatWindow(existingWindow, ScrollDirection.Bottom);
+                    this.markMessagesAsRead([message]);
+                    this.onMessagesSeen.emit([message]);
                 }
             }
 
-            this.openChatWindow(participant).then(chatWindow => {
+            if(!existingWindow) {
+                this.participants.find(d => d.groupId === message.groupId).unreadMessages++;
+            }
 
-                this.assertMessageType(message);
 
-                if (!chatWindow[1] || !this.historyEnabled) {
-                    chatWindow[0].messages.push(message);
-                }
+            if (this.maximizeWindowOnNewMessage && !this.document.hidden) {
+                this.emitMessageSound();
+                this.emitBrowserNotification(message);
+            }
 
-                this.scrollChatWindow(chatWindow[0], ScrollDirection.Bottom);
-
-                this.markMessagesAsRead([message]);
-                this.onMessagesSeen.emit([message]);
-
-                this.emitMessageSound(chatWindow[0]);
-
-                // Github issue #58
-                // Do not push browser notifications with message content for privacy purposes if the 'maximizeWindowOnNewMessage' setting is off and this is a new chat window.
-                if (this.maximizeWindowOnNewMessage || (!chatWindow[1] && !chatWindow[0].isCollapsed)) {
-                    // Some messages are not pushed because they are loaded by fetching the history hence why we supply the message here
-                    this.emitBrowserNotification(chatWindow[0], message);
-                }
-            });
         }
     }
 
@@ -641,18 +630,12 @@ export class NgChat implements OnInit, IChatController {
 
     // Marks all messages provided as read with the current time.
     public markMessagesAsRead(messages: Message[]): void {
-        const currentDate = new Date();
-        const uptdSeen: MessageSeen[] = [];
-        messages.forEach((msg) => {
-            const m = new MessageSeen();
-            m.dateSeen = currentDate;
-            m.userId = this.adapter.authService.currentUser.id;
-            m.msgId = msg.id;
-            msg.dateSeen.push(m);
-            uptdSeen.push(m);
-        });
 
-        this.adapter.markMessagesAsRead(uptdSeen);
+        if (messages.length > 0) {
+            const p = this.participants.find(d => d.groupId === messages[0].groupId);
+            p.unreadMessages = 0;
+            this.adapter.markMessagesAsRead({ groupId: messages[0].groupId });
+        }
     }
 
     // Buffers audio file (For component's bootstrapping)
@@ -665,16 +648,16 @@ export class NgChat implements OnInit, IChatController {
     }
 
     // Emits a message notification audio if enabled after every message received
-    private emitMessageSound(window: Window): void {
-        if (this.audioEnabled && !window.hasFocus && this.audioFile) {
+    private emitMessageSound(): void {
+        if (this.audioEnabled && this.audioFile) {
             this.audioFile.play();
         }
     }
 
     // Emits a browser notification
-    private emitBrowserNotification(window: Window, message: Message): void {
-        if (this.browserNotificationsBootstrapped && !window.hasFocus && message) {
-            const notification = new Notification(`${this.localization.browserNotificationTitle} ${window.participant.displayName}`, {
+    private emitBrowserNotification(message: Message): void {
+        if (this.browserNotificationsBootstrapped && message) {
+            const notification = new Notification(`${this.localization.browserNotificationTitle} ${message.fromUser.displayName}`, {
                 body: message.message,
                 icon: this.browserNotificationIconSource
             });
@@ -754,7 +737,7 @@ export class NgChat implements OnInit, IChatController {
 
         if (window) {
             totalUnreadMessages = window.messages.filter(x => x.fromUser.userId != this.adapter.authService.currentUser.id
-                && !x.dateSeen.some(d => d.userId === this.adapter.authService.currentUser.id)).length;
+                && !x.isSeen).length;
         }
 
         return this.formatUnreadMessagesTotal(totalUnreadMessages);
@@ -911,7 +894,7 @@ export class NgChat implements OnInit, IChatController {
         window.hasFocus = !window.hasFocus;
         if (window.hasFocus) {
             const unreadMessages = window.messages.filter(x => x.fromUser.userId != this.adapter.authService.currentUser.id
-                && !x.dateSeen.some(d => d.userId === this.adapter.authService.currentUser.id));
+                && !x.isSeen);
 
             if (unreadMessages && unreadMessages.length > 0) {
                 this.markMessagesAsRead(unreadMessages);

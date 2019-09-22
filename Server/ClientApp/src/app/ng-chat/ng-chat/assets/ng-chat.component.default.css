@@ -13,6 +13,10 @@
 #ng-chat-people.ng-chat-people-collapsed {
   height: 30px;
 }
+
+#ng-chat {
+  min-width: calc(50vw);
+}
 .chat-container {
   height: calc(100vh - 113px + var(--heighOffset) + env(safe-area-inset-top));
 }

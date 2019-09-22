@@ -132,9 +132,9 @@ export class SignalRGroupAdapter extends ChatAdapter implements IChatGroupAdapte
     }
   }
 
-  markMessagesAsRead(arrSeen: MessageSeen[]): void {
+  markMessagesAsRead(msgGroup: MessageSeen): void {
     if (this.hubConnection && this.hubConnection.state === signalR.HubConnectionState.Connected) {
-      this.hubConnection.send("chatMessageSeen", arrSeen);
+      this.hubConnection.send("chatMessageSeen", msgGroup);
     }
   }
 

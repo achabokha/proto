@@ -7,12 +7,10 @@ export class Message {
     public groupId: string;
     public message: string;
     public dateSent?: Date;
-    public dateSeen: MessageSeen[];
+    public isSeen: boolean;
     public fromUser: IChatParticipant;
     public id: string;
 }
 export class MessageSeen {
-    public userId: string;
-    public dateSeen: Date;
-    public msgId: string;
+    public groupId: string;
 }

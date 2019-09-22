@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using Models.Entities.Chat;
 
 namespace Models.Entities
 {
@@ -13,7 +14,7 @@ namespace Models.Entities
 		public EnumChatGroupParticipantType ParticipantType {get; set;}
 		public ICollection<Participant> Participants { get; set; }
 
-
+		public ICollection<ChatMessageSeen> DateSeen { get; set; }
 
 	}
 

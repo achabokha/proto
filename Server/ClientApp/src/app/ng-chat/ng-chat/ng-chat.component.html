@@ -42,9 +42,9 @@
                         <span
                             [ngClass]="{'ng-chat-participant-status': true, 'online': user.status == ChatParticipantStatus.Online, 'busy': user.status == ChatParticipantStatus.Busy, 'away': user.status == ChatParticipantStatus.Away, 'offline': user.status == ChatParticipantStatus.Offline}"
                             title="{{getStatusTitle(user.status)}}"></span>
-                        <span *ngIf="unreadMessagesTotalByParticipant(user).length > 0"
+                        <span *ngIf="user.unreadMessages > 0"
                             class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">
-                            <button mat-mini-fab color="warn">{{unreadMessagesTotalByParticipant(user)}}</button>
+                            <button mat-mini-fab color="warn">{{formatUnreadMessagesTotal(user.unreadMessages)}}</button>
                         </span>
                     </div>
                 </li>
@@ -109,7 +109,7 @@
                                         <i class="paperclip-icon"></i>
                                     </div>
                                     <a class="file-details" [attr.href]="message.downloadUrl" target="_blank"
-                                        rel="noopener noreferrer" (click)="this.markMessagesAsRead([message])" download>
+                                        rel="noopener noreferrer" (click)="this.markMessagesAsRead(message)" download>
                                         <span class="file-message-title"
                                             [attr.title]="message.message">{{message.message}}</span>
                                         <span *ngIf="message.fileSizeInBytes"

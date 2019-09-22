@@ -92,7 +92,6 @@ public class GroupChatHub : Hub
 		};
 		var msg = new ChatMessage()
 		{
-			DateSeen = new ChatMessageSeen[] { m },
 			DownloadUrl = message.DownloadUrl,
 			DateSent = message.DateSent,
 			FileSizeInBytes = message.FileSizeInBytes,
@@ -112,21 +111,29 @@ public class GroupChatHub : Hub
 		this._ctx.ChatMessages.Add(msg);
 		this._ctx.SaveChanges();
 
-		message.Id = msg.Id.ToString();
-		message.DateSeen  = new List<ChatMessageSeenViewModel>() { new ChatMessageSeenViewModel() { DateSeen = DateTime.UtcNow, UserId = sender.UserId, msgId = message.Id } };
-		
 	}
 
-	public async Task ChatMessageSeen(ChatMessageSeenViewModel[] message)
+	public async Task ChatMessageSeen(ChatMessageSeenViewModel message)
 	{
-		foreach (var msgSeen in message)
-		{
-			var chatMsgSeen = new ChatMessageSeen();
-			chatMsgSeen.DateSeen = msgSeen.DateSeen;
-			chatMsgSeen.User = await this._ctx.Users.FirstOrDefaultAsync(d => d.Id == msgSeen.UserId);
+		var userId = Context.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
 
-			var msg = await this._ctx.ChatMessages.Include(d => d.DateSeen).FirstOrDefaultAsync(d => d.Id.ToString() == msgSeen.msgId);
-			msg.DateSeen.Add(chatMsgSeen);
+
+		var msg = await this._ctx.ChatGroups
+			.Include(d => d.DateSeen)
+			.ThenInclude(s => s.User)
+			.FirstOrDefaultAsync(d => d.Id.ToString() == message.groupId );
+		var chatMsgSeen = msg.DateSeen.FirstOrDefault(d => d.User.Id == userId);
+		if (chatMsgSeen == null)
+		{
+			msg.DateSeen.Add(new ChatMessageSeen() {
+				DateSeen = DateTime.UtcNow,
+				User = this._ctx.Users.FirstOrDefault(d => d.Id == userId)
+			});
+		}
+		else
+		{
+			chatMsgSeen.DateSeen = DateTime.UtcNow;
+			chatMsgSeen.User = await this._ctx.Users.FirstOrDefaultAsync(d => d.Id == userId);
 		}
 
 		await this._ctx.SaveChangesAsync();

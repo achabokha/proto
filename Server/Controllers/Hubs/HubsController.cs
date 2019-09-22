@@ -53,9 +53,10 @@ namespace Server.Controllers.Hubs
 			{
 				userList.Add((string)item.userId);
 			};
-			
+
 			string participantUserId = this.HttpContext.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
-			if(!userList.Contains(participantUserId)) {
+			if (!userList.Contains(participantUserId))
+			{
 				userList.Add(participantUserId);
 			}
 
@@ -139,13 +140,29 @@ namespace Server.Controllers.Hubs
 
 			string userId = this.HttpContext.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
 			string userEmail = this._ctx.Users.Find(userId).Email;
-			var msgList = await (from g in this._ctx.ChatGroups
+			var msgListQuery = (from g in this._ctx.ChatGroups.Include(d => d.DateSeen).ThenInclude(d => d.User)
 								 join p in this._ctx.Participants.Include(d => d.User) on g equals p.Group into arrPart
+								 join ms in this._ctx.ChatMessages on g equals ms.ChatGroup  into chatMessages
 								 where g.ParticipantType == EnumChatGroupParticipantType.user
 								 && arrPart.Any(d => d.User.Id == userId)
+								 
+								 
+								 
 
-								 select new { Particpants = arrPart, ChatGroup = g }
-						   ).ToArrayAsync();
+								 select new { 
+									Particpants = arrPart,
+									ChatGroup = g, 
+								 	UnreadMessageCount = chatMessages
+										.Where(d => d.DateSent > g.DateSeen
+											.Where(s => s.User.Id == userId)
+												.Select(ds => ds.DateSeen)
+											.Max())
+										.Count()  
+									}
+						   );
+
+			Console.WriteLine(msgListQuery.ToString());
+			var msgList = await msgListQuery.ToArrayAsync();
 			var userList = await (
 				from u in this._ctx.Users
 				where !msgList.Any(d => d.Particpants.Any(p => p.User == u))
@@ -181,7 +198,7 @@ namespace Server.Controllers.Hubs
 
 				part.Metadata = new ParticipantMetadataViewModel()
 				{
-					TotalUnreadMessages = 99,
+					TotalUnreadMessages = item.UnreadMessageCount,
 					Title = item.ChatGroup.Title,
 					GroupId = item.ChatGroup != null ? item.ChatGroup.Id.ToString() : ""
 				};
@@ -255,12 +272,15 @@ namespace Server.Controllers.Hubs
 		public async Task<IActionResult> GroupMessageHistory([FromBody] dynamic payload)
 		{
 			string groupId = (string)payload.groupId;
+			string userId = this.HttpContext.User.GetClaim(OpenIdConnectConstants.Claims.Subject);
+
 			var msgList = await (from m in this._ctx.ChatMessages
 							.Include(d => d.FromUser)
 							.Include(d => d.ChatGroup)
-							.Include(d => d.DateSeen)
-								.ThenInclude(s => s.User)
-								 where m.ChatGroup.Id.ToString() == groupId
+							.ThenInclude(d => d.DateSeen)
+							.ThenInclude(s => s.User)
+								 where
+								 m.ChatGroup.Id.ToString() == groupId
 								 orderby m.DateSent
 								 select new
 								 {
@@ -268,7 +288,7 @@ namespace Server.Controllers.Hubs
 									 GroupId = m.ChatGroup.Id,
 									 Message = m.Message,
 									 DateSent = m.DateSent,
-									 DateSeen = m.DateSeen.Select(d => new { UserId = d.User.Id, DateSeen = d.DateSeen, MsgId = m.Id }),
+									 isSeen = m.DateSent < m.ChatGroup.DateSeen.Where(d => d.User.Id == userId).Max().DateSeen,
 									 Id = m.Id,
 									 FromUser = new
 									 {

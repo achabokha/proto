@@ -17,7 +17,7 @@ export abstract class ChatAdapter {
     public abstract getGroupMessageHistory(groupId: string): Observable<Message[]>;
 
     public abstract sendMessage(message: Message): void;
-    public abstract markMessagesAsRead(arrSeen: MessageSeen[]): void;
+    public abstract markMessagesAsRead(msgGroup: MessageSeen): void;
 
     public abstract get authService(): AuthService;
 
