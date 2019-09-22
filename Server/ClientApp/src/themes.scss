@@ -35,6 +35,14 @@
   .displayRow:hover {
     background: mat-color($foreground, 'dividers');
   }
+
+  .chat-message-header {
+    display: block;
+    font-size: 1em;
+    color: mat-color($accent)
+  }
+  
+
 }
 // themes and themes picker is taking from material.angular.io (sort of, heavily modified)
 // NOTE: -- default theme is not set here it is being set in ThemeStorage.ts !!! --

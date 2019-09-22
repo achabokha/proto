@@ -58,7 +58,7 @@
                     <button mat-button class="chatWindowHeaderButton">
                         <mat-icon aria-hidden="false" (click)="togleSidePanel()" aria-label="go back">arrow_back_ios
                         </mat-icon>
-                        {{ window.participant.chattingTo.length > 2 ? window.participant.title : window.participant.displayName}}
+                        {{ getWindowTitle(window) }}
                     </button>
                     <span
                         [ngClass]="{'ng-chat-participant-status': true, 'online': window.participant.status == ChatParticipantStatus.Online, 'busy': window.participant.status == ChatParticipantStatus.Busy, 'away': window.participant.status == ChatParticipantStatus.Away, 'offline': window.participant.status == ChatParticipantStatus.Offline}"
@@ -94,6 +94,7 @@
                             <ng-container [ngSwitch]="message.type">
                                 <div *ngSwitchCase="MessageType.Text"
                                     [ngClass]="{'sent-chat-message-container': isSentChatMessage(window, message), 'received-chat-message-container': isReceivedChatMessage(window, message)}">
+                                    <span *ngIf="isReceivedChatMessage(window, message)" class="chat-message-header">{{ message.fromUser.displayName }}</span>
                                     <span
                                         [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
                                     <span *ngIf="showMessageDate && message.dateSent"

@@ -292,7 +292,6 @@ mat-form-field.mat-form-field.mat-form-field-appearance-outline > div.mat-form-f
 }
 .ng-chat-window .ng-chat-messages .ng-chat-message > div {
   float: right;
-  width: 182px;
   padding: 0;
   margin-top: 0;
   border-radius: 5px;

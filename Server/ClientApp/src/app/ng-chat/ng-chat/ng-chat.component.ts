@@ -47,18 +47,18 @@ export class NgChat implements OnInit, IChatController {
     public openWinType: any = ChatWindowType;
 
     constructor(private _httpClient: HttpClient,
-                @Inject(DOCUMENT) private document: Document,
-                private platform: Platform) {
+        @Inject(DOCUMENT) private document: Document,
+        private platform: Platform) {
         this.openWindowType = ChatWindowType.Message;
         this.platform.ready().then(
             () => {
-              if (this.platform.is("cordova")) {
-                this.document.documentElement.style.setProperty("--heighOffset", "0px");
-              } else {
-                this.document.documentElement.style.setProperty("--heighOffset", "48px");
-              }
+                if (this.platform.is("mobile")) {
+                    this.document.documentElement.style.setProperty("--heighOffset", "0px");
+                } else {
+                    this.document.documentElement.style.setProperty("--heighOffset", "48px");
+                }
             }
-          );
+        );
 
     }
 
@@ -925,6 +925,10 @@ export class NgChat implements OnInit, IChatController {
         const currentStatus = status.toString().toLowerCase();
 
         return this.localization.statusDescription[currentStatus];
+    }
+
+    getWindowTitle(window: Window) {
+        return window.participant.chattingTo.length > 2 ? window.participant.title : window.participant.displayName;
     }
 
     triggerOpenChatWindow(participants: Group): void {
