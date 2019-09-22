@@ -181,7 +181,7 @@ namespace Server.Controllers.Hubs
 
 				part.Metadata = new ParticipantMetadataViewModel()
 				{
-					TotalUnreadMessages = 0,
+					TotalUnreadMessages = 99,
 					Title = item.ChatGroup.Title,
 					GroupId = item.ChatGroup != null ? item.ChatGroup.Id.ToString() : ""
 				};

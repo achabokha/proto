@@ -168,11 +168,8 @@
   background-color: #bababa;
 }
 .ng-chat-unread-messages-count {
-  margin-left: 5px;
-  padding: 0 5px;
-  border-radius: 25px;
-  font-size: 0.9em;
-  line-height: 30px;
+  float:right;
+  transform: scale(0.5) translate(0, -10px);
 }
 .ng-chat-window {
   height: calc(100vh - 149px + var(--heighOffset) - env(safe-area-inset-top));

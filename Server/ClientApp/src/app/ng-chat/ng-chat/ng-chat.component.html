@@ -43,13 +43,15 @@
                             [ngClass]="{'ng-chat-participant-status': true, 'online': user.status == ChatParticipantStatus.Online, 'busy': user.status == ChatParticipantStatus.Busy, 'away': user.status == ChatParticipantStatus.Away, 'offline': user.status == ChatParticipantStatus.Offline}"
                             title="{{getStatusTitle(user.status)}}"></span>
                         <span *ngIf="unreadMessagesTotalByParticipant(user).length > 0"
-                            class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">{{unreadMessagesTotalByParticipant(user)}}</span>
+                            class="ng-chat-unread-messages-count unread-messages-counter-container primary-text">
+                            <button mat-mini-fab color="warn">{{unreadMessagesTotalByParticipant(user)}}</button>
+                        </span>
                     </div>
                 </li>
             </ul>
         </div>
     </mat-sidenav>
-    <mat-sidenav-content >
+    <mat-sidenav-content>
         <div id="ng-chat" [ngClass]="theme" *ngFor="let window of windows; let i = index"
             [ngStyle]="{'right': (!hideFriendsList ? friendsListWidth : 0) + 20 + windowSizeFactor * i + 'px'}">
 
@@ -94,7 +96,8 @@
                             <ng-container [ngSwitch]="message.type">
                                 <div *ngSwitchCase="MessageType.Text"
                                     [ngClass]="{'sent-chat-message-container': isSentChatMessage(window, message), 'received-chat-message-container': isReceivedChatMessage(window, message)}">
-                                    <span *ngIf="isReceivedChatMessage(window, message)" class="chat-message-header">{{ message.fromUser.displayName }}</span>
+                                    <span *ngIf="isReceivedChatMessage(window, message)"
+                                        class="chat-message-header">{{ message.fromUser.displayName }}</span>
                                     <span
                                         [innerHtml]="message.message | emojify:emojisEnabled | linkfy:linkfyEnabled"></span>
                                     <span *ngIf="showMessageDate && message.dateSent"
