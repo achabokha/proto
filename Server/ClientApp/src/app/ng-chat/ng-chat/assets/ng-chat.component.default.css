@@ -14,7 +14,7 @@
   height: 30px;
 }
 .chat-container {
-  height: calc(100vh - 113px + var(--heighOffset));
+  height: calc(100vh - 113px + var(--heighOffset) + env(safe-area-inset-top));
 }
 
 .ng-chat-close {
@@ -175,7 +175,7 @@
   line-height: 30px;
 }
 .ng-chat-window {
-  height: calc(100vh - 149px + var(--heighOffset));
+  height: calc(100vh - 149px + var(--heighOffset) - env(safe-area-inset-top));
 }
 .sideNavPanel {
   min-width: 300px;
@@ -198,6 +198,7 @@ mat-form-field.mat-form-field.mat-form-field-appearance-outline > div.mat-form-f
 
 .chatWindowHeaderContainer {
   height: 36px;
+  overflow: hidden;
 }
 
 .ng-chat-window-collapsed {
@@ -250,6 +251,7 @@ mat-form-field.mat-form-field.mat-form-field-appearance-outline > div.mat-form-f
 }
 .ng-chat-window .ng-chat-messages {
   padding: 10px;
+  width: calc(100vw  - 20px);
   height: calc(100% - 50px);
   box-sizing: border-box;
   position: relative;
