@@ -250,8 +250,6 @@ mat-form-field.mat-form-field.mat-form-field-appearance-outline > div.mat-form-f
   padding: 5px 10px;
 }
 .ng-chat-window .ng-chat-messages {
-  padding: 10px;
-  width: calc(100vw  - 20px);
   height: calc(100% - 50px);
   box-sizing: border-box;
   position: relative;
