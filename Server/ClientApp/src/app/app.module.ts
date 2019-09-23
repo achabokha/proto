@@ -38,6 +38,7 @@ import { YtcThreadComponent } from "./yt-comments/ytc-thread/ytc-thread.componen
 import { YtcRepliesComponent } from "./yt-comments/ytc-replies/ytc-replies.component";
 import { Facebook } from "@ionic-native/facebook/ngx";
 import { GooglePlus } from "@ionic-native/google-plus/ngx";
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 
 @NgModule({
@@ -70,6 +71,7 @@ import { GooglePlus } from "@ionic-native/google-plus/ngx";
     ],
     providers: [
         StatusBar,
+        LocalNotifications,
         SplashScreen,
         Facebook,
         GooglePlus,

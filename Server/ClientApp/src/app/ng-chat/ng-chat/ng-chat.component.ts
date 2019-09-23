@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChildren, ViewChild, HostListener, Output, EventEmitter, ElementRef, ViewEncapsulation, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DOCUMENT } from "@angular/common";
-
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import { ChatAdapter } from "./core/chat-adapter";
 import { IChatGroupAdapter } from "./core/chat-group-adapter";
@@ -45,10 +45,11 @@ import { Platform } from "@ionic/angular";
 export class NgChat implements OnInit, IChatController {
 
     public openWinType: any = ChatWindowType;
-
+    public isCordova: boolean = false;
     constructor(private _httpClient: HttpClient,
         @Inject(DOCUMENT) private document: Document,
-        private platform: Platform) {
+        private platform: Platform,
+        private localNotifications: LocalNotifications) {
         this.openWindowType = ChatWindowType.Message;
         this.platform.ready().then(
             () => {
@@ -56,6 +57,10 @@ export class NgChat implements OnInit, IChatController {
                     this.document.documentElement.style.setProperty("--heighOffset", "0px");
                 } else {
                     this.document.documentElement.style.setProperty("--heighOffset", "48px");
+                }
+
+                if (this.platform.is("cordova")) {
+                    this.isCordova = true;
                 }
             }
         );
@@ -505,14 +510,24 @@ export class NgChat implements OnInit, IChatController {
                 }
             }
 
-            if(!existingWindow) {
-                this.participants.find(d => d.groupId === message.groupId).unreadMessages++;
+            if (!existingWindow) {
+                const prtcpnt = this.participants.find(d => d.groupId === message.groupId)
+                prtcpnt.unreadMessages++;
             }
 
 
             if (this.maximizeWindowOnNewMessage && !this.document.hidden) {
                 this.emitMessageSound();
-                this.emitBrowserNotification(message);
+                if (this.isCordova) {
+                    this.localNotifications.schedule({
+                        title: message.fromUser.displayName,
+                        text: message.message
+                    });
+                } else {
+                    this.emitBrowserNotification(message);
+                }
+
+
             }
 
         }
