@@ -1,0 +1,24 @@
+<div  *ngIf="cartRows$ | async as cartRows">
+  <ng-template #empty>
+    <ng-shop-cart-empty></ng-shop-cart-empty>
+  </ng-template>
+  <div *ngIf="cartRows.length > 0; else empty">
+    <h3>
+      Your cart
+    </h3>
+    <div>({{cartRows.length}} item)</div>
+
+    <ng-shop-cart-row *ngFor="let row of cartRows" [row]="row" 
+      (remove)="removeFromCart(row)"
+      (clicked)="goToDetail(row.book._id.$oid)"
+      (quantityUpdated)="rowQuantityChanged($event)"></ng-shop-cart-row>
+
+    <div class="footer">
+      <div style="display:inline-block"> Total : {{total$ | async | currency:'EUR':true}}</div>
+
+      <button md-raised-button routerLink="/cart/order" color="primary">Checkout</button>
+    </div>
+
+  </div>
+
+</div>

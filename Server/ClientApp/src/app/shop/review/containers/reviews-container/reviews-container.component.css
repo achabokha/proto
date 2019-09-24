@@ -1,0 +1,19 @@
+.reviews-container {
+    text-align: center;
+}
+
+app-add-review {
+    margin-top: 20px;
+}
+
+md-progress-spinner{
+    margin:0 auto;
+}
+
+.empty-reviews{
+    text-align: center;
+    white-space: nowrap;
+    font-size: 18px;
+    color: #757575;
+    padding-bottom: 20px;
+}

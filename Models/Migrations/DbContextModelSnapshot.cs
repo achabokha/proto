@@ -284,6 +284,73 @@ namespace Models.Migrations
                     b.ToTable("Participants");
                 });
 
+            modelBuilder.Entity("Models.Entities.Shop.Category", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("ProductId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "84dc3fb9-757a-4cc4-8a00-558224ba9549",
+                            Name = "Test Cat 1"
+                        },
+                        new
+                        {
+                            Id = "5b1f5211-32e7-4631-8d48-049bb2e70a6e",
+                            Name = "Test Cat 2"
+                        },
+                        new
+                        {
+                            Id = "45f82d18-ccc4-432f-b3ad-609d98b56efc",
+                            Name = "Test Cat 3"
+                        });
+                });
+
+            modelBuilder.Entity("Models.Entities.Shop.Order", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CategoryId");
+
+                    b.Property<string>("UserId");
+
+                    b.Property<int>("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Models.Entities.Shop.Product", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("OrderId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Products");
+                });
+
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictApplication", b =>
                 {
                     b.Property<string>("Id")
@@ -512,6 +579,31 @@ namespace Models.Migrations
                     b.HasOne("Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Models.Entities.Shop.Category", b =>
+                {
+                    b.HasOne("Models.Entities.Shop.Product")
+                        .WithMany("Categories")
+                        .HasForeignKey("ProductId");
+                });
+
+            modelBuilder.Entity("Models.Entities.Shop.Order", b =>
+                {
+                    b.HasOne("Models.Entities.Shop.Category")
+                        .WithMany("Orders")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Models.Entities.Shop.Product", b =>
+                {
+                    b.HasOne("Models.Entities.Shop.Order")
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictAuthorization", b =>

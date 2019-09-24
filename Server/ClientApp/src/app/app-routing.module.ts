@@ -43,6 +43,10 @@ const routes: Routes = [
     {
         path: "chat",
         loadChildren: () => import("./chat/chat.module").then(mod => mod.ChatModule)
+    },
+    {
+        path: "shope",
+        loadChildren: () => import("./shop/shop.module").then(mod => mod.ShopModule)
     }
 ];
 

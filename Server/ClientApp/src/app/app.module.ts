@@ -38,7 +38,17 @@ import { YtcThreadComponent } from "./yt-comments/ytc-thread/ytc-thread.componen
 import { YtcRepliesComponent } from "./yt-comments/ytc-replies/ytc-replies.component";
 import { Facebook } from "@ionic-native/facebook/ngx";
 import { GooglePlus } from "@ionic-native/google-plus/ngx";
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { LocalNotifications } from "@ionic-native/local-notifications/ngx";
+import { StoreRouterConnectingModule, RouterStateSerializer } from '@ngrx/router-store';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { CoreEffects } from './shop/core/effects/core.effects';
+import { environment } from 'src/environments/environment';
+import { reducers, metaReducers } from './shop/core/reducers';
+
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { CustomRouterStateSerializer } from './shop/shared/utils/router-utils';
+import { ShopModule } from './shop/shop.module';
 
 
 @NgModule({
@@ -59,6 +69,12 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
         FormsModule,
         HttpClientModule,
         IonicModule.forRoot(),
+        StoreModule.forRoot(reducers, { metaReducers }),
+        StoreRouterConnectingModule.forRoot(),
+
+        EffectsModule.forRoot([CoreEffects]),
+
+        !environment.production ? StoreDevtoolsModule.instrument() : [],
         AppRoutingModule,
         BrowserAnimationsModule,
         LayoutModule,
@@ -67,6 +83,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
         DashboardModule,
         ChartModule,
         LoginModule,
+        ShopModule,
         MatPasswordStrengthModule.forRoot()
     ],
     providers: [
@@ -83,8 +100,9 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
         AuthService,
         HttpClientModule,
         AuthProcessService,
+        { provide: RouterStateSerializer, useClass: CustomRouterStateSerializer },
         { provide: UserProvidedConfigToken, useValue: {} }
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
