@@ -1,7 +1,6 @@
 import { ProductNav } from './../models/product-nav';
-import { Book } from './../models/book';
+import { Product } from './../models/product';
 import { Action } from '@ngrx/store';
-import { Product } from '../models/product';
 
 export const LOAD_PRODUCTS = '[Catalog] Load';
 export const LOAD_PRODUCTS_SUCCESS = '[Catalog] Load Success';
@@ -9,60 +8,60 @@ export const LOAD_PRODUCTS_FAIL = '[Catalog] Load Fail';
 
 export const SELECT_PRODUCT = '[Catalog] Select';
 
-export const VIEW_PRODUCT = '[Book] Load';
-export const VIEW_PRODUCT_SUCCESS = '[Book] Load Success';
-export const VIEW_PRODUCTS_FAIL = '[Book] Load Fail';
+export const VIEW_PRODUCT = '[Product] Load';
+export const VIEW_PRODUCT_SUCCESS = '[Product] Load Success';
+export const VIEW_PRODUCTS_FAIL = '[Product] Load Fail';
 
 
-export const ADD_PRODUCT_TO_CART = '[Book] add';
-export const ADD_PRODUCT_TO_CART_SUCCESS = '[Book] add success'
-export const ADD_PRODUCT_TO_CART_FAIL = '[Book] add fail'
+export const ADD_PRODUCT_TO_CART = '[Product] add';
+export const ADD_PRODUCT_TO_CART_SUCCESS = '[Product] add success'
+export const ADD_PRODUCT_TO_CART_FAIL = '[Product] add fail'
 
 /**
  * Load Catalog Actions
  */
-export class LoadBooks implements Action {
+export class LoadProducts implements Action {
     readonly type = LOAD_PRODUCTS;
 }
 
-export class LoadBooksSuccess implements Action {
+export class LoadProductsSuccess implements Action {
     readonly type = LOAD_PRODUCTS_SUCCESS;
 
     constructor(public payload: Product[]) { }
 }
 
-export class LoadBooksFail implements Action {
+export class LoadProductsFail implements Action {
     readonly type = LOAD_PRODUCTS_FAIL;
 
     constructor(public payload: any) { }
 }
 
-export class SelectBook implements Action {
+export class SelectProduct implements Action {
     readonly type = SELECT_PRODUCT;
 
     constructor(public payload: any) { }
 }
 
 /**
- * view book action
+ * view product action
  * 
  * @export
- * @class ViewBook
+ * @class ViewProduct
  * @implements {Action}
  */
-export class ViewBook implements Action {
+export class ViewProduct implements Action {
     readonly type = VIEW_PRODUCT;
     constructor(public payload: any) { }
 
 }
 
-export class ViewBookSuccess implements Action {
+export class ViewProductSuccess implements Action {
     readonly type = VIEW_PRODUCT_SUCCESS;
 
     constructor(public payload: ProductNav) { }
 }
 
-export class ViewBookFail implements Action {
+export class ViewProductFail implements Action {
     readonly type = VIEW_PRODUCTS_FAIL;
 
     constructor(public payload: any) { }
@@ -78,7 +77,7 @@ export class ViewBookFail implements Action {
  */
 export class AddToCart implements Action {
     readonly type = ADD_PRODUCT_TO_CART;
-    constructor(public payload: Book) { }
+    constructor(public payload: Product) { }
 }
 
 export class AddToCartSuccess implements Action {
@@ -93,7 +92,7 @@ export class AddToCartFail implements Action {
 
 
 // export a new type that represents the ctalog actions 
-export type ActionType = LoadBooks | LoadBooksSuccess | LoadBooksFail
-    | ViewBook | ViewBookSuccess | ViewBookFail | SelectBook
+export type ActionType = LoadProducts | LoadProductsSuccess | LoadProductsFail
+    | ViewProduct | ViewProductSuccess | ViewProductFail | SelectProduct
     | AddToCart | AddToCartSuccess | AddToCartFail;
 

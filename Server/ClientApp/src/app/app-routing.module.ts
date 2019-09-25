@@ -45,7 +45,7 @@ const routes: Routes = [
         loadChildren: () => import("./chat/chat.module").then(mod => mod.ChatModule)
     },
     {
-        path: "shope",
+        path: "shop",
         loadChildren: () => import("./shop/shop.module").then(mod => mod.ShopModule)
     }
 ];

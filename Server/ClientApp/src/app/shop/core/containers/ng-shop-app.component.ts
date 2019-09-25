@@ -8,13 +8,9 @@ import * as actions from '../actions/core.actions';
 @Component({
   selector: 'ng-shop-root',
   template: `
-    <ng-shop-logo></ng-shop-logo>
     <ng-shop-cart></ng-shop-cart>
     <ng-shop-menu></ng-shop-menu>
     <router-outlet></router-outlet>
-    <footer style="margin-top:50px;">
-      <ng-shop-footer> </ng-shop-footer>
-    </footer>
   `
 })
 export class NgShopComponent implements OnInit {

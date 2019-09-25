@@ -7,6 +7,14 @@ const routes: Routes = [
   {
     path: "",
     component: NgShopComponent
+  },
+  {
+    path: "catalog",
+    loadChildren: () => import('./catalog/catalog.module').then(mod => mod.CatalogModule)
+  },
+  {
+    path: "cart",
+    loadChildren: () => import('./cart/cart.module').then(mod => mod.CartModule)
   }
 ];
 

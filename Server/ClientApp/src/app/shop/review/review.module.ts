@@ -18,7 +18,7 @@ import { reducers } from './reducers';
     SharedModule,
     FormsModule,
     AvatarModule,
-    StoreModule.forFeature('bookReview', reducers),
+    StoreModule.forFeature('productReview', reducers),
     EffectsModule.forFeature([ReviewEffects]),
     MomentModule
   ],

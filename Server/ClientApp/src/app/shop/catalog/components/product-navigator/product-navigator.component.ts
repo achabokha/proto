@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'app-book-navigator',
-  templateUrl: './book-navigator.component.html',
-  styleUrls: ['./book-navigator.component.css']
+  selector: 'app-product-navigator',
+  templateUrl: './product-navigator.component.html',
+  styleUrls: ['./product-navigator.component.css']
 })
-export class BookNavigatorComponent implements OnInit, OnChanges {
+export class ProductNavigatorComponent implements OnInit, OnChanges {
 
   @Input() current: number;
   @Input() count: number;

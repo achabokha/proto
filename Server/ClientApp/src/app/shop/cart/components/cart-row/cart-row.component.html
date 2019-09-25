@@ -1,13 +1,13 @@
 <div class="cart-row">
   <mat-grid-list cols="7" rowHeight="100px">
-    <mat-grid-tile><img width="70px" [src]="row.book.image"/></mat-grid-tile>
+    <mat-grid-tile><img width="70px" [src]="row.product.image"/></mat-grid-tile>
     <mat-grid-tile
-      ><a (click)="clicked.emit()" routerLink="/catalog/book/{{ row.book.id }}"
-        >{{ row.book.title }}
+      ><a (click)="clicked.emit()" routerLink="/catalog/product/{{ row.product.id }}"
+        >{{ row.product.title }}
       </a></mat-grid-tile
     >
-    <mat-grid-tile>{{ row.book.author }}</mat-grid-tile>
-    <mat-grid-tile>{{ row.book.price | currency: 'EUR':true }}</mat-grid-tile>
+    <mat-grid-tile>{{ row.product.author }}</mat-grid-tile>
+    <mat-grid-tile>{{ row.product.price | currency: 'EUR':true }}</mat-grid-tile>
     <mat-grid-tile
       ><input
         type="number"
@@ -15,7 +15,7 @@
         [(ngModel)]="row.quantity"
     /></mat-grid-tile>
     <mat-grid-tile>{{
-      row.quantity * row.book.price | currency: 'EUR':true
+      row.quantity * row.product.price | currency: 'EUR':true
     }}</mat-grid-tile>
     <mat-grid-tile
       ><a (click)="remove.emit()">

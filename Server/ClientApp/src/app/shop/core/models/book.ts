@@ -1,11 +1,11 @@
 
 /**
- * Contract of a Book
+ * Contract of a Product
  * 
  * @export
- * @interface Book
+ * @interface Product
  */
-export interface Book {
+export interface Product {
     id: string;
     isbn10?: string;
     title: string;

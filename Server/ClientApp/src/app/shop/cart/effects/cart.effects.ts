@@ -32,7 +32,7 @@ export class CartEffetcs {
   );
 
   @Effect()
-  removeBookFromCart = this.actions$.pipe(
+  removeProductFromCart = this.actions$.pipe(
     ofType(cartActions.REMOVE_FROM_CART),
     map((action: cartActions.RemoveFromCart) => action.payload),
     mergeMap(cartRow => of(this.cartService.remove(cartRow))),

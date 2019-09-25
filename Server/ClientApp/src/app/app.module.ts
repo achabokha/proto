@@ -49,6 +49,7 @@ import { reducers, metaReducers } from './shop/core/reducers';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { CustomRouterStateSerializer } from './shop/shared/utils/router-utils';
 import { ShopModule } from './shop/shop.module';
+import { CartService } from './shop/core/services/cart.service';
 
 
 @NgModule({
@@ -88,6 +89,7 @@ import { ShopModule } from './shop/shop.module';
     ],
     providers: [
         StatusBar,
+        CartService,
         LocalNotifications,
         SplashScreen,
         Facebook,

@@ -8,7 +8,7 @@ export interface ReviewState {
 }
 
 export interface State extends fromRoot.State {
-    'bookReview': ReviewState;
+    'productReview': ReviewState;
 }
 
 export const reducers = {
@@ -16,7 +16,7 @@ export const reducers = {
 }
 
 // Select the review slice feature from the state
-export const getReviewState = createFeatureSelector<ReviewState>('bookReview');
+export const getReviewState = createFeatureSelector<ReviewState>('productReview');
 
 export const getReview = createSelector(getReviewState,
     (state: ReviewState) => state.review);
@@ -24,8 +24,8 @@ export const getReview = createSelector(getReviewState,
 export const getListOfReviews = createSelector(getReview,
     (state: fromReview.State) => state.reviews);
 
-export const getBookSubjectToReview = createSelector(getReview,
-    (state: fromReview.State) => state.bookId);
+export const getProductSubjectToReview = createSelector(getReview,
+    (state: fromReview.State) => state.productId);
 
 export const getLoading = createSelector(getReview,
     (state: fromReview.State) => state.loading);

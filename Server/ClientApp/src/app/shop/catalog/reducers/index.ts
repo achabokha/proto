@@ -1,10 +1,10 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import * as fromBook from './product';
+import * as fromProduct from './product';
 import * as fromCollection from './collection';
 import * as fromRoot from '../../core/reducers';
 
 export interface CatalogState {
-    book: fromBook.State;
+    product: fromProduct.State;
     collection: fromCollection.State;
 }
 
@@ -14,7 +14,7 @@ export interface State extends fromRoot.State {
 
 // Catalog feature reducers
 export const reducers = {
-    book: fromBook.reducer,
+    product: fromProduct.reducer,
     collection: fromCollection.reducer,
 };
 
@@ -29,45 +29,45 @@ export const getCollection = createSelector(
 
 
 export const getCatalogContent = createSelector(getCollection,
-    (state: fromCollection.State) => state.books
+    (state: fromCollection.State) => state.products
 )
 
 export const getCatalogLoading = createSelector(getCollection,
     (state: fromCollection.State) => state.loading
 ) 
 
-export const getBook = createSelector(
+export const getProduct = createSelector(
     getCatalogState,
-    (state: CatalogState) => state.book
+    (state: CatalogState) => state.product
 );
 
-// Select the selectedBook slice from the Store
-export const getSelectedBook = createSelector(
-    getBook,
-    (state:fromBook.State) => state.selectedBook
+// Select the selectedProduct slice from the Store
+export const getSelectedProduct = createSelector(
+    getProduct,
+    (state:fromProduct.State) => state.selectedProduct
 )
 
-export const getBookLoading = createSelector(
-    getBook,
-    (state:fromBook.State) => state.loading
+export const getProductLoading = createSelector(
+    getProduct,
+    (state:fromProduct.State) => state.loading
 )
 
 export const getCurrent = createSelector(
-    getBook,
-    (state:fromBook.State) => state.current
+    getProduct,
+    (state:fromProduct.State) => state.current
 )
 
 export const getTotal = createSelector(
-    getBook,
-    (state:fromBook.State) => state.total
+    getProduct,
+    (state:fromProduct.State) => state.total
 )
 
 export const getNextId = createSelector(
-    getBook,
-    (state:fromBook.State) => state.nextId
+    getProduct,
+    (state:fromProduct.State) => state.nextId
 )
 
 export const getPreviousId = createSelector(
-    getBook,
-    (state:fromBook.State) => state.previousId
+    getProduct,
+    (state:fromProduct.State) => state.previousId
 )

@@ -1,10 +1,10 @@
 import { ProductNav } from './../models/product-nav';
-import { Book } from '../models/book';
+import { Product } from '../models/product';
 import * as catalogActions from '../actions/catalog.actions';
 
 export interface State {
     selectedId: string | null;
-    selectedBook: Book | null;
+    selectedProduct: Product | null;
     loading: boolean;
     current: number;
     total: number;
@@ -14,7 +14,7 @@ export interface State {
 
 export const initialState: State = {
     selectedId: null,
-    selectedBook: null,
+    selectedProduct: null,
     loading: false,
     current: 0,
     total: 0,
@@ -29,7 +29,7 @@ export function reducer(state = initialState, action: catalogActions.ActionType)
         case catalogActions.VIEW_PRODUCT:
             return {
                 ...state,
-                selectedBook: action.payload.book,
+                selectedProduct: action.payload.product,
                 current: action.payload.index,
                 total: action.payload.count,
                 nextId: action.payload.nextId,
@@ -43,7 +43,7 @@ export function reducer(state = initialState, action: catalogActions.ActionType)
 
 export const getSelectedId = (state: State) => state.selectedId;
 
-export const getSelectedBook = (state: State) => state.selectedBook;
+export const getSelectedProduct = (state: State) => state.selectedProduct;
 
 export const getLoading = (state: State) => state.loading;
 

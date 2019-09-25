@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import * as fromCollection from './../reducers';
 import { Store } from '@ngrx/store';
-import { Book } from './../models/book';
+import { Product } from './../models/product';
 import { Observable } from 'rxjs';
 import * as catalogActions from './../actions/catalog.actions';
 
@@ -10,12 +10,12 @@ import * as catalogActions from './../actions/catalog.actions';
   selector: 'app-catalog-list',
   template: `
     <div class="catalog-container">
-      <div *ngIf="(books$ | async) as books" class="catalog-list">
+      <div *ngIf="(products$ | async) as products" class="catalog-list">
         <app-catalog-item
-          *ngFor="let book of books"
-          [book]="book"
-          (addToCart)="addBookToCart($event)"
-          (bookDetails)="goToDetails($event)"
+          *ngFor="let product of products"
+          [product]="product"
+          (addToCart)="addProductToCart($event)"
+          (productDetails)="goToDetails($event)"
         ></app-catalog-item>
       </div>
       <mat-progress-spinner
@@ -48,31 +48,31 @@ import * as catalogActions from './../actions/catalog.actions';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogListComponent implements OnInit {
-  books$: Observable<Book[]>;
+  products$: Observable<Product[]>;
   loading$: Observable<boolean>;
 
   constructor(
     private store: Store<fromCollection.State>,
     private router: Router
   ) {
-    this.books$ = this.store.select(fromCollection.getCatalogContent);
+    this.products$ = this.store.select(fromCollection.getCatalogContent);
     this.loading$ = this.store.select(fromCollection.getCatalogLoading);
   }
 
   ngOnInit() {
     // Dispatch the load action
-    this.store.dispatch(new catalogActions.LoadBooks());
+    this.store.dispatch(new catalogActions.LoadProducts());
   }
 
-  viewBook(bookId) {
-    this.store.dispatch(new catalogActions.ViewBook(bookId));
+  viewProduct(productId) {
+    this.store.dispatch(new catalogActions.ViewProduct(productId));
   }
 
-  addBookToCart(book: Book) {
-    this.store.dispatch(new catalogActions.AddToCart(book));
+  addProductToCart(product: Product) {
+    this.store.dispatch(new catalogActions.AddToCart(product));
   }
 
-  goToDetails(book: Book) {
-    this.router.navigate(['/catalog/book/', book.id]);
+  goToDetails(product: Product) {
+    this.router.navigate(['/catalog/product/', product.id]);
   }
 }

@@ -1,28 +1,28 @@
 
-import { map, publishLast, refCount } from 'rxjs/operators';
-import { ProductNav } from '../../catalog/models/product-nav';
-import { Product } from '../../catalog/models/product';
+import {refCount, publishLast, map} from 'rxjs/operators';
+import { ProductNav } from '../models/product-nav';
 import { Injectable } from '@angular/core';
-import { Observable } from "rxjs";
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
+import { Observable } from "rxjs";
 
 
 
+import { Product } from "../models/product";
 
 const url = "https://api.mongolab.com/api/1/databases/sfproducts/collections/sfproducts/";
 const apiKey = "?apiKey=d3qvB8ldYFW2KSynHRediqLuBLP8JA8i";
 
 
 @Injectable()
-export class ProductService {
+export class CatalogService {
 
   list$: Observable<Product[]>;
 
 
   constructor(private http: HttpClient) {
-    // keep in cache the last result
-    this.list$ = this.loadProducts().pipe(publishLast(), refCount());
+    // keep in cache the last result  
+    this.list$ = this.http.get(url + apiKey).pipe(map(response => response),publishLast(),refCount(),);
+
   }
 
   fetchProducts(): Observable<Product[]> { // Array<Product>
@@ -31,6 +31,7 @@ export class ProductService {
 
 
   getProduct(productId: string): Observable<ProductNav> {
+    // return this.http.get(url+productId+apiKey).map(response => response.json());
     return this.fetchProducts().pipe(map(products => {
 
       const product = products.filter(b => b.id === productId)[0];
@@ -42,10 +43,6 @@ export class ProductService {
     }));
   }
 
-  loadProducts(): Observable<Product[]> {
-    return this.http.get(environment.apiUrl + "/api/products").pipe(map(data => (data as Product[])));
-
-  }
 
 
 }

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BookNavigatorComponent } from './book-navigator.component';
+import { ProductNavigatorComponent } from './product-navigator.component';
 
-describe('BookNavigatorComponent', () => {
-  let component: BookNavigatorComponent;
-  let fixture: ComponentFixture<BookNavigatorComponent>;
+describe('ProductNavigatorComponent', () => {
+  let component: ProductNavigatorComponent;
+  let fixture: ComponentFixture<ProductNavigatorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BookNavigatorComponent ]
+      declarations: [ ProductNavigatorComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BookNavigatorComponent);
+    fixture = TestBed.createComponent(ProductNavigatorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

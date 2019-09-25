@@ -8,7 +8,7 @@
     (removeReview)="removeReview(review)" [user]="review.$key" (upVoteClicked)="voteReview(review,1)" (downVoteClicked)="voteReview(review,-1)">
   </app-review-item>
   <p class="empty-reviews" *ngIf="reviews.length === 0">
-      Be the first one to review this book
+      Be the first one to review this product
   </p>
 </div>
 

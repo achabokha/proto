@@ -1,4 +1,4 @@
-import { Book } from './../models/book';
+import { Product } from './../models/product';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 
 @Component({
@@ -6,17 +6,17 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
   template: `
     <mat-card>
       <mat-card-header> </mat-card-header>
-      <img md-card-image [src]="book.image" alt="Photo of a book" />
+      <img md-card-image [src]="product.image" alt="Photo of a product" />
       <mat-card-content>
         <p>
-          <a (click)="bookDetails.emit(book)">{{ book.title }}</a>
+          <a (click)="productDetails.emit(product)">{{ product.title }}</a>
         </p>
       </mat-card-content>
       <mat-card-actions>
-        <button mat-button (click)="addToCart.emit(book)">
+        <button mat-button (click)="addToCart.emit(product)">
           <i class="material-icons">add_shopping_cart</i>
         </button>
-        <button mat-button (click)="bookDetails.emit(book)">
+        <button mat-button (click)="productDetails.emit(product)">
           <i class="material-icons">search</i>
         </button>
       </mat-card-actions>
@@ -72,10 +72,10 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
   ]
 })
 export class CatalogItemComponent implements OnInit {
-  @Input() book: Book;
+  @Input() product: Product;
 
   @Output() addToCart: EventEmitter<any> = new EventEmitter();
-  @Output() bookDetails: EventEmitter<any> = new EventEmitter();
+  @Output() productDetails: EventEmitter<any> = new EventEmitter();
 
   constructor() {}
 

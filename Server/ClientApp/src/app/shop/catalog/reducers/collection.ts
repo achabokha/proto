@@ -1,27 +1,27 @@
-import { Book } from './../models/book';
+import { Product } from './../models/product';
 import * as catalogActions from './../actions/catalog.actions';
 
 export interface State {
     loading: boolean,
-    books: Book[]
+    products: Product[]
 }
 
 export const initialState: State = {
     loading: false,
-    books: []
+    products: []
 }
 
 export function reducer(state = initialState, action: catalogActions.ActionType): State {
     switch (action.type) {
-        case catalogActions.LOAD_BOOKS:
+        case catalogActions.LOAD_PRODUCTS:
             return { ...state, loading: true }
-        case catalogActions.LOAD_BOOKS_SUCCESS:
-            return { ...state, books: action.payload, loading: false }
+        case catalogActions.LOAD_PRODUCTS_SUCCESS:
+            return { ...state, products: action.payload, loading: false }
 
         default:
             return state;
     }
 }
 
-export const getBooks = (state: State) => state.books;
+export const getProducts = (state: State) => state.products;
 export const getLoading = (state: State) => state.loading;

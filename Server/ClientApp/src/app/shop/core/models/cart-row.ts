@@ -1,14 +1,14 @@
-import { Book } from './../../catalog/models/book';
+import { Product } from './../../catalog/models/product';
 
 export class CartRow {
 
     constructor(
-        public book: Book,
+        public product: Product,
         public quantity: number =  1) {}
 
 
    amout(){
-       return this.book.price * this.quantity;
+       return this.product.price * this.quantity;
    }
 
 

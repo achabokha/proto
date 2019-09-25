@@ -37,8 +37,8 @@ export class CartContentPageComponent implements OnInit {
     this.store.dispatch(new cartActions.GetCartTotal());    
   }
 
-  goToDetail(bookId){
-    this.router.navigate(['/catalog/book',bookId])
+  goToDetail(productId){
+    this.router.navigate(['/catalog/product',productId])
   }
 
   rowQuantityChanged(quantity){

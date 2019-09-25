@@ -20,33 +20,33 @@ export class CatalogEffects {
   ) {}
 
   /**
-   * Load Books effects
+   * Load Products effects
    *
    * @memberof CatalogEffects
    */
   @Effect()
-  loadBooks = this.actions$.pipe(
+  loadProducts = this.actions$.pipe(
     ofType(catalogActions.LOAD_PRODUCTS),
-    mergeMap(() => this.productService.fetchBooks()),
-    map(products => new catalogActions.LoadBooksSuccess(products)),
+    mergeMap(() => this.productService.fetchProducts()),
+    map(products => new catalogActions.LoadProductsSuccess(products)),
     catchError(err =>
-      of(new catalogActions.LoadBooksFail({ error: err.message }))
+      of(new catalogActions.LoadProductsFail({ error: err.message }))
     )
   );
 
   @Effect()
-  getBook = this.actions$.pipe(
+  getProduct = this.actions$.pipe(
     ofType(catalogActions.VIEW_PRODUCT),
-    map((action: catalogActions.ViewBook) => action.payload),
-    mergeMap(selectedBook => this.productService.getBook(selectedBook)),
-    map(product => new catalogActions.ViewBookSuccess(product)),
+    map((action: catalogActions.ViewProduct) => action.payload),
+    mergeMap(selectedProduct => this.productService.getProduct(selectedProduct)),
+    map(product => new catalogActions.ViewProductSuccess(product)),
     catchError(err =>
-      of(new catalogActions.ViewBookFail({ error: err.message }))
+      of(new catalogActions.ViewProductFail({ error: err.message }))
     )
   );
 
   @Effect({ dispatch: false })
-  addBookToCart = this.actions$.pipe(
+  addProductToCart = this.actions$.pipe(
     ofType(catalogActions.ADD_PRODUCT_TO_CART),
     map((action: catalogActions.AddToCart) => action.payload),
     mergeMap(product => of(this.cartService.add(product))),

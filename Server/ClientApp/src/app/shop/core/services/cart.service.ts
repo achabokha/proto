@@ -1,5 +1,5 @@
 import { CartRow } from './../models/cart-row';
-import { Book } from './../../catalog/models/book';
+import { Product } from './../../catalog/models/product';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -10,8 +10,8 @@ export class CartService {
   constructor() { 
   }
 
-  add(book: Book, quantity: number = 1) {
-    this.rows.push(new CartRow(book, quantity));
+  add(product: Product, quantity: number = 1) {
+    this.rows.push(new CartRow(product, quantity));
   }
 
   remove(row: CartRow) {
@@ -20,7 +20,7 @@ export class CartService {
 
   total() {
     return this.rows.reduce((total, row) => {
-      return total + row.book.price * row.quantity;
+      return total + row.product.price * row.quantity;
     }, 0)
   }
 

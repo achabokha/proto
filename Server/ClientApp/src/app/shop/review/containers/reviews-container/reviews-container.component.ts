@@ -16,7 +16,7 @@ import {randomGenerator} from './../../../shared/utils/random-generator';
 })
 export class ReviewsContainerComponent implements OnInit, OnChanges {
 
-  @Input() bookId: string;
+  @Input() productId: string;
 
   loading$: Observable<boolean>;
   reviews$: Observable<Review[]>;
@@ -30,26 +30,26 @@ export class ReviewsContainerComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.bookId.currentValue !== changes.bookId.previousValue) {
-      // load reviews when book id value has changed
+    if (changes.productId.currentValue !== changes.productId.previousValue) {
+      // load reviews when product id value has changed
       this.loadReviews();
     }
   }
 
   loadReviews() {
-    this.store.dispatch(new reviewActions.LoadReviews(this.bookId));
+    this.store.dispatch(new reviewActions.LoadReviews(this.productId));
 
   }
 
   removeReview(review) {
-    this.store.dispatch(new reviewActions.RemoveReview({bookId:this.bookId,reviewId:review.$key}));
+    this.store.dispatch(new reviewActions.RemoveReview({productId:this.productId,reviewId:review.$key}));
   }
 
   voteReview(review, val) {
     let up = val === 1;
     let down = val === -1;
     this.store.dispatch(new reviewActions.ReviewVote({
-       review,up,down, bookId:this.bookId
+       review,up,down, productId:this.productId
        }));
   }
 
@@ -62,7 +62,7 @@ export class ReviewsContainerComponent implements OnInit, OnChanges {
       user: randomGenerator.randomName(),
       date: now.toString()
     }
-    this.store.dispatch(new reviewActions.AddReview({review,bookId:this.bookId}));
+    this.store.dispatch(new reviewActions.AddReview({review,productId:this.productId}));
   }
 
 

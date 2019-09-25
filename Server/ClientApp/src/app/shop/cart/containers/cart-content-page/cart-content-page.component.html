@@ -10,7 +10,7 @@
 
     <ng-shop-cart-row *ngFor="let row of cartRows" [row]="row" 
       (remove)="removeFromCart(row)"
-      (clicked)="goToDetail(row.book._id.$oid)"
+      (clicked)="goToDetail(row.product._id.$oid)"
       (quantityUpdated)="rowQuantityChanged($event)"></ng-shop-cart-row>
 
     <div class="footer">

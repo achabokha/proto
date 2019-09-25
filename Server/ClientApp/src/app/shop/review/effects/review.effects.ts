@@ -39,7 +39,7 @@ export class ReviewEffects {
     map((action: reviewActions.ReviewVote) => action.payload),
     mergeMap(payload =>
       of(
-        this.http$.post(`/reviews/${payload.bookId}/all/${payload.review.$key}`, {
+        this.http$.post(`/reviews/${payload.productId}/all/${payload.review.$key}`, {
           upVote: payload.review.upVote + (payload.up ? 1 : 0),
           downVote: payload.review.downVote + (payload.down ? 1 : 0)
         })
@@ -56,7 +56,7 @@ export class ReviewEffects {
     ofType(reviewActions.ADD_REVIEW),
     map((action: reviewActions.AddReview) => action.payload),
     mergeMap(payload =>
-      this.http$.post(`/reviews/${payload.bookId}/all`, payload.review)
+      this.http$.post(`/reviews/${payload.productId}/all`, payload.review)
     ),
     map(() => new reviewActions.AddReviewSuccess()),
     catchError(err =>
@@ -69,7 +69,7 @@ export class ReviewEffects {
     ofType(reviewActions.REMOVE_REVIEW),
     map((action: reviewActions.RemoveReview) => action.payload),
     mergeMap(payload =>
-      this.http$.delete(`/reviews/${payload.bookId}/all/${payload.reviewId}`)
+      this.http$.delete(`/reviews/${payload.productId}/all/${payload.reviewId}`)
     ),
     map(() => new reviewActions.RemoveReviewSuccess()),
     catchError(err =>
