@@ -19,7 +19,7 @@ namespace Server.Controllers.Shop
 			_ctx = ctx;
 		}
 
-		[HttpGet("[action]")]
+		[HttpGet("")]
 		public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
 		{
 			return await (from c in _ctx.Products

@@ -7,10 +7,11 @@ import { Observable } from 'rxjs';
 import * as catalogActions from './../actions/catalog.actions';
 
 @Component({
-  selector: 'app-catalog-list',
+  selector: 'ng-shop-catalog-list',
   template: `
     <div class="catalog-container">
       <div *ngIf="(products$ | async) as products" class="catalog-list">
+      {{ product | json }}
         <app-catalog-item
           *ngFor="let product of products"
           [product]="product"

@@ -20,6 +20,9 @@ import { reducers } from './reducers';
 import { ErrorComponent } from './components/error/error.component';
 import { FieldComponent } from './components/field/field.component';
 import { OrderFormComponent } from './components/order-form/order-form.component';
+import { MaterialModule } from 'src/app/material-modules';
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -27,6 +30,7 @@ import { OrderFormComponent } from './components/order-form/order-form.component
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    MaterialModule,
     // Store and effects
     StoreModule.forFeature('cartModule', reducers),
     EffectsModule.forFeature([CartEffetcs])

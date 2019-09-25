@@ -1,6 +1,6 @@
 <div class="cart-row">
   <mat-grid-list cols="7" rowHeight="100px">
-    <mat-grid-tile><img width="70px" [src]="row.product.image"/></mat-grid-tile>
+    <mat-grid-tile><img width="70px" [src]="'assets/img/' + row.product.imageUrl"/></mat-grid-tile>
     <mat-grid-tile
       ><a (click)="clicked.emit()" routerLink="/catalog/product/{{ row.product.id }}"
         >{{ row.product.title }}

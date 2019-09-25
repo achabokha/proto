@@ -73,22 +73,65 @@ namespace Models
 			modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 			modelBuilder.Entity<ApplicationUser>().ToTable("Users");
 
-			modelBuilder.Entity<Category>().HasData(
-				new Category
-				{
-					Id = Guid.NewGuid().ToString(),
-					Name = "Test Cat 1",
+			List<dynamic> categories = new List<dynamic>(){
+					new
+					{
+						Id = "1",
+						Name = "Test Cat 1",
+					},
+					new
+					{
+						Id = "2",
+						Name = "Test Cat 2"
+					},
+					new
+					{
+						Id = "3",
+						Name = "Test Cat 3"
+					}};
+
+			List<Object> products = new List<Object>() {
+				new {
+					Id = "1",
+					Price = 0.12m,
+					ImageUrl = "product1.jpg",
+					CategoryId = categories[0].Id
 				},
-				new Category
-				{
-					Id = Guid.NewGuid().ToString(),
-					Name = "Test Cat 2"
+				new {
+					Id = "2",
+					Price = 10.12m,
+					ImageUrl = "product2.jpg",
+					CategoryId = categories[0].Id
 				},
-				new Category
-				{
-					Id = Guid.NewGuid().ToString(),
-					Name = "Test Cat 3"
-				});
+				new {
+					Id = "3",
+					Price = 1231230.12m,
+					ImageUrl = "product3.jpg",
+					CategoryId = categories[1].Id
+				}
+			};
+
+			modelBuilder.Entity<Category>(c =>
+			{
+				c.HasData(categories);
+				c.HasMany(d => d.Products);
+			});
+
+			modelBuilder.Entity<Product>(c =>
+			{
+				
+				c.HasOne(d => d.Category);
+				c.HasData(products);
+			});
+
+			modelBuilder.Entity<Order>(c =>
+			{
+				c.HasMany(d => d.Products);
+			});
+
+
+
+
 
 			// default values --
 			modelBuilder.Entity<ApplicationUser>()

@@ -7,13 +7,6 @@ import { Observable } from "rxjs";
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
-
-
-
-const url = "https://api.mongolab.com/api/1/databases/sfproducts/collections/sfproducts/";
-const apiKey = "?apiKey=d3qvB8ldYFW2KSynHRediqLuBLP8JA8i";
-
-
 @Injectable()
 export class ProductService {
 

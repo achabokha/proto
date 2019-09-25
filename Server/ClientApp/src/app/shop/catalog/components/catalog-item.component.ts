@@ -6,7 +6,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
   template: `
     <mat-card>
       <mat-card-header> </mat-card-header>
-      <img md-card-image [src]="product.image" alt="Photo of a product" />
+      <img md-card-image [src]="'assets/img/' + product.imageUrl" alt="Photo of a product" />
       <mat-card-content>
         <p>
           <a (click)="productDetails.emit(product)">{{ product.title }}</a>

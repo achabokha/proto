@@ -2,11 +2,13 @@ using System.Collections.Generic;
 
 namespace Models.Entities.Shop
 {
-    public class Product
-    {
-        public string Id {get; set;}
-        public List<Category> Categories {get; set;}
+	public class Product
+	{
+		public string Id { get; set; }
+		public decimal Price { get; set; }  
 
-        public decimal price;
-    }
+        public string ImageUrl {get; set;}
+
+        public Category Category {get; set;}
+	}
 }

@@ -16,7 +16,7 @@ import * as fromProduct from '../reducers';
   
     <table *ngIf="product">
       <td width="50%">
-        <img height="70%" [src]="product.image">
+        <img height="70%" [src]="'assets/img/' + product.imageUrl">
       </td>
       <td width="50%">
         <h1>{{product.title}}</h1>

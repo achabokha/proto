@@ -6,6 +6,6 @@ namespace Models.Entities.Shop
 	{
 		public string Id { get; set; }
 		public string Name { get; set; }
-        public List<Order> Orders {get ;set;}
+        public List<Product> Products {get ;set;}
 	}
 }

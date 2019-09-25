@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Models;
 
 namespace Models.Migrations
 {
     [DbContext(typeof(DbContext))]
-    partial class DbContextModelSnapshot : ModelSnapshot
+    [Migration("20190925122307_seedShop")]
+    partial class seedShop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -336,8 +338,6 @@ namespace Models.Migrations
 
                     b.Property<string>("CategoryId");
 
-                    b.Property<string>("ImageUrl");
-
                     b.Property<string>("OrderId");
 
                     b.Property<decimal>("Price");
@@ -355,21 +355,18 @@ namespace Models.Migrations
                         {
                             Id = "1",
                             CategoryId = "1",
-                            ImageUrl = "product1.jpg",
                             Price = 0.12m
                         },
                         new
                         {
                             Id = "2",
                             CategoryId = "1",
-                            ImageUrl = "product2.jpg",
                             Price = 10.12m
                         },
                         new
                         {
                             Id = "3",
                             CategoryId = "2",
-                            ImageUrl = "product3.jpg",
                             Price = 1231230.12m
                         });
                 });

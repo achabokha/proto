@@ -50,6 +50,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { CustomRouterStateSerializer } from './shop/shared/utils/router-utils';
 import { ShopModule } from './shop/shop.module';
 import { CartService } from './shop/core/services/cart.service';
+import { ProductService } from './shop/core/services/product.service';
 
 
 @NgModule({
@@ -90,6 +91,7 @@ import { CartService } from './shop/core/services/cart.service';
     providers: [
         StatusBar,
         CartService,
+        ProductService,
         LocalNotifications,
         SplashScreen,
         Facebook,

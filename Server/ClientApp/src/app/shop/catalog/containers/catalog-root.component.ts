@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-catalog-root',
+    selector: 'ng-shop-catalog-root',
     template: `
         <router-outlet></router-outlet>
     `
