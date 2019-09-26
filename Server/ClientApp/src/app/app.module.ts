@@ -51,6 +51,7 @@ import { CustomRouterStateSerializer } from './shop/shared/utils/router-utils';
 import { ShopModule } from './shop/shop.module';
 import { CartService } from './shop/core/services/cart.service';
 import { ProductService } from './shop/core/services/product.service';
+import { PayPal } from "@ionic-native/paypal/ngx";
 
 
 @NgModule({
@@ -91,6 +92,7 @@ import { ProductService } from './shop/core/services/product.service';
     providers: [
         StatusBar,
         CartService,
+        PayPal,
         ProductService,
         LocalNotifications,
         SplashScreen,

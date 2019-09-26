@@ -1,12 +1,13 @@
-import { Router } from '@angular/router';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Injectable } from '@angular/core';
+import { Router } from "@angular/router";
+import { Actions, Effect, ofType } from "@ngrx/effects";
+import { Injectable } from "@angular/core";
 
-import { of } from 'rxjs';
-import { tap, delay, mergeMap, map, catchError } from 'rxjs/operators';
+import { of, scheduled, from } from "rxjs";
+import { tap, delay, mergeMap, map, catchError } from "rxjs/operators";
 
-import * as cartActions from './../actions/cart.actions';
-import { CartService } from './../../core/services/cart.service';
+import * as cartActions from "./../actions/cart.actions";
+import { CartService } from "./../../core/services/cart.service";
+
 
 /**
  * Side effects service for cart module
@@ -21,7 +22,7 @@ export class CartEffetcs {
     private actions$: Actions,
     private cartService: CartService,
     private router: Router
-  ) {}
+  ) { }
 
   @Effect()
   loadCart = this.actions$.pipe(
@@ -55,9 +56,7 @@ export class CartEffetcs {
   @Effect({ dispatch: false })
   checkout = this.actions$.pipe(
     ofType(cartActions.CART_CHECKOUT),
-    delay(1000),
-    map((action: cartActions.CartCheckout) => action.payload),
     mergeMap(() => of(this.cartService.clear())),
-    tap(() => this.router.navigate(['/cart/complete']))
+    tap(() => this.router.navigate(["/cart/complete"]))
   );
 }
