@@ -1,7 +1,7 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
-import * as fromProduct from './product';
-import * as fromCollection from './collection';
-import * as fromRoot from '../../core/reducers';
+import { createSelector, createFeatureSelector } from "@ngrx/store";
+import * as fromProduct from "./product";
+import * as fromCollection from "./collection";
+import * as fromRoot from "../../core/reducers";
 
 export interface CatalogState {
     product: fromProduct.State;
@@ -9,7 +9,7 @@ export interface CatalogState {
 }
 
 export interface State extends fromRoot.State {
-    'catalog': CatalogState;
+    "catalog": CatalogState;
 }
 
 // Catalog feature reducers
@@ -18,8 +18,8 @@ export const reducers = {
     collection: fromCollection.reducer,
 };
 
-// Select the catalog slice feature from the store 
-export const getCatalogState = createFeatureSelector<CatalogState>('catalog');
+// Select the catalog slice feature from the store
+export const getCatalogState = createFeatureSelector<CatalogState>("catalog");
 
 
 export const getCollection = createSelector(
@@ -30,11 +30,11 @@ export const getCollection = createSelector(
 
 export const getCatalogContent = createSelector(getCollection,
     (state: fromCollection.State) => state.products
-)
+);
 
 export const getCatalogLoading = createSelector(getCollection,
     (state: fromCollection.State) => state.loading
-) 
+); 
 
 export const getProduct = createSelector(
     getCatalogState,
@@ -44,30 +44,30 @@ export const getProduct = createSelector(
 // Select the selectedProduct slice from the Store
 export const getSelectedProduct = createSelector(
     getProduct,
-    (state:fromProduct.State) => state.selectedProduct
-)
+    (state: fromProduct.State) => state.selectedProduct
+);
 
 export const getProductLoading = createSelector(
     getProduct,
-    (state:fromProduct.State) => state.loading
-)
+    (state: fromProduct.State) => state.loading
+);
 
 export const getCurrent = createSelector(
     getProduct,
-    (state:fromProduct.State) => state.current
-)
+    (state: fromProduct.State) => state.current
+);
 
 export const getTotal = createSelector(
     getProduct,
-    (state:fromProduct.State) => state.total
-)
+    (state: fromProduct.State) => state.total
+);
 
 export const getNextId = createSelector(
     getProduct,
-    (state:fromProduct.State) => state.nextId
-)
+    (state: fromProduct.State) => state.nextId
+);
 
 export const getPreviousId = createSelector(
     getProduct,
-    (state:fromProduct.State) => state.previousId
-)
+    (state: fromProduct.State) => state.previousId
+);

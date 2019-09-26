@@ -9,10 +9,9 @@ import * as catalogActions from './../actions/catalog.actions';
 @Component({
   selector: 'ng-shop-catalog-list',
   template: `
-    <div class="catalog-container">
+    <div class="catalog-container" >
       <div *ngIf="(products$ | async) as products" class="catalog-list">
-      {{ product | json }}
-        <app-catalog-item
+        <app-catalog-item fxflex="25"
           *ngFor="let product of products"
           [product]="product"
           (addToCart)="addProductToCart($event)"
@@ -37,9 +36,7 @@ import * as catalogActions from './../actions/catalog.actions';
       }
 
       .catalog-list {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px;
       }
       mat-progress-spinner {
         margin: 0 auto;

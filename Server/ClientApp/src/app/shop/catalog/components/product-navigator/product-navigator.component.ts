@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-  selector: 'app-product-navigator',
+  selector: 'ng-shop-product-navigator',
   templateUrl: './product-navigator.component.html',
   styleUrls: ['./product-navigator.component.css']
 })

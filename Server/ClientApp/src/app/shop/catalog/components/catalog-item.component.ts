@@ -25,9 +25,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
   styles: [
     `
       mat-card {
-        width: 240px;
-        height: 260px;
-        margin: 15px;
+        flex: 1 1 25%;
       }
       @media only screen and (max-width: 768px) {
         mat-card {
@@ -49,9 +47,8 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
         cursor: pointer;
       }
       img {
-        width: 170px;
-        min-width: 60px;
-        height: 174px;
+        max-width: 160px;
+        min-height: 160px
       }
       mat-card-content {
         margin-top: 15px;
