@@ -116,3 +116,7 @@ Full guide here https://developers.google.com/identity/sign-in/web/sign-in?refre
   2. Select Web Browser as your  app environment
   3. If you need to change or edit any params visit https://console.developers.google.com
   
+# Paypal test account
+
+email: sb-0l8yg165974@personal.example.com
+passw: wjOnv-hH
