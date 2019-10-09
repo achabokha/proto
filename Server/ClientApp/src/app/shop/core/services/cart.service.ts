@@ -1,13 +1,13 @@
-import { CartRow } from './../models/cart-row';
-import { Product } from './../../catalog/models/product';
-import { Injectable } from '@angular/core';
+import { CartRow } from "./../models/cart-row";
+import { Product } from "./../../catalog/models/product";
+import { Injectable } from "@angular/core";
 
 @Injectable()
 export class CartService {
 
   rows: CartRow[] = [];
 
-  constructor() { 
+  constructor() {
   }
 
   add(product: Product, quantity: number = 1) {
@@ -21,7 +21,7 @@ export class CartService {
   total() {
     return this.rows.reduce((total, row) => {
       return total + row.product.price * row.quantity;
-    }, 0)
+    }, 0);
   }
 
   count() {
@@ -29,7 +29,7 @@ export class CartService {
       .map(row => row.quantity)
       .reduce((count, value) => {
         return count + value;
-      }, 0)
+      }, 0);
   }
 
 
@@ -37,11 +37,11 @@ export class CartService {
     return this.rows.length === 0;
   }
 
-  clear(){
+  clear() {
     this.rows = [];
   }
 
-  getCartRows(){
+  getCartRows() {
     return this.rows;
   }
 

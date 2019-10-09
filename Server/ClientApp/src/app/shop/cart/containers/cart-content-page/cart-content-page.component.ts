@@ -37,6 +37,10 @@ export class CartContentPageComponent implements OnInit {
     this.store.dispatch(new cartActions.GetCartTotal());    
   }
 
+  getCartRowItemCount(cartRows: CartRow[]) {
+    return `(${cartRows.length})  ${cartRows.length === 1 ? "item" : "items"}`;
+  }
+
   goToDetail(productId){
     this.router.navigate(['/catalog/product',productId])
   }

@@ -6,7 +6,7 @@
     <h3>
       Your cart
     </h3>
-    <div>({{cartRows.length}} item)</div>
+    <div>{{ getCartRowItemCount(cartRows) }}</div>
 
     <ng-shop-cart-row *ngFor="let row of cartRows" [row]="row" 
       (remove)="removeFromCart(row)"

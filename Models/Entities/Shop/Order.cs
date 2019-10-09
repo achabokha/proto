@@ -2,13 +2,14 @@ using System.Collections.Generic;
 
 namespace Models.Entities.Shop
 {
-	public class Order
+	public class Order: BaseEntity
 	{
-		public string Id { get; set; }
-		public List<Product> Products { get; set; }
+		
 		public ApplicationUser User { get; set; }
 
-		public EnumOrderStatus status { get; set; }
+		public EnumOrderStatus Status { get; set; }
+
+		public virtual ICollection<OrderProducts> OrderProducts {get; set;}
 	}
 
 	public enum EnumOrderStatus

@@ -9,6 +9,9 @@ import { Store } from "@ngrx/store";
 import * as cartActions from "./../../actions/cart.actions";
 import * as fromCart from "./../../reducers"
 import { Observable } from 'rxjs';
+import { CartRow } from 'src/app/shop/core/models/cart-row';
+import { map } from 'rxjs/operators';
+import { CartService } from 'src/app/shop/core/services/cart.service';
 
 declare var paypal: any;
 
@@ -22,15 +25,17 @@ export class OrderFormComponent implements OnInit {
   submitted = false;
 
   total$: Observable<number>;
+  cartRows: CartRow[];
 
   constructor(
     private store: Store<fromCart.State>,
     private payPal: PayPal,
-    private platform: Platform) {
-    this.total$ = this.store.select(fromCart.getCartTotal);
+    private platform: Platform,
+    private cartService: CartService) {
   }
 
   ngOnInit() {
+    let self = this;
     paypal.Buttons({
       createOrder(data, actions) {
         // Set up the transaction
@@ -38,7 +43,16 @@ export class OrderFormComponent implements OnInit {
           purchase_units: [{
             amount: {
               value: 0.01
-            }
+            },
+            items: [
+              self.cartService.getCartRows().map(d => {
+                return {
+                  name: d.product.title,
+                  quantity: d.amount(),
+                  description: d.product.description
+                }
+              })
+            ]
           }]
         });
       },

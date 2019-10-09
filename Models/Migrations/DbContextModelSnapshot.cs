@@ -289,6 +289,12 @@ namespace Models.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DateModified");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
@@ -318,15 +324,42 @@ namespace Models.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("UserId");
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
 
-                    b.Property<int>("status");
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<int>("Status");
+
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Models.Entities.Shop.OrderProducts", b =>
+                {
+                    b.Property<string>("OrderId");
+
+                    b.Property<string>("ProductId");
+
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<string>("Id");
+
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("Models.Entities.Shop.Product", b =>
@@ -336,17 +369,23 @@ namespace Models.Migrations
 
                     b.Property<string>("CategoryId");
 
+                    b.Property<DateTime>("DateCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime?>("DateModified");
+
+                    b.Property<string>("Description");
+
                     b.Property<string>("ImageUrl");
 
-                    b.Property<string>("OrderId");
-
                     b.Property<decimal>("Price");
+
+                    b.Property<string>("Title");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("Products");
 
@@ -355,22 +394,28 @@ namespace Models.Migrations
                         {
                             Id = "1",
                             CategoryId = "1",
+                            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dapibus.",
                             ImageUrl = "product1.jpg",
-                            Price = 0.12m
+                            Price = 0.12m,
+                            Title = "Product 1 Title"
                         },
                         new
                         {
                             Id = "2",
                             CategoryId = "1",
+                            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dapibus.",
                             ImageUrl = "product2.jpg",
-                            Price = 10.12m
+                            Price = 10.12m,
+                            Title = "Product 2 Title"
                         },
                         new
                         {
                             Id = "3",
                             CategoryId = "2",
+                            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dapibus.",
                             ImageUrl = "product3.jpg",
-                            Price = 1231230.12m
+                            Price = 1231230.12m,
+                            Title = "Product 3 Title"
                         });
                 });
 
@@ -611,15 +656,24 @@ namespace Models.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("Models.Entities.Shop.OrderProducts", b =>
+                {
+                    b.HasOne("Models.Entities.Shop.Order", "Order")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Models.Entities.Shop.Product", "Product")
+                        .WithMany("OrderProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Models.Entities.Shop.Product", b =>
                 {
                     b.HasOne("Models.Entities.Shop.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId");
-
-                    b.HasOne("Models.Entities.Shop.Order")
-                        .WithMany("Products")
-                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictAuthorization", b =>

@@ -7,7 +7,7 @@ export class CartRow {
         public quantity: number =  1) {}
 
 
-   amout(){
+   amount(){
        return this.product.price * this.quantity;
    }
 

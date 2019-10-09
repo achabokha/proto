@@ -60,6 +60,8 @@ namespace Models
 		{
 			base.OnModelCreating(modelBuilder);
 
+			
+
 			//modelBuilder.ApplyConfiguration(new CategoryConfiguration());
 			// Customize the ASP.NET Identity model and override the defaults if needed.
 			// For example, you can rename the ASP.NET Identity table names and more.
@@ -73,11 +75,31 @@ namespace Models
 			modelBuilder.Entity<IdentityRole>().ToTable("Roles");
 			modelBuilder.Entity<ApplicationUser>().ToTable("Users");
 
+			modelBuilder.Entity<OrderProducts>(d => {
+				d.HasKey(p => new {p.OrderId, p.ProductId} );
+				d.ToTable("OrderProducts");
+			});
+
+			modelBuilder.Entity<Product>(p => {
+				p.Property(d => d.DateCreated).HasDefaultValueSql("getdate()");
+			});
+			modelBuilder.Entity<Category>(p => {
+				p.Property(d => d.DateCreated).HasDefaultValueSql("getdate()");
+			});
+			modelBuilder.Entity<Order>(p => {
+				p.Property(d => d.DateCreated).HasDefaultValueSql("getdate()");
+			});
+			modelBuilder.Entity<OrderProducts>(p => {
+				p.Property(d => d.DateCreated).HasDefaultValueSql("getdate()");
+			});
+
+
+
 			List<dynamic> categories = new List<dynamic>(){
 					new
 					{
 						Id = "1",
-						Name = "Test Cat 1",
+						Name = "Test Cat 1"
 					},
 					new
 					{
@@ -95,18 +117,24 @@ namespace Models
 					Id = "1",
 					Price = 0.12m,
 					ImageUrl = "product1.jpg",
+					Title = "Product 1 Title",
+					Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dapibus.",
 					CategoryId = categories[0].Id
 				},
 				new {
 					Id = "2",
 					Price = 10.12m,
 					ImageUrl = "product2.jpg",
+					Title = "Product 2 Title",
+					Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dapibus.",
 					CategoryId = categories[0].Id
 				},
 				new {
 					Id = "3",
 					Price = 1231230.12m,
 					ImageUrl = "product3.jpg",
+					Title = "Product 3 Title",
+					Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dapibus.",
 					CategoryId = categories[1].Id
 				}
 			};
@@ -119,14 +147,14 @@ namespace Models
 
 			modelBuilder.Entity<Product>(c =>
 			{
-				
+
 				c.HasOne(d => d.Category);
 				c.HasData(products);
 			});
 
 			modelBuilder.Entity<Order>(c =>
 			{
-				c.HasMany(d => d.Products);
+				c.HasMany(d => d.OrderProducts);
 			});
 
 

@@ -5,14 +5,13 @@ using System.Text;
 
 namespace Models
 {
-    public abstract class BaseEntity
-    {
-        [Required]
-        public DateTime DateCreated { get; set; }
+	public abstract class BaseEntity
+	{
+		[Required]
+		public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
-        public DateTime DateModified { get; set; }
+		public DateTime? DateModified { get; set; }
 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
-    }
+		public string Id { get; set; }
+	}
 }
