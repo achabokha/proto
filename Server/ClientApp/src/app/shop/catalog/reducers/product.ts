@@ -26,7 +26,7 @@ export function reducer(state = initialState, action: catalogActions.ActionType)
     switch (action.type) {
         case catalogActions.VIEW_PRODUCT:
             return { ...state, selectedId: action.payload, loading: true };
-        case catalogActions.VIEW_PRODUCT:
+        case catalogActions.VIEW_PRODUCT_SUCCESS:
             return {
                 ...state,
                 selectedProduct: action.payload.product,
