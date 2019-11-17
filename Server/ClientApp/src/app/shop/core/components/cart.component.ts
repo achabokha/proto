@@ -3,11 +3,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'ng-shop-cart',
-    template: `
-    <a routerLink="/cart/content"> 
-    <mat-icon>shopping_cart</mat-icon>
-    </a>
-  `,
+    template: `<a routerLink="/cart/content">`,
     styles: [
         `
     .cart {
