@@ -5,8 +5,8 @@ import { Component, Input } from '@angular/core';
     selector: 'ng-shop-cart',
     template: `
     <a routerLink="/cart/content"> 
-    <i class="material-icons md-48 cart">shopping_cart</i>   
-    </a> 
+    <mat-icon>shopping_cart</mat-icon>
+    </a>
   `,
     styles: [
         `

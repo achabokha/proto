@@ -12,7 +12,8 @@ import * as fromProduct from "../reducers";
     selector: 'ng-shop-selected-product',
     template: `
     <div class="selected-product" *ngIf="selectedProduct$ | async as product">
-    <ng-shop-product-navigator [current]="(current$ | async) + 1" [count]="count$ | async" (onNext)="nextProduct($event)" (onPrevious)="previousProduct($event)"></ng-shop-product-navigator>
+    <ng-shop-product-navigator [current]="(current$ | async) + 1" [count]="count$ | async" 
+        (onNext)="nextProduct($event)" (onPrevious)="previousProduct($event)"></ng-shop-product-navigator>
 
     <table *ngIf="product">
       <td width="50%">
@@ -24,7 +25,9 @@ import * as fromProduct from "../reducers";
         <div class="price">{{product.price | currency:'EUR':true }}</div>
         <p> {{product.pages}} pages</p>
         <div [innerHtml]="product.description"></div>
-        <button class="add-cart" (click)="addProductToCart(product)" md-raised-button color="primary">ADD TO CART <i class="material-icons">add_shopping_cart</i></button>
+        <button (click)="addProductToCart(product)" mat-raised-button class="add-cart">
+            ADD TO CART <mat-icon>add_shopping_cart</mat-icon>
+        </button>
       </td>
     </table>
     <p class="review-title">Reviews</p>
@@ -55,13 +58,11 @@ import * as fromProduct from "../reducers";
         margin-right: 15%;
     }
 
-    md-grid-list{
+    mat-grid-list{
         display:block !important;
     }
 
     .review-title{
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        color: #202020;
         font-size: 1.3em;
         font-weight: 500;
         margin: 32px 0;

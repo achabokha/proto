@@ -4,7 +4,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
     selector: 'app-add-review',
     template: `
     <textarea mdInput placeholder="Add review..." [(ngModel)]="reviewContent" ></textarea>
-    <button md-raised-button color="primary" [disabled]="!reviewContent" (click)="addReviewClicked()"> Add Review </button>
+    <button mat-raised-button color="primary" [disabled]="!reviewContent" (click)="addReviewClicked()"> Add Review </button>
     `,
     styles: [`
       :host{

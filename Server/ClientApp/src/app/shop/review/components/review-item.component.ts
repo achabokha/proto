@@ -5,7 +5,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
     template: `
     <mat-card>
     <mat-card-header>
-    <div md-card-avatar>
+    <div mat-card-avatar>
     <ngx-avatar [src]="_randomAvatarUrl()" ></ngx-avatar>
 
     </div>

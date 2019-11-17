@@ -5,8 +5,8 @@ import { Component } from '@angular/core';
     selector: 'ng-shop-cart-empty',
     template: `
     <div class="empty-cart">
-    Your  <i class="material-icons md-48 cart">shopping_cart</i> is empty
-    </div>  
+    Your  <mat-icon>shopping_cart</mat-icon> is empty
+    </div>
   `,
     styles: [
         `
