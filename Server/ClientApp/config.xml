@@ -99,4 +99,12 @@
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^4.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <plugin name="cordova-plugin-facebook4" spec="^6.0.0">
+        <variable name="APP_ID" value="307725046317139" />
+        <variable name="APP_NAME" value="DevLight" />
+    </plugin>
+    <plugin name="cordova-plugin-googleplus" spec="^8.0.0">
+        <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.994336992522-4v9iii4l79p8vg2q55t70u4a0r1pl5re" />
+        <variable name="WEB_APPLICATION_CLIENT_ID" value="994336992522-3jliemtatktsld6qkfn3vcrkqpjs61ck.apps.googleusercontent.com" />
+    </plugin>
 </widget>

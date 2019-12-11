@@ -63,8 +63,10 @@ the server proxy localhost:5000 to localhost:4200 for the angular client.
 ## For Mac
 ```bash
 cd Server/ClientApp/
+sudo gem install cocoapods
+// You might need to run 'pod install' from platforms/ios/
 ionic cordova build ios
-xed platforme/ios/
+xed platforms/ios/
 ```
 
 > see https://ionicframework.com/docs/v3/intro/deploying/ for details
