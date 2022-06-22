@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Refit" Version="4.7.9" />
     <PackageReference Include="Sendgrid" Version="9.11.0" />
     <PackageReference Include="Twilio" Version="5.31.3" />
